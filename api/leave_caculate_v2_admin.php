@@ -128,7 +128,7 @@ foreach ($period as $dt) {
 
 array_push($leaves, $end->format("Ymd") . " A");
 
-if($leave_level == "B" || $leave_level == "C" || $leave_type == "H")
+if($leave_level == "B" || $leave_level == "C" || $leave_type == "H" || $leave_type == "U")
 {
     if($amStart == "P")
         unset($leaves[0]);

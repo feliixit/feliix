@@ -63,6 +63,7 @@ switch ($method) {
         $v1 = (isset($_POST['v1']) ?  $_POST['v1'] : '');
         $v2 = (isset($_POST['v2']) ?  $_POST['v2'] : '');
         $v3 = (isset($_POST['v3']) ?  $_POST['v3'] : '');
+        $v4 = (isset($_POST['v4']) ?  $_POST['v4'] : '');
     
         if ($id == 0) {
             http_response_code(401);
@@ -79,6 +80,7 @@ switch ($method) {
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
+                    `v4` = :v4,
                     `normal` = 0,
                     updated_id = :updated_id,
                     updated_at = now()
@@ -95,6 +97,7 @@ switch ($method) {
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+                $stmt->bindParam(':v4', $v4);
 
                 $stmt->bindParam(':updated_id', $user_id);
 

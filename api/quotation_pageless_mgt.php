@@ -26,6 +26,7 @@ else
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $user_id = $decoded->data->id;
+        $username = $decoded->data->username;
     }
         // if decode fails, it means jwt is invalid
     catch (Exception $e){
@@ -88,7 +89,10 @@ $query = "SELECT pm.id,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
-                DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at
+                DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at,
+                pm.project_category,
+                pm.can_view,
+                pm.can_duplicate
           FROM quotation pm 
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
@@ -101,6 +105,12 @@ FROM quotation pm
     LEFT JOIN user u_user ON pm.updated_id = u_user.id 
     left join project_main p on pm.project_id = p.id
 where pm.status <> -1  and pageless = 'Y'  ";
+
+if (is_quotation_control($db, $username) == false) {
+    // 沒有權限的情況
+    $query .= " and ((pm.can_view = '') or (pm.can_view = 'N' and pm.project_category = 'Lighting')) ";
+    $query_cnt .= " and ((pm.can_view = '') or (pm.can_view = 'N' and pm.project_category = 'Lighting')) ";
+} 
 
 if($fpt != "")
 {
@@ -254,6 +264,10 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_by = $row['updated_by'];
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
+
+    $can_view = $row['can_view'];
+    $can_duplicate = $row['can_duplicate'];
+    $project_category = $row['project_category'];
    
     $post = GetRecentPost($row['id'], $db);
 
@@ -276,6 +290,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_by" => $updated_by,
         "created_at" => $created_at,
         "updated_at" => $updated_at,
+        "can_view" => $can_view,
+        "can_duplicate" => $can_duplicate,
+        "project_category" => $project_category,
         "post" => $post,
         "cnt" => $cnt,
      
@@ -308,6 +325,18 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
 
+function is_quotation_control($db, $user_name)
+{
+    $access = false;
+
+    $query = "SELECT * FROM access_control WHERE quotation_control LIKE '%" . $user_name . "%' ";
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $access = true;
+    }
+    return $access;
+}
 
 
 function GetRecentPost($quotation_id, $db){
@@ -324,6 +353,8 @@ function GetRecentPost($quotation_id, $db){
               SELECT username, p.created_at updated_at FROM quotation_total p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
     UNION all
               SELECT username, p.created_at updated_at FROM quotation_term p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.created_at updated_at FROM quotation_slogan p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
     UNION all
               SELECT username, p.created_at updated_at FROM quotation_signature p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
     UNION all

@@ -12,14 +12,45 @@ include_once 'config/core.php';
 include_once 'config/conf.php';
 include_once 'config/database.php';
 
+include_once 'libs/php-jwt-master/src/BeforeValidException.php';
+include_once 'libs/php-jwt-master/src/ExpiredException.php';
+include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once 'libs/php-jwt-master/src/JWT.php';
+
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+
+$from_ip = $_SERVER['REMOTE_ADDR'];
+
+$mail_trigger_id = 0;
+
+use \Firebase\JWT\JWT;
+
+if ( !isset( $jwt ) ) {
+    
+}
+else
+{
+    try {
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+        $mail_trigger_id = $decoded->data->id;
+    }
+        // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+        
+    }
+}
+
+
+
 function logMail($email, $content){
 
     $database = new Database();
     $db = $database->getConnection();
 
     $query = "INSERT INTO mail_log
-                (`approve`, `content`) 
-                VALUES (:approve, :content)";
+                (`approve`, `content`, `create_id`, `from_ip`) 
+                VALUES (:approve, :content, :create_id, :from_ip)";
 
         // prepare the query
         $stmt = $db->prepare($query);
@@ -29,6 +60,8 @@ function logMail($email, $content){
 
             $stmt->bindParam(':approve', $email);
             $stmt->bindParam(':content', $content_b);
+            $stmt->bindParam(':create_id', $GLOBALS['mail_trigger_id']);
+            $stmt->bindParam(':from_ip', $GLOBALS['from_ip']);
             
 
         try {
@@ -59,7 +92,7 @@ function sendGridMail($name, $email1,  $leaver, $projectname, $remark)
     $email->setSubject("Downpayment Proof Submitted by " . $leaver . "(" . $projectname . ")" );
     $email->addTo($email1, $name);
 
-    $baseURL = "https://storage.cloud.google.com/feliiximg/";
+    $baseURL = "https://storage.googleapis.com/feliiximg/";
 
     $content =  "<p>Dear " . $name . ",</p>";
     $content = $content . "<p>" . $leaver . " has applied for downpayment proof, Following are the details:</p>";
@@ -98,14 +131,7 @@ function batch_performance_evaluate_adm_notify_mail($s_date, $e_date, $dead_date
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -178,14 +204,7 @@ function batch_performance_evaluate_adm_notify_mail_single($s_date, $dead_date, 
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -259,14 +278,7 @@ function batch_performance_evaluate_emp_notify_mail($s_date, $e_date, $dead_date
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -340,14 +352,7 @@ function batch_performance_evaluate_emp_notify_mail_single($s_date, $dead_date, 
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -422,14 +427,7 @@ function batch_performance_review_notify_mail($_name, $_email, $s_date, $e_date)
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
  
@@ -472,14 +470,7 @@ function send_review_mail_adm($s_date, $e_date, $adm_id, $emp_id, $dead_date){
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
     
@@ -549,14 +540,7 @@ function send_review_mail_adm_single($s_date, $adm_id, $emp_id, $dead_date){
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
     
@@ -625,14 +609,7 @@ function send_review_mail($s_date, $e_date, $adm_id, $emp_id, $dead_date){
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -703,14 +680,7 @@ function send_review_mail_single($s_date, $adm_id, $emp_id, $dead_date){
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
     
@@ -782,14 +752,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -805,39 +768,32 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     if($kind == 2)
         $payment = "2307";
 
+    //Customer Value Director 和 所有的 Admin Team 成員
+    $mail->AddAddress('manilynne@feliix.com', 'Manilynne Nicol');
+    $mail->AddAddress('gina@feliix.com', 'Gina Donato');
+    $mail->AddAddress('kayla@feliix.com', 'Marie Kayla Patricia Dequina');
+    $mail->AddAddress('stephanie@feliix.com', 'Stephanie De dios');
+
     if($category == '1')
         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
 
     if($category == '2')
-        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
+        $mail->AddAddress('jack@feliix.com', 'Jack Beringuela');
 
+    //需要 cc 的名單
     $mail->AddCC('kuan@feliix.com', 'Kuan');
-    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
-    $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
     $mail->AddCC('ariel@feliix.com', 'Ariel Lin');
-    //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
-    //if($kind == 0)
-    //    $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+    $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    $mail->AddCC('kenilynsy@gmail.com', 'Kenilyn Sy');
 
-    //if($kind == 1 && $send_mail == 'true')
-
-    //if($kind == 0 || $kind == 1)
-        //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-
-    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
-    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+
 
     if($status == 'True'){
         $mail->Subject = "[PAYMENT CONFIRMED] Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
 
-        if($category == '2' && ($kind == 0 || $kind == 1)){
-            $mail->AddAddress('aiza@feliix.com', 'Aiza Eisma');
-            $mail->AddCC('cristina@feliix.com', 'Cristina Matining');
-            $mail->AddCC('alleah.feliix@gmail.com', 'Alleah Belmonte');
-        }
     }
     if($status == 'False')
         $mail->Subject = "Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
@@ -865,28 +821,39 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
     // 判斷 Project Type 和 Proof Kind 和 Project Final Amount 來決定 稱呼者名稱
     // Project Type = Normal
-    if($special == "")
-	$content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+    if($special == ""){
+	    $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+	}
 
-    // Project Type = X-Deal
-    if($special == "s")
+    // Project Type = X-Deal and Kind = 0 or 1
+    if($special == "s" && ($kind == 0 || $kind == 1)){
         $content = $content . "Boss has checked " . $payment . " proof, Please check details below:";
+    }
+
+    // Project Type = X-Deal and Kind = 2
+    if($special == "s" && $kind == 2){
+        $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+    }
 
     // Project Type = No DP and Kind = 0 and Amount <= 10萬
-    if($special == "sn" && $kind == 0 && $final_amount <= 100000)
-        $content = $content . "Kristel has checked " . $payment . " proof, Please check details below:";
+    if($special == "sn" && $kind == 0 && $final_amount <= 100000){
+        $content = $content . "Manilynne has checked " . $payment . " proof, Please check details below:";
+    }
 
     // Project Type = No DP and Kind = 0 and Amount > 10萬
-    if($special == "sn" && $kind == 0 && $final_amount > 100000)
+    if($special == "sn" && $kind == 0 && $final_amount > 100000){
         $content = $content . "Boss has checked " . $payment . " proof, Please check details below:";
+    }
 
     // Project Type = No DP and Kind = 1 or 2 and Amount <= 10萬
-    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount <= 100000)
+    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount <= 100000){
         $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+    }
 
     // Project Type = No DP and Kind = 1 or 2 and Amount > 10萬
-    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount > 100000)
+    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount > 100000){
         $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+    }
 
 
     $content = $content . '</td>
@@ -1111,31 +1078,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
                     </div>
                     </body>
                     </html>';
-/*
-    $content = $content . "<p>Remark: " . $remark . "</p>";
 
-
-    $content = $content . "<p>Status: Checked: " . $status . "</p>";
-
-    $content = $content . "<p>Date of Receiving Payment: " . $receive_date . "</p>";
-
-    $content = $content . "<p>Amount of Receiving Payment: " . number_format($amount) . "</p>";
-
-    $content = $content . "<p>Project Name: " . $projectname . "</p>";
-    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
-    $content = $content . "<p>Submitter: " . $leaver . "</p>";
-    $content = $content . "<p>Checked: " . $status . "</p>";
-    $content = $content . "<p>Remark: " . $remark . "</p>";
-
-
-    if($reason != "")
-        $content = $content . "<p>Additional Remark: " . $reason . "</p>";
-
-    $content = $content . "<p> </p>";
-
-    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to view the downpayment proof.</p>";
-    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
-*/
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -1151,107 +1094,9 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
 }
 
-// 2023/07/10 因為目前無任何地方會呼叫此函數，因此將其註解起來
-// function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category)
-// {
-//     $conf = new Conf();
-
-//     $mail = new PHPMailer();
-//     $mail->IsSMTP();
-//     $mail->Mailer = "smtp";
-//     $mail->CharSet = 'UTF-8';
-//     $mail->Encoding = 'base64';
-
-//     // $mail->SMTPDebug  = 0;
-//     // $mail->SMTPAuth   = true;
-//     // $mail->SMTPSecure = "ssl";
-//     // $mail->Port       = 465;
-//     // $mail->SMTPKeepAlive = true;
-//     // $mail->Host       = $conf::$mail_host;
-//     // $mail->Username   = $conf::$mail_username;
-//     // $mail->Password   = $conf::$mail_password;
-
-//     $mail = SetupMail($mail, $conf);
-
-//     $mail->IsHTML(true);
-//     $mail->AddAddress($email1, $name);
 
 
-//     if($category == '1')
-//         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
-
-//     if($category == '2')
-//         $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
-
-//     $mail->AddCC('kuan@feliix.com', 'Kuan');
-//     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
-//     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
-//     $mail->AddCC('ariel@feliix.com', 'Ariel Lin');
-//     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
-//     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-
-//     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
-
-//     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
-//     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
-//     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
-
-
-//     if($status == 'True'){
-//         $mail->Subject = "[PAYMENT CONFIRMED] Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
-
-//         if($category == '2'){
-//             $mail->AddAddress('aiza@feliix.com', 'Aiza Eisma');
-//             $mail->AddCC('cristina@feliix.com', 'Cristina Matining');
-//             $mail->AddCC('alleah.feliix@gmail.com', 'Alleah Belmonte');
-//         }
-
-//     }
-//     if($status == 'False')
-//         $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
-
-//     $content =  "<p>Dear " . $name . ",</p>";
-//     $content = $content . "<p>Glen has checked downpayment proof, Following are the details:</p>";
-
-//     $content = $content . "<p>Project Name: " . $projectname . "</p>";
-//     $content = $content . "<p>Submission Time: " . $subtime . "</p>";
-//     $content = $content . "<p>Submitter: " . $name . "</p>";
-//     $content = $content . "<p>Remark: " . $remark . "</p>";
-
-
-//     $content = $content . "<p>Status: Checked: " . $status . "</p>";
-//     /*
-//     $content = $content . "<p>Project Name: " . $projectname . "</p>";
-//     $content = $content . "<p>Submission Time: " . $subtime . "</p>";
-//     $content = $content . "<p>Submitter: " . $leaver . "</p>";
-//     $content = $content . "<p>Checked: " . $status . "</p>";
-//     $content = $content . "<p>Remark: " . $remark . "</p>";
-//     */
-
-//     if($reason != "")
-//         $content = $content . "<p>Additional Remark: " . $reason . "</p>";
-
-//     $content = $content . "<p> </p>";
-
-//     $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to view the downpayment proof.</p>";
-//     $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
-
-
-//     $mail->MsgHTML($content);
-//     if($mail->Send()) {
-//         logMail($email1, $content);
-//         return true;
-// //        echo "Error while sending Email.";
-// //        var_dump($mail);
-//     } else {
-//         logMail($email1, $mail->ErrorInfo . $content);
-//         return false;
-// //        echo "Email sent successfully";
-//     }
-
-// }
-
-function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special, $final_amount)
+function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special, $final_amount, $bid)
 {
     $conf = new Conf();
 
@@ -1261,14 +1106,7 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -1279,27 +1117,30 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     if($special == ""){
         $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
 	$mail->AddCC('kuan@feliix.com', 'Kuan');
-	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     }
 
-    // Project Type = X-Deal
-    if($special == "s"){
+    // Project Type = X-Deal and Kind = 0 or 1
+    if($special == "s" && ($kind == 0 || $kind == 1)){
         $mail->AddAddress('kuan@feliix.com', 'Kuan');
-	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
 	$mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    }
+
+    // Project Type = X-Deal and Kind = 2
+    if($special == "s" && $kind == 2){
+        $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+	$mail->AddCC('kuan@feliix.com', 'Kuan');
     }
 
     // Project Type = No DP and Kind = 0 and Amount <= 10萬
     if($special == "sn" && $kind == 0 && $final_amount <= 100000){
-        $mail->AddAddress('kristel@feliix.com', 'Kristel Tan');
-	$mail->AddCC('kuan@feliix.com', 'Kuan');
-	$mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+        $mail->AddAddress('manilynne@feliix.com', 'Manilynne Nicol');
+        $mail->AddCC('kuan@feliix.com', 'Kuan');
+        $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
     }
 
     // Project Type = No DP and Kind = 0 and Amount > 10萬
     if($special == "sn" && $kind == 0 && $final_amount > 100000){
         $mail->AddAddress('kuan@feliix.com', 'Kuan');
-	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
 	$mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
     }
 
@@ -1307,22 +1148,20 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
         if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount <= 100000){
         $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
 	$mail->AddCC('kuan@feliix.com', 'Kuan');
-	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     }
 
     // Project Type = No DP and Kind = 1 or 2 and Amount > 10萬
     if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount > 100000){
         $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
 	$mail->AddCC('kuan@feliix.com', 'Kuan');
-	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     }
 
 
     if($category == '1')
         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
 
-    if($category == '2')
-        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
+    //if($category == '2')
+        //$mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
 
     $pay = "Full Payment";
     if($kind == 0)
@@ -1339,8 +1178,6 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
         //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
     //if($category == '2' && ($kind == 0 || $kind == 1))
         //$mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
-
-    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -1363,15 +1200,19 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     // 判斷 Project Type 和 Proof Kind 和 Project Final Amount 來決定 稱呼者名稱
     // Project Type = Normal
     if($special == "")
-	$content = $content . ' Dear Glendon, ';
+	    $content = $content . ' Dear Glendon, ';
 
-    // Project Type = X-Deal
-    if($special == "s")
+    // Project Type = X-Deal and Kind = 0 or 1
+    if($special == "s" && ($kind == 0 || $kind == 1))
         $content = $content . ' Dear Boss, ';
+
+    // Project Type = X-Deal and Kind = 2
+    if($special == "s" && $kind == 2)
+        $content = $content . ' Dear Glendon, ';
 
     // Project Type = No DP and Kind = 0 and Amount <= 10萬
     if($special == "sn" && $kind == 0 && $final_amount <= 100000)
-        $content = $content . ' Dear Kristel, ';
+        $content = $content . ' Dear Manilynne, ';
 
     // Project Type = No DP and Kind = 0 and Amount > 10萬
     if($special == "sn" && $kind == 0 && $final_amount > 100000)
@@ -1472,7 +1313,7 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
                         <tr>
                             <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
                                 Please log on to Feliix >> Admin Section >> Verify and Review to review the downpayment proof.<br>';
-    $content = $content . 'URL:  <a href="' . $conf::$mail_ip . '">' . $conf::$mail_ip . '</a> ';
+    $content = $content . 'URL:  <a href="' . $conf::$mail_ip . 'downpayment_proof?id=' . $bid . '">' . $conf::$mail_ip . '</a> ';
     $content = $content . '</td>
                         </tr>
                         </tbody>
@@ -1506,14 +1347,7 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -1524,13 +1358,11 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
 
     if($category == '2')
-        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
+        $mail->AddAddress('jack@feliix.com', 'Jack Beringuela');
 
     $mail->AddCC('kuan@feliix.com', 'Kuan');
-    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC($email1, $name);
 
-    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -1572,14 +1404,7 @@ function sendMail($name, $email1, $appove_hash, $reject_hash, $leave_info, $leav
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -1630,14 +1455,7 @@ function send_schedule_notify_mail($last_id, $project, $creator, $_date, $_time,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -1700,14 +1518,7 @@ function send_schedule_edit_mail($last_id, $project, $creator, $_date, $_time, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -1777,14 +1588,7 @@ function send_schedule_edit_goodby_mail($last_id, $project, $creator, $_date, $_
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -1842,14 +1646,7 @@ function send_schedule_del_mail($last_id, $project, $creator, $_date, $_time, $s
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -1917,14 +1714,7 @@ function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -1979,14 +1769,7 @@ function send_meeting_modified_mail($name, $email1, $subject, $creator, $attende
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2041,14 +1824,7 @@ function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2121,14 +1897,7 @@ function void_expense_mail($request_no, $applicant, $user_name, $user_email, $de
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2224,14 +1993,7 @@ function reject_expense_mail($request_no, $user_name, $requestor, $requestor_ema
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2309,14 +2071,7 @@ function send_liquidate_mail($request_no,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2373,6 +2128,11 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
             $action = "approve";
             $tab = "Review";
             break;
+        case "Send To OP ONLY":
+            $title = "Expense Application for Approve: Request No." . $request_no . " from " . $applicant;
+            $action = "approve";
+            $tab = "Review";
+            break;
         case "Send To MD":
             $title = "Expense Application for approve: Request No." . $request_no . " from " . $applicant;
             $action = "approve";
@@ -2406,14 +2166,7 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2463,14 +2216,7 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2529,14 +2275,7 @@ function task_notify_admin_c($request_type,  $project_name, $task_name, $task_st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2668,14 +2407,7 @@ function task_notify_admin_d($request_type, $task_status, $task_name, $stages_st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2804,14 +2536,7 @@ function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_s
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -2961,14 +2686,7 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -3105,14 +2823,7 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -3241,14 +2952,7 @@ function task_notify_admin_l($request_type, $task_status, $task_name, $stages_st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -3373,14 +3077,7 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
     
     $mail = SetupMail($mail, $conf);
 
@@ -3462,14 +3159,7 @@ function stage_order_close_notify($project_creator_id, $project_id, $project_nam
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
     
@@ -3543,14 +3233,7 @@ function task_notify_admin($request_type, $task_status, $task_name, $stages_stat
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -3696,14 +3379,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->Encoding = 'base64';
 
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -3829,14 +3505,7 @@ function task_notify_r($request_type, $project_name, $task_name, $stages_status,
     $mail->Encoding = 'base64';
 
     
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
     
@@ -3962,14 +3631,7 @@ function task_notify_order($request_type, $project_name, $task_name, $stages_sta
     $mail->Encoding = 'base64';
 
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -4104,14 +3766,7 @@ function task_notify_inquiry($request_type, $project_name, $task_name, $stages_s
     $mail->Encoding = 'base64';
 
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -4256,14 +3911,7 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
     $mail->Encoding = 'base64';
 
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -4376,20 +4024,14 @@ function batch_date_start_company_notify_mail($user_array)
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
     $mail->IsHTML(true);
 
-    $mail->AddAddress("dennis@feliix.com", "Dennis");
+    $mail->AddAddress("anita@feliix.com", "Anita Liu");
+    $mail->AddAddress("dennis@feliix.com", "Dennis Lin");
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -4407,7 +4049,7 @@ function batch_date_start_company_notify_mail($user_array)
         $content = $content . "<p>Seniority Change: " . $user["seniority_old"] . " -> " . $user["seniority_new"] . " </p>";
         $content = $content . "<p> </p>";
     }
-    
+    $content = $content . "<p> </p>";
     $content = $content . "<p>Please log on to Feliix >> System Section >> User to adjust yearly leave credits.";
     $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
 
@@ -4462,14 +4104,7 @@ function task_notify_type_inquiry($request_type, $project_name, $task_name, $sta
     $mail->Encoding = 'base64';
 
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -4658,14 +4293,7 @@ function message_notify_dept($request_type, $project_name, $task_name, $stages, 
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -4782,14 +4410,7 @@ function message_notify_r($request_type, $project_name, $task_name, $stages, $cr
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -4923,14 +4544,7 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5048,14 +4662,7 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5157,14 +4764,7 @@ function task_notify01_admin_sl($old_status, $task_status, $revisor, $task_name,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5244,14 +4844,7 @@ function task_notify01_admin_sv($old_status, $task_status, $revisor, $task_name,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5332,14 +4925,7 @@ function task_notify01_admin_d($old_status, $task_status, $revisor, $task_name, 
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5420,14 +5006,7 @@ function task_notify01_admin_o($old_status, $task_status, $revisor, $task_name, 
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5508,14 +5087,7 @@ function task_notify01_admin_l($old_status, $task_status, $revisor, $task_name, 
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5599,14 +5171,7 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5728,14 +5293,7 @@ function task_notify01_r($old_status, $task_status, $project_name, $task_name, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5854,14 +5412,7 @@ function task_notify01_order($old_status, $task_status, $project_name, $task_nam
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -5982,14 +5533,7 @@ function task_notify01_inquiry($old_status, $task_status, $project_name, $task_n
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -6111,14 +5655,7 @@ function task_notify01_type_order($old_status, $task_status, $project_name, $tas
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -6249,14 +5786,7 @@ function task_notify01_type_inquiry($old_status, $task_status, $project_name, $t
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -6389,14 +5919,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -6526,14 +6049,7 @@ function task_notify02_r($old_status, $task_status, $project_name, $task_name, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -6662,14 +6178,7 @@ function task_notify02_order($old_status, $task_status, $project_name, $task_nam
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -6799,14 +6308,7 @@ function task_notify02_inquiry($old_status, $task_status, $project_name, $task_n
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -6935,14 +6437,7 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -7081,14 +6576,7 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -7412,14 +6900,7 @@ function project01_notify_mail($request_type, $project_name, $username, $created
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -7499,14 +6980,7 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
     $mail->Encoding = 'base64';
 
     
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -7598,14 +7072,7 @@ function project03_stage_client_task_notify_mail($project_name, $username, $crea
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -7663,14 +7130,7 @@ function project02_status_change_notify_mail($project_name, $project_category, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
     $mail = SetupMail($mail, $conf);
 
     $mail->IsHTML(true);
@@ -7757,14 +7217,7 @@ function send_salary_slip(  $start_date,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -7822,14 +7275,7 @@ function send_salary_slip_withdraw(
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -7887,14 +7333,7 @@ function send_salary_slip_confirm(
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -8089,14 +7528,7 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -8115,9 +7547,7 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
 
     if($special == "")
     {
-        $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
         $mail->AddCC($email1, $name);
-        $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
     }
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -8149,7 +7579,7 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
 
     // Project Type = No DP and Kind = 0 and Amount <= 10萬
     if($special == "sn" && $kind == 0 && $final_amount <= 100000)
-        $content = $content . ' Dear Kristel, ';
+        $content = $content . ' Dear Manilynne, ';
 
     // Project Type = No DP and Kind = 0 and Amount > 10萬
     if($special == "sn" && $kind == 0 && $final_amount > 100000)
@@ -8281,14 +7711,7 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -8301,7 +7724,10 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
     $_list = explode(",", $access);
     foreach($_list as &$c_list)
     {
-        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        if($action == 'approval')
+            $notifior = GetAccessNotifiersAccess($c_list, $serial_name, 'access3');
+        else
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
             if($action == 'finish_notes')
@@ -8329,15 +7755,11 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
                     {
                         $receiver .= "Aiza Eisma" . ", ";
                         $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
-                        $receiver .= $list["username"] . ", ";
-                        $mail->AddAddress($list["email"], $list["username"]);
                     }
                     else{
                         if($list["username"] == 'Cristina Matining'){
                             $receiver .= "Alleah Belmonte" . ", ";
                             $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
-                            $receiver .= $list["username"] . ", ";
-                            $mail->AddAddress($list["email"], $list["username"]);
                         }
                         else{
                             $receiver .= $list["username"] . ", ";
@@ -8371,7 +7793,7 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
                 }
                 else{
                     if($list["username"] == 'Cristina Matining'){
-                        $cc .= "Alleah Belmonte" . ", ";;
+                        $cc .= "Alleah Belmonte" . ", ";
                         $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
                     }
                     else{
@@ -8387,15 +7809,11 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
                     {
                         $cc .= "Aiza Eisma" . ", ";
                         $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
-                        $cc .= $list["username"];
-                        $mail->AddCC($list["email"], $list["username"]);
                     }
                     else{
                         if($list["username"] == 'Cristina Matining'){
                             $cc .= "Alleah Belmonte";
                             $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
-                            $cc .= $list["username"];
-                            $mail->AddCC($list["email"], $list["username"]);
                         }
                         else{
                             $cc .= $list["username"];
@@ -8426,6 +7844,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" need your feedback';
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" need your feedback. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     if($action == 'withdraw_note_tw')
@@ -8433,6 +7854,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Request for feedback was withdrawn on items of "' . $order_type . ': ' . $serial_name . '" ';
         $header = 'The request for your feedback was withdrawn on items of  "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     if($action == 'approval')
@@ -8440,6 +7864,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" need your approval';
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" need your approval. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     if($action == 'finish_notes')
@@ -8447,6 +7874,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Taiwan office already provided feedback for items of "' . $order_type . ': ' . $serial_name . '"';
         $header = 'Taiwan office already provided feedback for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     // for approve
@@ -8455,6 +7885,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" were approved';
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" were already approved and need you to follow. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     if($action == 'reject')
@@ -8462,6 +7895,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" were rejected';
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" were already rejected and need you to follow. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     if($action == 'withdraw')
@@ -8469,6 +7905,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Request for approval was withdrawn on items of "' . $order_type . ': ' . $serial_name . '" ';
         $header = 'The request for your approval was withdrawn on items of  "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     // APPROVED
@@ -8478,6 +7917,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" are ordered';
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" are ordered. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     // Canceled
@@ -8487,6 +7929,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" are canceled';
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" are canceled. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     if($action == 'ship_info')
@@ -8495,6 +7940,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     if($action == 'ware_info')
@@ -8503,6 +7951,9 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Warehouse info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = 'Warehouse info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     if($action == 'batch')
@@ -8512,6 +7963,8 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $header = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
 
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
     }
 
     $content = '<!DOCTYPE html>
@@ -8640,6 +8093,310 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
 
 }
 
+
+
+function order_notification_warehouse($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $access7)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            if($action == 'finish_notes')
+            {
+                if($list["username"] == 'Nestor Rosales')
+                {
+                    $receiver .= "Aiza Eisma" . ", ";
+                    $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                }
+                else{
+                    if($list["username"] == 'Cristina Matining'){
+                        $receiver .= "Alleah Belmonte" . ", ";
+                        $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
+                    }
+                    else{
+                        $receiver .= $list["username"] . ", ";
+                        $mail->AddAddress($list["email"], $list["username"]);
+                    }
+                }
+            }
+            else{
+                if($action == 'reject')
+                {
+                    if($list["username"] == 'Nestor Rosales')
+                    {
+                        $receiver .= "Aiza Eisma" . ", ";
+                        $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                    }
+                    else{
+                        if($list["username"] == 'Cristina Matining'){
+                            $receiver .= "Alleah Belmonte" . ", ";
+                            $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
+                        }
+                        else{
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                    }
+                }
+                else{
+                    $receiver .= $list["username"] . ", ";
+                    $mail->AddAddress($list["email"], $list["username"]);
+                }
+            }
+        }
+    }
+
+    if($access7 != '')
+    {
+        $_list = explode(",", $access7);
+        foreach($_list as &$c_list)
+        {
+            $c_list = trim($c_list);
+            $notifior = GetAccessNotifiersByName($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver = $list["username"];
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            if($action == 'send_note' || $action == 'withdraw_note_tw')
+            {
+                if($list["username"] == 'Nestor Rosales')
+                {
+                    $cc .= "Aiza Eisma" . ", ";
+                    $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+                }
+                else{
+                    if($list["username"] == 'Cristina Matining'){
+                        $cc .= "Alleah Belmonte" . ", ";
+                        $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
+                    }
+                    else{
+                        $cc .= $list["username"];
+                        $mail->AddCC($list["email"], $list["username"]);
+                    }
+                }
+            }
+            else{
+                if($action == 'approval' || $action == 'approved' || $action == 'withdraw')
+                {
+                    if($list["username"] == 'Nestor Rosales')
+                    {
+                        $cc .= "Aiza Eisma" . ", ";
+                        $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+                    }
+                    else{
+                        if($list["username"] == 'Cristina Matining'){
+                            $cc .= "Alleah Belmonte";
+                            $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
+                        }
+                        else{
+                            $cc .= $list["username"];
+                            $mail->AddCC($list["email"], $list["username"]);
+                        }
+                    }
+                }
+                else{
+                    $cc .= $list["username"];
+                    $mail->AddCC($list["email"], $list["username"]);
+                }
+            }
+        }
+    }
+
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $url = "";
+
+    if($action == 'approval')
+    {
+        $receiver = "all";
+
+        $mail->Subject = 'Some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse';
+        $header = 'Please note that some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
+    }
+
+    if($action == 'approved')
+    {
+        $receiver = "all";
+
+        $mail->Subject = 'Some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse';
+        $header = 'Please note that some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+
+        $cc .= "Manilynne Nicol" . ", ";
+        $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
+    }
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Order Type: ' . $order_type . '<br>';
+                    $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . 'Comment: ' . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Items
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 440px;">
+                    Product Code
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個產品的其他產品 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                        ';
+                        $content = $content . $items[$i]['serial_number'] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
+                        ';
+                        $content = $content . $items[$i]['code'] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            /* 最後一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['serial_number']  . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['code'] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+
 function mockup_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
 {
     $conf = new Conf();
@@ -8650,14 +8407,7 @@ function mockup_notification($name, $access,  $access_cc, $project_name, $serial
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -8670,7 +8420,11 @@ function mockup_notification($name, $access,  $access_cc, $project_name, $serial
     $_list = explode(",", $access);
     foreach($_list as &$c_list)
     {
-        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        if($action == 'approval')
+            $notifior = GetAccessNotifiersAccess($c_list, $serial_name, 'access3');
+        else
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+
         foreach($notifior as &$list)
         {
             $receiver .= $list["username"] . ", ";
@@ -8922,6 +8676,222 @@ function mockup_notification($name, $access,  $access_cc, $project_name, $serial
 }
 
 
+
+function mockup_notification_warehouse($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $access7)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    if($access7 != '')
+    {
+        $_list = explode(",", $access7);
+        foreach($_list as &$c_list)
+        {
+            $c_list = trim($c_list);
+            $notifior = GetAccessNotifiersByName($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver = $list["username"];
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $url = "";
+
+    if($action == 'approval')
+    {
+        $receiver = "all";
+
+        $mail->Subject = 'Some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse';
+        $header = 'Please note that some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_mockup_p3?id=" . $od_id;
+    }
+
+    if($action == 'approved')
+    {
+        $receiver = "all";
+
+        $mail->Subject = 'Some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse';
+        $header = 'Please note that some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_mockup_p3?id=" . $od_id;
+    }
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Order Type: ' . $order_type . '<br>';
+                    $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . 'Comment: ' . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Items
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 440px;">
+                    Product Code
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個產品的其他產品 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                        ';
+                        $content = $content . $items[$i]['serial_number'] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
+                        ';
+                        $content = $content . $items[$i]['code'] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            /* 最後一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['serial_number']  . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['code'] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
 function inquiry_partial_complete_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $task_type)
 {
     $conf = new Conf();
@@ -8932,14 +8902,7 @@ function inquiry_partial_complete_notification($name, $access,  $access_cc, $pro
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -9077,14 +9040,7 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -9123,6 +9079,9 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
+    //每一個 inquiry 都應該 cc 給 Customer Value Director 
+    $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
+
     $mail->Subject = "";
 
     $header = "";
@@ -9136,7 +9095,7 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
         $header = 'Inquiry "' . $serial_name . '" needs your feedback. Please check details below:';
         $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
     }
-        
+
     if($action == 'withdraw_note_tw')
     {
         $receiver = "Ariel Lin";
@@ -9151,6 +9110,13 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
         $mail->Subject = '[Inquiry Notification] Taiwan office already provided feedback for Inquiry "' . $serial_name . '".';
         $header = 'Taiwan office already provided feedback for Inquiry "' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
+    }
+
+
+    // 如果是 Lighting 的 inquiry，則 Gwendolyn Sarmiento 一定至少要出現在 cc 收件者
+    if( substr($serial_name, 0, 1) == "L")
+    {
+        $mail->AddCC("gwen.feliix@gmail.com", "Gwendolyn Sarmiento");
     }
 
 
@@ -9231,7 +9197,7 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
 
 }
 
-function knowledge_add_notification($name, $name_at, $access, $access_cc, $title, $creator, $created_at, $category, $view_type, $duration, $watch, $od_id, $action)
+function inquiry_notification_reply($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $task_type)
 {
     $conf = new Conf();
 
@@ -9241,14 +9207,7 @@ function knowledge_add_notification($name, $name_at, $access, $access_cc, $title
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -9276,6 +9235,212 @@ function knowledge_add_notification($name, $name_at, $access, $access_cc, $title
     foreach($cc_list as &$c_list)
     {
         $notifior = GetNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    //每一個 inquiry 都應該 cc 給 Customer Value Director 
+    $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $url = "";
+
+    // preliminary
+    if($action == 'send_note_reply_tw')
+    {
+        $receiver = "Ariel Lin";
+        $mail->Subject = '[Inquiry Notification] ' . $name . ' replied on Inquiry "' . $serial_name . '" ';
+        $header = $name . ' replied on Inquiry "' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
+    }
+
+    // 如果是 Lighting 的 inquiry，則 Gwendolyn Sarmiento 一定至少要出現在 cc 收件者
+    if( substr($serial_name, 0, 1) == "L")
+    {
+        $mail->AddCC("gwen.feliix@gmail.com", "Gwendolyn Sarmiento");
+    }
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Inquiry Name: ' . $serial_name . ' ' . $order_name . '<br>';
+
+                    if($task_type == "")
+                        $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    else
+                        $content = $content . 'Task Management of ' . $task_type . ' Department<br>';
+
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . 'Comment: ' . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+       
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Items
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 440px;">
+                    Product Code
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個產品的其他產品 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                        ';
+                        $content = $content . $items[$i]['serial_number'] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
+                        ';
+                        $content = $content . $items[$i]['code'] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            /* 最後一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['serial_number']  . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['code'] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+        
+            ';
+
+
+        $content = $content . '
+        </tbody>
+        </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function knowledge_add_notification($name, $name_at, $access, $access_cc, $title, $creator, $created_at, $category, $view_type, $duration, $watch, $od_id, $action)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetNotifiers($c_list);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetNotifiers($c_list);
         foreach($notifior as &$list)
         {
             $cc = $list["username"];
@@ -9374,14 +9539,7 @@ function batch_voting_system_notify_mail($access, $access_cc, $topic_name, $crea
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -9394,7 +9552,7 @@ function batch_voting_system_notify_mail($access, $access_cc, $topic_name, $crea
     $_list = explode(",", $access);
     foreach($_list as &$c_list)
     {
-        $notifior = GetNotifiers($c_list, $serial_name);
+        $notifior = GetNotifiers($c_list);
         foreach($notifior as &$list)
         {
             $receiver .= $list["username"] . ", ";
@@ -9408,7 +9566,7 @@ function batch_voting_system_notify_mail($access, $access_cc, $topic_name, $crea
     $cc_list = explode(",", $access_cc);
     foreach($cc_list as &$c_list)
     {
-        $notifior = GetNotifiers($c_list, $serial_name);
+        $notifior = GetNotifiers($c_list);
         foreach($notifior as &$list)
         {
             $cc = $list["username"];
@@ -9504,14 +9662,7 @@ function order_type_notification($name, $access,  $access_cc, $project_name, $se
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -9524,7 +9675,11 @@ function order_type_notification($name, $access,  $access_cc, $project_name, $se
     $_list = explode(",", $access);
     foreach($_list as &$c_list)
     {
-        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        if($action == 'approval')
+            $notifior = GetAccessNotifiersAccess($c_list, $serial_name, 'access3');
+        else
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+
         foreach($notifior as &$list)
         {
             $receiver .= $list["username"] . ", ";
@@ -9775,6 +9930,224 @@ function order_type_notification($name, $access,  $access_cc, $project_name, $se
 
 }
 
+
+function order_type_notification_warehouse($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $type, $access7)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    if($access7 != '')
+    {
+        $_list = explode(",", $access7);
+        foreach($_list as &$c_list)
+        {
+            $c_list = trim($c_list);
+            $notifior = GetAccessNotifiersByName($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver = $list["username"];
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $url = "";
+
+
+    if($action == 'approval')
+    {
+        $receiver = "all";
+
+        $mail->Subject = 'Some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse';
+        $header = 'Please note that some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse. Please check details below:';
+
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+    }
+
+    // for approve
+    if($action == 'approved')
+    {
+        $receiver = "all";
+
+        $mail->Subject = 'Some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse';
+        $header = 'Please note that some items of "' . $order_type . ': ' . $serial_name . '" will come from Warehouse. Please check details below:';
+
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+    }
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Order Type: ' . $order_type . '<br>';
+                    $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . 'Comment: ' . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Items
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 440px;">
+                    Product Code
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個產品的其他產品 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                        ';
+                        $content = $content . $items[$i]['serial_number'] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
+                        ';
+                        $content = $content . $items[$i]['code'] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            /* 最後一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['serial_number']  . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['code'] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
 
 function order_sample_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $type)
 {
@@ -9786,14 +10159,7 @@ function order_sample_notification($name, $access,  $access_cc, $project_name, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -9806,7 +10172,12 @@ function order_sample_notification($name, $access,  $access_cc, $project_name, $
     $_list = explode(",", $access);
     foreach($_list as &$c_list)
     {
-        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        
+        if($action == 'approval')
+            $notifior = GetAccessNotifiersAccess($c_list, $serial_name, 'access3');
+        else
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+
         foreach($notifior as &$list)
         {
             $receiver .= $list["username"] . ", ";
@@ -10057,7 +10428,7 @@ function order_sample_notification($name, $access,  $access_cc, $project_name, $
 
 }
 
-function order_notification02($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
+function order_notification02($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $pic1 = 0, $pic2 = 0)
 {
     $conf = new Conf();
 
@@ -10067,14 +10438,7 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -10164,18 +10528,42 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
         }
 
         $receiver = "";
-        // access5
-        $_list = explode(",", $access);
-        foreach($_list as &$c_list)
+
+        if($pic1 != 0)
         {
-            $notifior = GetAccessNotifiers($c_list, $serial_name);
-            foreach($notifior as &$list)
+            $pic = GetNotifiers($pic1);
+
+            if(count($pic) > 0)
             {
-                $receiver .= $list["username"] . ", ";
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
             }
         }
         
-        $receiver = rtrim($receiver, ", ");
+        if($pic2 != 0)
+        {
+            $pic = GetNotifiers($pic2);
+
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+
+
+        // // access5
+        // $_list = explode(",", $access);
+        // foreach($_list as &$c_list)
+        // {
+        //     $notifior = GetAccessNotifiers($c_list, $serial_name);
+        //     foreach($notifior as &$list)
+        //     {
+        //         $receiver .= $list["username"] . ", ";
+        //     }
+        // }
+        
+        $receiver = "all";
 
         $mail->Subject = 'Testing info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the testing info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -10241,10 +10629,216 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             }
         }
 
-        $receiver = rtrim($receiver, ", ");
+        $pm_info = get_pic_from_od_main($od_id);
+        $pic1 = $pm_info[0];
+        $pic2 = $pm_info[1];
+        $create_id = $pm_info[2];
+
+        if($pic1 != 0)
+        {
+            $pic = GetNotifiers($pic1);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+        
+        if($pic2 != 0)
+        {
+            $pic = GetNotifiers($pic2);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+
+        $receiver = "all";
 
         $mail->Subject = 'Delivery info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the delivery info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+    
+    if($action == 'edit_delivery_a')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['delivery'];
+        }
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "";
+
+        // access5
+        $_list = explode(",", $access);
+        foreach($_list as &$c_list)
+        {
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver .= $list["username"] . ", ";
+            }
+        }
+
+        $pm_info = get_pic_from_od_main($od_id);
+        $pic1 = $pm_info[0];
+        $pic2 = $pm_info[1];
+        $create_id = $pm_info[2];
+
+        if($pic1 != 0)
+        {
+            $pic = GetNotifiers($pic1);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+        
+        if($pic2 != 0)
+        {
+            $pic = GetNotifiers($pic2);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+
+        if($create_id != 0)
+        {
+            $pic = GetNotifiers($create_id);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+
+        $receiver = "all";
+
+        $mail->Subject = 'Delivery info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = $name . ' updated the delivery info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+    if($action == 'date_needed')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['delivery'];
+        }
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+
+        // access 7 from od_main
+        $ret = get_access7_from_od_main($od_id);
+        $project_id = $ret[0];
+        $task_type = $ret[1];
+        $access7 = $ret[2];
+        
+        if($access7  != "")
+        {
+            $_list = explode(",", $access7 );
+            foreach($_list as &$c_list)
+            {
+                $c_list = trim($c_list);
+                $notifior = GetAccessNotifiersByName($c_list, $serial_name);
+                foreach($notifior as &$list)
+                {
+                    $receiver = $list["username"];
+                    $mail->AddAddress($list["email"], $list["username"]);
+                }
+            }
+        }
+
+        if($task_type == "")
+        {
+            $pm_info = get_pic_from_project_main($project_id);
+            $pic1 = $pm_info[0];
+            $pic2 = $pm_info[1];
+            $create_id = $pm_info[2];
+
+            if($pic1 != 0)
+            {
+                $pic = GetNotifiers($pic1);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+            
+            if($pic2 != 0)
+            {
+                $pic = GetNotifiers($pic2);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+
+            if($create_id != 0)
+            {
+                $pic = GetNotifiers($create_id);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+
+        }
+
+        // access 1
+        $notifior = GetAccessNotifiers("access1", $serial_name);
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        // other
+        $_list = explode(",", $access);
+        foreach($_list as &$c_list)
+        {
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
+        }
+
+        $notifior = GetAccessNotifiersByName($name, "");
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "all";
+        // $receiver = rtrim($receiver, ", ");
+
+        $mail->Subject = 'Info of date needed by client for items of "' . $order_type . ': ' . $serial_name . '" is revised';
+        $header = ' Info of date needed by client for items of "' . $order_type . ': ' . $serial_name . '" is revised. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
         
     }
@@ -10378,7 +10972,7 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
 }
 
 
-function mockup_notification02($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
+function mockup_notification02($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $pic1 = 0, $pic2 = 0)
 {
     $conf = new Conf();
 
@@ -10388,14 +10982,7 @@ function mockup_notification02($name, $access,  $access_cc, $project_name, $seri
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -10495,8 +11082,32 @@ function mockup_notification02($name, $access,  $access_cc, $project_name, $seri
                 $receiver .= $list["username"] . ", ";
             }
         }
+
+        if($pic1 != 0)
+        {
+            $pic = GetNotifiers($pic1);
+
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
         
-        $receiver = rtrim($receiver, ", ");
+        if($pic2 != 0)
+        {
+            $pic = GetNotifiers($pic2);
+
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+
+        
+        // $receiver = rtrim($receiver, ", ");
+        $receiver = "all";
 
         $mail->Subject = 'Testing info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the testing info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -10535,6 +11146,78 @@ function mockup_notification02($name, $access,  $access_cc, $project_name, $seri
         
     }
 
+    if($action == 'edit_delivery_a')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['delivery'];
+        }
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "";
+
+        // access5
+        $_list = explode(",", $access);
+        foreach($_list as &$c_list)
+        {
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver .= $list["username"] . ", ";
+            }
+        }
+
+        
+        $pm_info = get_pic_from_od_main($od_id);
+        $pic1 = $pm_info[0];
+        $pic2 = $pm_info[1];
+        $create_id = $pm_info[2];
+
+        if($pic1 != 0)
+        {
+            $pic = GetNotifiers($pic1);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+        
+        if($pic2 != 0)
+        {
+            $pic = GetNotifiers($pic2);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+
+        if($create_id != 0)
+        {
+            $pic = GetNotifiers($create_id);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+
+        $receiver = "all";
+
+        $mail->Subject = 'Delivery info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = $name . ' updated the delivery info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_mockup_p3?id=" . $od_id;
+        
+    }
+
+    
     if($action == 'edit_delivery')
     {
         foreach($items as &$item)
@@ -10562,10 +11245,153 @@ function mockup_notification02($name, $access,  $access_cc, $project_name, $seri
             }
         }
 
-        $receiver = rtrim($receiver, ", ");
+        
+        $pm_info = get_pic_from_od_main($od_id);
+        $pic1 = $pm_info[0];
+        $pic2 = $pm_info[1];
+        $create_id = $pm_info[2];
+
+        if($pic1 != 0)
+        {
+            $pic = GetNotifiers($pic1);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+        
+        if($pic2 != 0)
+        {
+            $pic = GetNotifiers($pic2);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
+        }
+
+        $receiver = "all";
 
         $mail->Subject = 'Delivery info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the delivery info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_mockup_p3?id=" . $od_id;
+        
+    }
+
+    if($action == 'date_needed')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['delivery'];
+        }
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+
+        // access 7 from od_main
+        $ret = get_access7_from_od_main($od_id);
+        $project_id = $ret[0];
+        $task_type = $ret[1];
+        $access7 = $ret[2];
+        
+        if($access7  != "")
+        {
+            $_list = explode(",", $access7 );
+            foreach($_list as &$c_list)
+            {
+                $c_list = trim($c_list);
+                $notifior = GetAccessNotifiersByName($c_list, $serial_name);
+                foreach($notifior as &$list)
+                {
+                    $receiver = $list["username"];
+                    $mail->AddAddress($list["email"], $list["username"]);
+                }
+            }
+        }
+
+        if($task_type == "")
+        {
+            $pm_info = get_pic_from_project_main($project_id);
+            $pic1 = $pm_info[0];
+            $pic2 = $pm_info[1];
+            $create_id = $pm_info[2];
+
+            if($pic1 != 0)
+            {
+                $pic = GetNotifiers($pic1);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+            
+            if($pic2 != 0)
+            {
+                $pic = GetNotifiers($pic2);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+
+            if($create_id != 0)
+            {
+                $pic = GetNotifiers($create_id);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+
+        }
+
+        $notifior = GetAccessNotifiersByName($name, "");
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        // access 1
+        $notifior = GetAccessNotifiers("access1", $serial_name);
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        // other
+        $_list = explode(",", $access);
+        foreach($_list as &$c_list)
+        {
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
+        }
+
+        $notifior = GetAccessNotifiersByName($name, "");
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "all";
+        // $receiver = rtrim($receiver, ", ");
+
+        $mail->Subject = 'Info of date needed by client for items of "' . $order_type . ': ' . $serial_name . '" is revised';
+        $header = ' Info of date needed by client for items of "' . $order_type . ': ' . $serial_name . '" is revised. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_mockup_p3?id=" . $od_id;
         
     }
@@ -10708,14 +11534,7 @@ function order_sample_notification02($name, $access,  $access_cc, $project_name,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -10804,6 +11623,13 @@ function order_sample_notification02($name, $access,  $access_cc, $project_name,
             $mail->AddCC($list["email"], $list["username"]);
         }
 
+        // access 7 from od_main
+        $ret = get_access7_from_od_main($od_id);
+        $project_id = $ret[0];
+        $task_type = $ret[1];
+        $access7 = $ret[2];
+        $create_id = $ret[3];
+    
         $receiver = "";
         // access5
         $_list = explode(",", $access);
@@ -10815,8 +11641,16 @@ function order_sample_notification02($name, $access,  $access_cc, $project_name,
                 $receiver .= $list["username"] . ", ";
             }
         }
+
+        $pic = GetNotifiers($create_id);
+        for($i=0; $i<count($pic); $i++)
+        {
+            $mail->AddAddress($pic[$i]["email"],$pic[$i]["username"]);
+            $receiver .= $pic[$i]["username"] . ", ";
+        }
         
-        $receiver = rtrim($receiver, ", ");
+        // $receiver = rtrim($receiver, ", ");
+        $receiver = "all";
 
         $mail->Subject = 'Testing info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the testing info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -10869,7 +11703,7 @@ function order_sample_notification02($name, $access,  $access_cc, $project_name,
             $mail->AddCC($list["email"], $list["username"]);
         }
 
-        $receiver = "All";
+        
 
         // access5
         $_list = explode(",", $access);
@@ -10882,7 +11716,7 @@ function order_sample_notification02($name, $access,  $access_cc, $project_name,
             }
         }
 
-        $receiver = rtrim($receiver, ", ");
+        $receiver = "all";
 
         $mail->Subject = 'Delivery info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the delivery info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -10890,6 +11724,114 @@ function order_sample_notification02($name, $access,  $access_cc, $project_name,
         
     }
 
+    if($action == 'date_needed')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['delivery'];
+        }
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        // access 7 from od_main
+        $ret = get_access7_from_od_main($od_id);
+        $project_id = $ret[0];
+        $task_type = $ret[1];
+        $access7 = $ret[2];
+        
+        if($access7  != "")
+        {
+            $_list = explode(",", $access7 );
+            foreach($_list as &$c_list)
+            {
+                $c_list = trim($c_list);
+                $notifior = GetAccessNotifiersByName($c_list, $serial_name);
+                foreach($notifior as &$list)
+                {
+                    $receiver = $list["username"];
+                    $mail->AddAddress($list["email"], $list["username"]);
+                }
+            }
+        }
+
+        if($task_type == "")
+        {
+            $pm_info = get_pic_from_project_main($project_id);
+            $pic1 = $pm_info[0];
+            $pic2 = $pm_info[1];
+            $create_id = $pm_info[2];
+
+            if($pic1 != 0)
+            {
+                $pic = GetNotifiers($pic1);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+            
+            if($pic2 != 0)
+            {
+                $pic = GetNotifiers($pic2);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+
+            if($create_id != 0)
+            {
+                $pic = GetNotifiers($create_id);
+                if(count($pic) > 0)
+                {
+                    $mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                    $receiver .= $pic[0]["username"] . ", ";
+                }
+            }
+
+        }
+
+        // access 1
+        $notifior = GetAccessNotifiers("access1", $serial_name);
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        // other
+        $_list = explode(",", $access);
+        foreach($_list as &$c_list)
+        {
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
+        }
+
+        $notifior = GetAccessNotifiersByName($name, "");
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "all";
+        // $receiver = rtrim($receiver, ", ");
+
+        $mail->Subject = 'Info of date needed by client for items of "' . $order_type . ': ' . $serial_name . '" is revised';
+        $header = ' Info of date needed by client for items of "' . $order_type . ': ' . $serial_name . '" is revised. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+        
+    }
 
 
     $content = '<!DOCTYPE html>
@@ -10920,7 +11862,7 @@ function order_sample_notification02($name, $access,  $access_cc, $project_name,
                 <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
                     $content = $content . 'Order Type: ' . $order_type . '<br>';
                     $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
-                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
                     $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
                     $content = $content . 'Submitter: ' . $name . '<br>';
                     $content = $content . 'Comment: ' . $remark . '';
@@ -11029,14 +11971,7 @@ function order_sample_delievery_notification($name, $access,  $access_cc, $proje
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -11061,44 +11996,58 @@ function order_sample_delievery_notification($name, $access,  $access_cc, $proje
     {
         // 收件人：角色4, 部門為 Admin 的所有人員
         
-        $_list = explode(",", $access);
-        foreach($_list as &$c_list)
+        // $_list = explode(",", $access);
+        // foreach($_list as &$c_list)
+        // {
+        //     $notifior = GetAccessNotifiers($c_list, $serial_name);
+        //     foreach($notifior as &$list)
+        //     {
+        //         $receiver .= $list["username"] . ", ";
+        //         $mail->AddAddress($list["email"], $list["username"]);
+        //     }
+        // }
+        // $receiver = rtrim($receiver, ", ");
+
+        // $notifior = GetAccessNotifiersByDepartment("Admin");
+        // foreach($notifior as &$list)
+        // {
+        //     if( $list["username"] == 'Gina Donato' || $list["username"] == 'Marie Kayla Patricia Dequina'){
+        //         $receiver .= $list["username"] . ", ";
+        //         $mail->AddAddress($list["email"], $list["username"]);
+        //     }
+        // }
+
+        // // CC收件人：執行動作的人, 角色1, 角色3, 職位為Sales Manager的使用者, 角色5
+        // $cc_list = explode(",", $access_cc);
+        // foreach($cc_list as &$c_list)
+        // {
+        //     $notifior = GetAccessNotifiers($c_list, $serial_name);
+        //     foreach($notifior as &$list)
+        //     {
+        //         $cc = $list["username"];
+        //         $mail->AddCC($list["email"], $list["username"]);
+        //     }
+        // }
+
+        // $notifior = GetChargeNotifiersByTitle('Customer Value Director');
+        // foreach($notifior as &$list)
+        // {
+        //     $mail->AddCC($list["email"], $list["username"]);
+        // }
+
+        $pm_info = get_task_from_od_main($od_id);
+        $create_id = $pm_info[0];
+
+        if($create_id != 0)
         {
-            $notifior = GetAccessNotifiers($c_list, $serial_name);
-            foreach($notifior as &$list)
+            $pic = GetNotifiers($create_id);
+            if(count($pic) > 0)
             {
-                $receiver .= $list["username"] . ", ";
-                $mail->AddAddress($list["email"], $list["username"]);
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
             }
         }
-        $receiver = rtrim($receiver, ", ");
-
-        $notifior = GetAccessNotifiersByDepartment("Admin");
-        foreach($notifior as &$list)
-        {
-            if( $list["username"] == 'Gina Donato' || $list["username"] == 'Ronnie Fernando Dela Cruz'){
-                $receiver .= $list["username"] . ", ";
-                $mail->AddAddress($list["email"], $list["username"]);
-            }
-        }
-
-        // CC收件人：執行動作的人, 角色1, 角色3, 職位為Sales Manager的使用者, 角色5
-        $cc_list = explode(",", $access_cc);
-        foreach($cc_list as &$c_list)
-        {
-            $notifior = GetAccessNotifiers($c_list, $serial_name);
-            foreach($notifior as &$list)
-            {
-                $cc = $list["username"];
-                $mail->AddCC($list["email"], $list["username"]);
-            }
-        }
-
-        $notifior = GetChargeNotifiersByTitle('Sales Manager');
-        foreach($notifior as &$list)
-        {
-            $mail->AddCC($list["email"], $list["username"]);
-        }
+       
     
         $notifior = GetAccessNotifiersByName($name, "");
         foreach($notifior as &$list)
@@ -11111,6 +12060,41 @@ function order_sample_delievery_notification($name, $access,  $access_cc, $proje
 
         $mail->Subject = 'Delivery info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the delivery info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+        
+    }
+
+    if($action == 'date_needed')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['delivery'];
+        }
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+
+        // access5
+        $_list = explode(",", $access);
+        foreach($_list as &$c_list)
+        {
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver .= $list["username"] . ", ";
+            }
+        }
+
+        $receiver = "all";
+        // $receiver = rtrim($receiver, ", ");
+
+        $mail->Subject = 'Info of date needed by client for items of "' . $order_type . ': ' . $serial_name . '" is revised';
+        $header = ' Info of date needed by client for items of "' . $order_type . ': ' . $serial_name . '" is revised. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
         
     }
@@ -11145,7 +12129,7 @@ function order_sample_delievery_notification($name, $access,  $access_cc, $proje
                 <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
                     $content = $content . 'Order Type: ' . $order_type . '<br>';
                     $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
-                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
                     $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
                     $content = $content . 'Submitter: ' . $name . '<br>';
                     $content = $content . 'Comment: ' . $remark . '';
@@ -11254,14 +12238,7 @@ function order_stock_delievery_notification($name, $access,  $access_cc, $projec
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -11284,23 +12261,36 @@ function order_stock_delievery_notification($name, $access,  $access_cc, $projec
 
     if($action == 'edit_delivery')
     {
-        //收件人：角色1, 角色3, 職位為Sales Manager的使用者, 角色4, 角色5
-        $_list = explode(",", $access);
-        foreach($_list as &$c_list)
-        {
-            $notifior = GetAccessNotifiers($c_list, $serial_name);
-            foreach($notifior as &$list)
-            {
-                $receiver .= $list["username"] . ", ";
-                $mail->AddAddress($list["email"], $list["username"]);
-            }
-        }
-        $receiver = rtrim($receiver, ", ");
+        // //收件人：角色1, 角色3, 職位為Sales Manager的使用者, 角色4, 角色5
+        // $_list = explode(",", $access);
+        // foreach($_list as &$c_list)
+        // {
+        //     $notifior = GetAccessNotifiers($c_list, $serial_name);
+        //     foreach($notifior as &$list)
+        //     {
+        //         $receiver .= $list["username"] . ", ";
+        //         $mail->AddAddress($list["email"], $list["username"]);
+        //     }
+        // }
+        // $receiver = rtrim($receiver, ", ");
 
-        $notifior = GetChargeNotifiersByTitle('Sales Manager');
-        foreach($notifior as &$list)
+        // $notifior = GetChargeNotifiersByTitle('Customer Value Director');
+        // foreach($notifior as &$list)
+        // {
+        //     $mail->AddAddress($list["email"], $list["username"]);
+        // }
+
+        $pm_info = get_task_from_od_main($od_id);
+        $create_id = $pm_info[0];
+
+        if($create_id != 0)
         {
-            $mail->AddAddress($list["email"], $list["username"]);
+            $pic = GetNotifiers($create_id);
+            if(count($pic) > 0)
+            {
+            	$mail->AddAddress($pic[0]["email"], $pic[0]["username"]);
+                $receiver .= $pic[0]["username"] . ", ";
+            }
         }
 
         // CC收件人：執行動作的人
@@ -11349,7 +12339,7 @@ function order_stock_delievery_notification($name, $access,  $access_cc, $projec
                 <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
                     $content = $content . 'Order Type: ' . $order_type . '<br>';
                     $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
-                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
                     $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
                     $content = $content . 'Submitter: ' . $name . '<br>';
                     $content = $content . 'Comment: ' . $remark . '';
@@ -11457,14 +12447,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -11507,16 +12490,12 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
                     {
                         $receiver .= "Aiza Eisma" . ", ";
                         $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
-                        $receiver .= $list["username"] . ", ";
-                        $mail->AddAddress($list["email"], $list["username"]);
                     }
                     else{
                         if($list["username"] == 'Cristina Matining')
                         {
                             $receiver .= "Alleah Belmonte" . ", ";
                             $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
-                            $receiver .= $list["username"] . ", ";
-                            $mail->AddAddress($list["email"], $list["username"]);
                         }
                         else{
                             $receiver .= $list["username"] . ", ";
@@ -11551,6 +12530,8 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
+    $mail->AddCC("manilynne@feliix.com", "Manilynne Nicol");
+
     $mail->Subject = "";
 
     $url = "";
@@ -11567,6 +12548,11 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         }
 
         $receiver = "All";
+
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
 
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -11606,6 +12592,11 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
@@ -11643,6 +12634,11 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         }
 
         $receiver = "All";
+
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
 
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -11795,14 +12791,7 @@ function mockup_notification03($name, $access,  $access_cc, $project_name, $seri
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -11859,6 +12848,11 @@ function mockup_notification03($name, $access,  $access_cc, $project_name, $seri
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
@@ -11897,6 +12891,11 @@ function mockup_notification03($name, $access,  $access_cc, $project_name, $seri
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
@@ -11934,6 +12933,11 @@ function mockup_notification03($name, $access,  $access_cc, $project_name, $seri
         }
 
         $receiver = "All";
+
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
 
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -12086,14 +13090,7 @@ function order_type_notification03($name, $access,  $access_cc, $project_name, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -12150,6 +13147,11 @@ function order_type_notification03($name, $access,  $access_cc, $project_name, $
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p1?id=" . $od_id;
@@ -12188,6 +13190,11 @@ function order_type_notification03($name, $access,  $access_cc, $project_name, $
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p2?id=" . $od_id;
@@ -12225,6 +13232,11 @@ function order_type_notification03($name, $access,  $access_cc, $project_name, $
         }
 
         $receiver = "All";
+
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
 
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -12376,14 +13388,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -12426,16 +13431,12 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
                     {
                         $receiver .= "Aiza Eisma" . ", ";
                         $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
-                        $receiver .= $list["username"] . ", ";
-                        $mail->AddAddress($list["email"], $list["username"]);
                     }
                     else{
                         if($list["username"] == 'Cristina Matining')
                         {
                             $receiver .= "Alleah Belmonte" . ", ";
                             $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
-                            $receiver .= $list["username"] . ", ";
-                            $mail->AddAddress($list["email"], $list["username"]);
                         }
                         else{
                             $receiver .= $list["username"] . ", ";
@@ -12498,6 +13499,11 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
@@ -12536,6 +13542,11 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
@@ -12573,6 +13584,11 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         }
 
         $receiver = "All";
+
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
 
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -12725,14 +13741,7 @@ function mockup_notification03Access7($name, $access,  $access_cc, $project_name
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -12800,6 +13809,11 @@ function mockup_notification03Access7($name, $access,  $access_cc, $project_name
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_mockup_p1?id=" . $od_id;
@@ -12838,6 +13852,11 @@ function mockup_notification03Access7($name, $access,  $access_cc, $project_name
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_mockup_p2?id=" . $od_id;
@@ -12875,6 +13894,11 @@ function mockup_notification03Access7($name, $access,  $access_cc, $project_name
         }
 
         $receiver = "All";
+
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
 
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -13028,14 +14052,7 @@ function order_type_notification03Access7($name, $access,  $access_cc, $project_
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -13103,6 +14120,11 @@ function order_type_notification03Access7($name, $access,  $access_cc, $project_
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p1?id=" . $od_id;
@@ -13141,6 +14163,11 @@ function order_type_notification03Access7($name, $access,  $access_cc, $project_
 
         $receiver = "All";
 
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
+
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p2?id=" . $od_id;
@@ -13178,6 +14205,11 @@ function order_type_notification03Access7($name, $access,  $access_cc, $project_
         }
 
         $receiver = "All";
+
+        //<! Ariel is to request someone who should always reply her question in the order interface -->
+        $mail->AddAddress("jack@feliix.com", "Jack Beringuela");
+        $mail->AddAddress("beaclaudine.feliix@gmail.com", "Bea Claudine M. Zara");
+        $mail->AddAddress("aurielyn.feliix@gmail.com", "Aurielyn P. Paralejas");
 
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -13331,14 +14363,7 @@ function tag_group_notification($name, $user_id, $items)
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
     $mail->IsHTML(true);
@@ -13517,14 +14542,7 @@ function tag_notification($name, $user_id, $tag_group, $items)
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
     $mail->IsHTML(true);
@@ -13703,14 +14721,7 @@ function order_notification04($name, $access,  $access_cc, $project_name, $seria
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -13892,14 +14903,7 @@ function mockup_notification04($name, $access,  $access_cc, $project_name, $seri
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -14081,14 +15085,7 @@ function order_type_notification04($name, $access,  $access_cc, $project_name, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -14269,18 +15266,13 @@ function product_notify($action, $_record)
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
     $mail->IsHTML(true);
+
+    $receiver = "";
 
     //收件人名單內容
     if($_record["category"] == "20000000")
@@ -14319,6 +15311,14 @@ function product_notify($action, $_record)
         {
             $receiver .= $list["username"] . ", ";
             $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        if($_record["brand"] == 'SEEDDESIGN' || $_record["brand"] == 'XCELLENT')
+        {
+            $receiver .= "Gian Miguel Osorio" . ", ";
+            $mail->AddAddress("gianm.feliix@gmail.com", "Gian Miguel Osorio");
+            $receiver .= "Ronnel B. Balmeo" . ", ";
+            $mail->AddAddress("ronnel@feliix.com", "Ronnel B. Balmeo");
         }
 
         $mail->AddAddress("ariel@feliix.com", "Ariel Lin");
@@ -14368,7 +15368,7 @@ function product_notify($action, $_record)
 
     if( $action == "delete" ){
         // 刪除者名字 放入 cc收件人名單名字
-        $notifior = GetNotifiers($_record["updated_id"]);
+        $notifior = GetNotifiers($_record["deleted_id"]);
         foreach($notifior as &$list)
         {
             $receiver .= $list["username"] . ", ";
@@ -14398,7 +15398,7 @@ function product_notify($action, $_record)
     if( $action == "update" )
         $mail->Subject = "[Product Notification] " . $_record["updator"] . " revised an existing product in Product Database";
     if( $action == "delete" )
-        $mail->Subject = "[Product Notification] " . $_record["updator"] . " deleted an existing product in Product Database";
+        $mail->Subject = "[Product Notification] " . $_record["deletor"] . " deleted an existing product in Product Database";
 
 
 
@@ -14422,7 +15422,7 @@ if( $action == "add" )
 if( $action == "update" )
     $content = $content . $_record["updator"] . " revised an existing product in Product Database. Below is the details of the product after revision:";
 if( $action == "delete" )
-    $content = $content . $_record["updator"] . " deleted an existing product in Product Database. Below is the details of the product:";
+    $content = $content . $_record["deletor"] . " deleted an existing product in Product Database. Below is the details of the product:";
 
 $content = $content . '
                     </td>
@@ -14441,7 +15441,7 @@ $content = $content . '
     <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
 
     if($_record["photo1"] != "")
-        $content .= "<img style='max-width: 400px; max-height: 400px;' src='https://storage.cloud.google.com/feliiximg/" . $_record["photo1"] . "' >";
+        $content .= "<img style='max-width: 400px; max-height: 400px;' src='https://storage.googleapis.com/feliiximg/" . _rawurlencode($_record["photo1"]) . "' >";
 
     $content .= '</td>
     </tr>
@@ -14666,8 +15666,8 @@ function GetProject01NotifiersByCatagory($catagory)
             LEFT JOIN user_title ut
             ON u.title_id = ut.id 
             WHERE title IN(
-                'Sales Manager',
-                'Office Systems Manager',
+                'Customer Value Director',
+                'Office Space Value Creation Director',
                 'Office Systems Assistant Manager',
                 'Operations Manager',
                 'Managing Director')  and u.status = 1";
@@ -14680,8 +15680,8 @@ function GetProject01NotifiersByCatagory($catagory)
             LEFT JOIN user_title ut
             ON u.title_id = ut.id 
             WHERE title IN(
-                'Sales Manager',
-                'Lighting Manager',
+                'Customer Value Director',
+                'Lighting Value Creation Director',
                 'Lighting Assistant Manager',
                 'Operations Manager',
                 'Managing Director')  and u.status = 1";
@@ -14712,7 +15712,7 @@ function GetProjectNotifiersByCatagory($catagory)
             LEFT JOIN user_title ut
             ON u.title_id = ut.id 
             WHERE title IN(
-                'Office Systems Manager',
+                'Office Space Value Creation Director',
                 'Managing Director') and u.status = 1";
     }
     else
@@ -14723,7 +15723,7 @@ function GetProjectNotifiersByCatagory($catagory)
             LEFT JOIN user_title ut
             ON u.title_id = ut.id 
             WHERE title IN(
-                'Lighting Manager',
+                'Lighting Value Creation Director',
                 'Managing Director') and u.status = 1";
     }
 
@@ -14778,13 +15778,13 @@ function GetProjectNotifiers()
         ON u.title_id = ut.id 
         WHERE title IN(
             'Jr. Account Executive',
-            'Account Executive',
-            'Sr. Account Executive',
-            'Assistant Sales Manager',
-            'Sales Manager',
-            'Lighting Manager',
+            'Customer Value Supervisor',
+            'Senior Customer Value Supervisor',
+            'Assistant Customer Value Director',
+            'Customer Value Director',
+            'Lighting Value Creation Director',
             'Lighting Assistant Manager',
-            'Office Systems Manager',
+            'Office Space Value Creation Director',
             'Office Systems Assistant Manager',
             'Operations Manager',
             'Managing Director') and u.status = 1";
@@ -14881,6 +15881,69 @@ function GetAccessNotifiers($field, $order_type){
 
 }
 
+
+function GetAccessNotifiersAccess($field, $order_type, $access){
+    $field = trim($field);
+    $username = "";
+    $database = new Database();
+    $db = $database->getConnection();
+
+    // split field by comma
+    $fields = explode(",", $field);
+    $merged_results = array();
+
+    foreach($fields as &$f)
+    {
+        $f = trim($f);
+
+        $query = "SELECT ". $f . " FROM access_control ";
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $username = $row[$f];
+        }
+
+        // splite usernames and implode with quotes
+        $usernames = explode(",", $username);
+        $username = implode("','", $usernames);
+
+        if($username == '')
+        return [];
+        
+        $sql = "
+            SELECT username, email, department 
+            FROM user
+            left join user_department ud on user.apartment_id = ud.id
+            WHERE username IN('" . $username . "') and user.status = 1";
+
+        // get first character from order type
+        $department = substr($order_type, 0, 1);
+
+        
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if($row['department'] == 'Lighting' && $department == 'O' && $f == $access)
+            {
+                continue;
+            }
+
+            if($row['department'] == 'Office' && $department == 'L' && $f == $access)
+            {
+                continue;
+            }
+            $merged_results[] = $row;
+        }
+    }
+
+    
+
+    return $merged_results;
+
+}
+
 function GetProjectCategoryByStageId($id)
 {
 
@@ -14936,14 +15999,7 @@ function send_car_approval_mail_1($to, $cc, $project, $creator, $date_check, $ti
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -15016,14 +16072,7 @@ function send_car_request_mail_2($to, $cc, $project, $creator, $date_check, $tim
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -15087,14 +16136,7 @@ function withdraw_car_approval_mail_3($to, $cc, $project, $creator, $date_check,
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -15166,14 +16208,7 @@ function withdraw_car_request_mail_4($to, $cc, $project, $creator, $date_check, 
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -15239,14 +16274,7 @@ function delete_car_approval_mail_5($to, $cc, $project, $creator, $date_check, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -15318,14 +16346,7 @@ function delete_car_request_mail_6($to, $cc, $project, $creator, $date_check, $t
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+    
 
     $mail = SetupMail($mail, $conf);
 
@@ -15378,6 +16399,608 @@ function delete_car_request_mail_6($to, $cc, $project, $creator, $date_check, $t
 //        echo "Email sent successfully";
     }
 
+}
+
+function get_access7_from_od_main($id)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $query = "SELECT create_id, task_id, task_type, access7 FROM od_main WHERE id = " . $id;
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $task_id = 0;
+    $task_type = "";
+    $access7 = "";
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $create_id = $row['create_id'];
+        $task_id = $row['task_id'];
+        $task_type = $row['task_type'];
+        $access7 = $row['access7'];
+    }
+
+    return array($task_id, $task_type, $access7, $create_id);
+
+}
+
+function get_task_from_od_main($id)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $query = "SELECT  task_id, task_type FROM od_main WHERE id = " . $id;
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $task_type = "";
+    $task_id = 0;
+    $create_id = 0;
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $task_type = $row['task_type'];
+        $task_id = $row['task_id'];
+    }
+
+    if($task_type != '')
+    {
+        if($task_type == 'SVC')
+            $task_type = '_sv';
+        if($task_type == 'LT')
+            $task_type = '_l';
+        if($task_type == 'OS')
+            $task_type = '_o';
+        if($task_type == 'SLS')
+            $task_type = '_sl';
+
+        $query = 'select create_id from project_other_task' . $task_type . ' where id = ' . $task_id;
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+
+        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $create_id = $row['create_id'];
+        }
+
+    }
+
+
+    return array($create_id);
+
+}
+
+function get_pic_from_od_main($id)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $query = "SELECT pic1, pic2, project_main.create_id FROM project_main WHERE id = (SELECT project_id FROM project_stages WHERE id = (select stage_id from project_other_task where id = (select task_id from od_main where id = " . $id . ")))";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $pic1 = 0;
+    $pic2 = 0;
+    $create_id = 0;
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $pic1 = $row['pic1'];
+        $pic2 = $row['pic2'];
+        $create_id = $row['create_id'];
+    }
+
+    return array($pic1, $pic2, $create_id);
+
+
+}
+
+function get_pic_from_project_main($id)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $query = "SELECT pic1, pic2, create_id FROM project_main WHERE id = (SELECT project_id FROM project_stages WHERE id = (select stage_id from project_other_task where id = " . $id . "))";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $pic1 = 0;
+    $pic2 = 0;
+    $create_id = 0;
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $pic1 = $row['pic1'];
+        $pic2 = $row['pic2'];
+        $create_id = $row['create_id'];
+    }
+
+    return array($pic1, $pic2, $create_id);
+
+
+}
+
+
+function GetDataSheetChecker($requestor)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    // get department and position from user
+    $sql = "SELECT username, email, department, title FROM user u LEFT JOIN user_department ud ON u.apartment_id = ud.id LEFT JOIN user_title ut ON u.title_id = ut.id WHERE u.status <> -1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    $my_title = "";
+    $my_department = "";
+
+    foreach($merged_results as &$list)
+    {
+        if($list["username"] == $requestor)
+        {
+            $my_title = $list["title"];
+            $my_department = $list["department"];
+        }
+    }
+
+    $notifior = array();
+
+
+    if($my_title == "Customer Value Director")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Value Delivery Manager" || $list["title"] == "Managing Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+
+    if($my_title == "Lighting Value Creation Director")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Value Delivery Manager" || $list["title"] == "Managing Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+
+    if($my_title == "Office Space Value Creation Director")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Value Delivery Manager" || $list["title"] == "Managing Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+
+    if($my_title == "Engineering Manager")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Value Delivery Manager" || $list["title"] == "Managing Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+
+    if($my_title == "Operations Manager")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Value Delivery Manager" || $list["title"] == "Managing Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+
+    if($my_title == "Value Delivery Manager")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Managing Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+    
+    
+    if($my_title == "Managing Director")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Chief Advisor")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+
+    if($my_department == "Sales")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Customer Value Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+    
+
+    if($my_department == "Lighting")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Lighting Value Creation Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+    
+    if($my_department == "Office")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Office Space Value Creation Director")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+
+    if($my_department == "Engineering")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Engineering Manager")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+    
+    if($my_department == "Admin")
+    {
+        foreach($merged_results as &$list)
+        {
+            if($list["title"] == "Operations Manager")
+            {
+                $notifior[] = $list;
+            }
+        }
+
+        return $notifior;
+    }
+    
+    
+    return $notifior;
+}
+
+function employee_data_sheet_notification($requestor)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($requestor);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    $notifior = GetDataSheetChecker($requestor);
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->Subject = "[Employee Data Sheet Notification] Revised employee data sheet submitted by " . $requestor . " needs your review ";
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>" . $requestor . " submitted the revised employee data sheet and it is waiting for your review. </p>";
+    $content = $content . "<br/>";
+    $content = $content . "<p>Please log on to Feliix >> HR & Admin Section >> Employee Data Sheet to view the revised employee data.</p>";
+    $content = $content . "URL: <a href='https://feliix.myvnc.com/employee_data_sheet'>https://feliix.myvnc.com/employee_data_sheet</a>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($requestor, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($requestor, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+}
+
+function leadership_assessment_notify($user_id, $employee_id, $id)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiers($user_id);
+    $requestor = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $requestor .= $list["username"] . ", ";
+    }
+    $requestor = rtrim($requestor, ", ");
+
+    $notifior = GetNotifiers($employee_id);
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->Subject = "[Leadership Assessment Notification] Please Choose Respondents for Your Leadership Assessment";
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>" . $requestor . " created the leadership assessment for you. Please choose respondents for your leadership assessment. </p>";
+    $content = $content . "<p>By clicking this link to view the target webpage:</p>";
+    $content = $content . "<a href='https://feliix.myvnc.com/leadership_assessment?id=" . $id . "'>https://feliix.myvnc.com/leadership_assessment?id=" . $id . "</a>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($requestor, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($requestor, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+}
+
+
+function leadership_assessment_self_notify($employee_id, $creator_id, $id)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiers($creator_id);
+    $requestor = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $requestor .= $list["username"] . ", ";
+    }
+    $requestor = rtrim($requestor, ", ");
+
+    $notifior = GetNotifiers($employee_id);
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->Subject = "[Leadership Assessment Notification] Please Fill out Survey of Your Leadership Assessment";
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>Please fill out the survey of your Leadership assessment as soon as possible. By clicking this link to view the target webpage: </p>";
+    $content = $content . "<a href='https://feliix.myvnc.com/leadership_assessment?id=" . $id . "'>https://feliix.myvnc.com/leadership_assessment?id=" . $id . "</a>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($requestor, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($requestor, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+}
+
+function leadership_assessment_respondent_notify($user_id, $employee_id, $id)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiers($user_id);
+    $requestor = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $requestor .= $list["username"] . ", ";
+    }
+    $requestor = rtrim($requestor, ", ");
+
+    $notifior = GetNotifiersByName($employee_id);
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->Subject = "[Leadership Assessment Notification] Please Help Fill out Survey of " . $requestor . "'s Leadership Assessment";
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>" . $requestor . " has requested that you please rate him/her in Leadership Assessment. By clicking this link to view the target webpage: </p>";
+    $content = $content . "<a href='https://feliix.myvnc.com/leadership_assessment?id=" . $id . "'>https://feliix.myvnc.com/leadership_assessment?id=" . $id . "</a>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($requestor, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($requestor, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+}
+
+
+function leadership_assessment_respondent_other_notify($email, $name, $employee_id, $id, $token)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->AddAddress($email, $name);
+
+    $notifior = array();
+    $notifior = GetNotifiers($employee_id);
+    $requestor = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $requestor .= $list["username"] . ", ";
+    }
+    $requestor = rtrim($requestor, ", ");
+    $mail->Subject = "[Leadership Assessment Notification] Please Help Fill out Survey of " . $requestor . "'s Leadership Assessment";
+    $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>" . $requestor . " has requested that you please rate him/her in Leadership Assessment. By clicking this link to view the target webpage: </p>";
+    $content = $content . "<a href='https://feliix.myvnc.com/leadership_assessment_standalone?token=" . $token . "'>https://feliix.myvnc.com/leadership_assessment_standalone?id=" . $id . "</a>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($requestor, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($requestor, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+}
+
+function _rawurlencode($string) {
+    $string = rawurlencode($string);
+        return $string;
 }
 
 function SetupMail($mail, $conf)

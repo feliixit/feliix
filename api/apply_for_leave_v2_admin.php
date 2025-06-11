@@ -137,7 +137,7 @@ else
 
         array_push($leaves, $end->format("Ymd") . " A");
 
-        if($leave_level == "B" || $leave_level == "C" || $leave_type == "H")
+        if($leave_level == "B" || $leave_level == "C" || $leave_type == "H" || $leave_type == "U")
         {
             if($amStart == "P")
                 unset($leaves[0]);
@@ -587,14 +587,16 @@ function getLeaveType($type){
 
     if($type =="A")
         $leave_type = "Service Incentive Leave";
-    if($type =="B")
+    if($type =="N")
+        $leave_type = "Vaction Leave";
+    if($type =="B" || $type =="S")
         $leave_type = "Sick Leave";
-    if($type =="C")
+    if($type =="C" || $type =="U")
         $leave_type = "Unpaid Leave";
     if($type =="D")
         $leave_type = "Absence";
     if($type =="H")
-        $leave_type = "Service Incentive Leave";
+        $leave_type = "Manager Halfday Planning";
     
     return $leave_type;
 }

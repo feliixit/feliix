@@ -105,6 +105,9 @@ switch ($method) {
                         info_remark_other,
                         amount_liquidated,
                         remark_liquidated,
+                        total_amount_liquidate,
+                        amount_of_return,
+                        method_of_return,
                         pm.rtype,
                         pm.dept_name
                 from apply_for_petty pm 
@@ -168,6 +171,11 @@ switch ($method) {
         $liquidate_date = "";
         $liquidate_items = [];
 
+        $total_amount_liquidate = "";
+        $amount_of_return = "";
+        $method_of_return = "";
+        $apply_for_petty_liquidate = [];
+
         $amount_liquidated = 0;
         $remark_liquidated = "";
 
@@ -198,9 +206,39 @@ switch ($method) {
             $amount_liquidated = $row['amount_liquidated'];
             $remark_liquidated = $row['remark_liquidated'];
 
+            $apply_for_petty_liquidate = GetAmountPettyLiquidate($row['id'], $db);
+
+            $total_amount_liquidate = $row['total_amount_liquidate'];
+            $amount_of_return = $row['amount_of_return'];
+            $method_of_return = $row['method_of_return'];
+
             $history = GetHistory($row['id'], $db);
             $list = GetList($row['id'], $db);
             $created_at = $row['created_at'];
+
+            $combine_liquidate = [];
+            if($amount_liquidated == null)
+            {
+                //$total_amount_liquidate = 0;
+                foreach ($list as &$value) {
+                    $obj = array(
+                        "id" => $value['id'],
+                        "sn" => $value['sn'],
+                        "vendor" => $value['payee'],
+                        "particulars" => $value['particulars'],
+                        "price" => $value['price'],
+                        "qty" => $value['qty'],
+                        "status" => $value['status']
+                    );
+
+                    //$total_amount_liquidate += $value['price'] * $value['qty'];
+                    $combine_liquidate[] = $obj;
+                }
+            }
+            else
+            {
+                $combine_liquidate = $apply_for_petty_liquidate;
+            }
 
             $info_account = $row['info_account'];
             $info_category = $row['info_category'];
@@ -240,6 +278,12 @@ switch ($method) {
                 "liquidate_items" => $liquidate_items,
                 "amount_liquidated" => $amount_liquidated,
                 "remark_liquidated" => $remark_liquidated,
+
+                "total_amount_liquidate" => $total_amount_liquidate,
+                "amount_of_return" => $amount_of_return,
+                "method_of_return" => $method_of_return,
+                "apply_for_petty_liquidate" => $combine_liquidate,
+
                 "release_date" => $release_date,
                 "release_items" => $release_items,
 
@@ -492,6 +536,24 @@ function GetLiquidateHistory($_id, $db)
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $merged_results = $row['created_at'];
+    }
+
+    return $merged_results;
+}
+
+function GetAmountPettyLiquidate($_id, $db)
+{
+    $sql = "select pm.id, sn, vendor payee, particulars, price, qty, `status`
+    from apply_for_petty_liquidate pm 
+    where `status` <> -1 and petty_id = " . $_id . " order by sn ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
     }
 
     return $merged_results;

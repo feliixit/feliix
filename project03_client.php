@@ -26,6 +26,9 @@ $GLOBALS['department'] = $decoded->data->department;
 $test_manager = $decoded->data->test_manager;
 $user_id = $decoded->data->id;
 
+if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
 //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
 //    header( 'location:index.php' );
 
@@ -2131,8 +2134,8 @@ header('location:index');
 
     </style>
 
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/fullcalendar@5.1.0/main.min.css">
-    <script defer type="text/javascript" src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/fullcalendar@5.1.0/main.min.css">
+    <script defer type="text/javascript" src="js/fullcalendar@5.1.0/main.min.js"></script>
     <script src="js/moment.js"></script>
 
     <!-- jQuery和js載入 -->
@@ -2561,11 +2564,11 @@ header('location:index');
                         <li><b>{{ receive_record.num }}</b></li>
                         <li class="cmt">
                             <p style="white-space: pre;">{{ receive_record.message }}
-                                <a v-for="item in receive_record.attachments" class="attch" :href="'https://storage.cloud.google.com/feliiximg/' + item.gcp_name" target="_blank">{{ item.name }}</a>
+                                <a v-for="item in receive_record.attachments" class="attch" :href="'https://storage.googleapis.com/feliiximg/' + item.gcp_name" target="_blank">{{ item.name }}</a>
                                 <i class="t">{{ receive_record.username }} at {{receive_record.created_at }}</i>
                             </p>
                             <p v-for="item in receive_record.items" style="white-space: pre;">{{ item.f_message }}
-                                <a class="attch" v-for="it in item.f_attachments" :href="'https://storage.cloud.google.com/feliiximg/'+ it.gcp_name" target="_blank">{{ it.name }}</a>
+                                <a class="attch" v-for="it in item.f_attachments" :href="'https://storage.googleapis.com/feliiximg/'+ it.gcp_name" target="_blank">{{ it.name }}</a>
                                 <i class="t"> {{ item.f_username }} at {{ item.f_created_at }}</i>
                             </p>
                         </li>
@@ -3024,7 +3027,7 @@ header('location:index');
                                 var elm = '<div class="file-element">' +
                                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
                                     '<label for="' + element + '">' +
-                                    '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
+                                    '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
                                     '</label>' +
                                     '</div>';
 
@@ -3559,7 +3562,7 @@ header('location:index');
                 var elm = '<div class="file-element">' +
                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
                     '<label for="' + element + '">' +
-                    '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
+                    '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
                     '</label>' +
                     '</div>';
 
@@ -3596,11 +3599,11 @@ header('location:index');
     }
 </script>
 
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/exif-js.js"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script type="text/javascript" src="js/project03_client.js?random=<?php echo uniqid(); ?>" defer></script>
 <script defer src="js/a076d05399.js"></script>
 

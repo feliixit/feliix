@@ -39,7 +39,7 @@ var app = new Vue({
     ],
     perPage: 5,
 
-    baseURL: 'https://storage.cloud.google.com/feliiximg/',
+    baseURL: 'https://storage.googleapis.com/feliiximg/',
 
     // data
     id:0,
@@ -2111,7 +2111,7 @@ var app1 = new Vue({
     ],
     perPage: 5,
 
-    baseURL: 'https://storage.cloud.google.com/feliiximg/',
+    baseURL: 'https://storage.googleapis.com/feliiximg/',
 
 
     // calendar

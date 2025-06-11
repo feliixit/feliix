@@ -54,7 +54,7 @@ var app = new Vue({
         { project_status: "Close", id: 2 },
       ],
 
-    baseURL:'https://storage.cloud.google.com/feliiximg/',
+    baseURL:'https://storage.googleapis.com/feliiximg/',
 
     // Venue
     venue: '',
@@ -308,6 +308,9 @@ var app = new Vue({
         .classList.remove("show");
 
         this.getProjectOtherTask(this.stage_id);
+
+        var cnt = this.$refs['task_reply_msg_cnt_' + item_id][0];
+        cnt.innerHTML = "0";
     },
 
     msg_upload(item_id, msg_id, batch_id) {
@@ -705,6 +708,18 @@ var app = new Vue({
           fileTarget.value = "";
         }
       }
+    },
+
+    count_message(task_id) {
+      var comment = this.$refs['comment_task_' + task_id][0];
+
+      var cnt = this.$refs['comment_task_cnt' + task_id][0];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+    },
+
+    clear_message(task_id) {
+      var cnt = this.$refs['comment_task_cnt' + task_id][0];
+      cnt.innerHTML = "0";
     },
 
     getDueDate(stage_id) {
@@ -2312,12 +2327,21 @@ var app = new Vue({
                   }
                },
 
+               count_reply(message_id, ref_id) {
+                var comment = this.$refs['task_reply_msg_' + message_id + '_' + ref_id][0];
+          
+                var cnt = this.$refs['task_reply_msg_cnt_' + message_id + '_' + ref_id][0];
+                cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+              },
+
               comment_clear(trackid) {
 
                 this.arrTask[trackid] = "";
                   
                   //document.getElementById('btn'+trackid).classList.remove("diashow");
                   this.$refs['comment_task_' + trackid][0].value = "";
+
+                  this.clear_message(trackid);
                
               },
 
@@ -2764,7 +2788,7 @@ var app1 = new Vue({
     ],
     perPage: 5,
 
-    baseURL: 'https://storage.cloud.google.com/feliiximg/',
+    baseURL: 'https://storage.googleapis.com/feliiximg/',
 
 
     // calendar

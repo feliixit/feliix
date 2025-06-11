@@ -80,7 +80,12 @@ switch ($method) {
         $serial_name = (isset($_POST['serial_name']) ?  $_POST['serial_name'] : '');
         $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
 
+        $pic1 = (isset($_POST['pic1']) ?  $_POST['pic1'] : 0);
+        $pic2 = (isset($_POST['pic2']) ?  $_POST['pic2'] : 0);
+
         $diff = [];
+
+        $all_delivery = "_a";
         
         // update main table
         $query = "UPDATE od_main SET `updated_id` = :updated_id,  `updated_at` = now() WHERE id = :id";
@@ -107,14 +112,81 @@ switch ($method) {
        
         for($i=0; $i<count($items); $i++) {
 
+            // get previous block confirm
+            $query = "select confirm, charge from od_item where id = :id";
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':id', $items[$i]['id']);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $pre_charge = $row['charge'];
+
+            $confirm = (isset($items[$i]['confirm']) ?  $items[$i]['confirm'] : '');
+            $charge = (isset($items[$i]['charge']) ?  $items[$i]['charge'] : '');
+
+            // update product qty
+            if($pre_charge == '' && $charge == '1' && $confirm == 'O' && $items[$i]['pid'] != 0)
+                RemoveProductQty($o_id, $items[$i], $db);
+
+            if($pre_charge == '1' && $charge == false && $confirm == 'O' && $items[$i]['pid'] != 0)
+                UpdateProductQty($o_id, $items[$i], $db);
+
             $id = $items[$i]['id'];
 
             $pre_item = GetShipping($id, $db);
 
             add_process($o_id, $comment, $type, json_encode($pre_item, JSON_PRETTY_PRINT), $uid, $db);
 
+            // $msg = "";
+            // $msg .= 'shipping_way in pg: ' . $items[$i]['shipping_way'] . '\n';
+            // $msg .= 'date_send in pg: ' . $items[$i]['date_send'] . '\n';
+            // $msg .= 'date_send in db: ' .  $pre_item[0]['date_send'] . '\n';
+            // $msg .= 'shipping_number in pg: ' . $items[$i]['shipping_number'] . '\n';
+            // $msg .= 'shipping_number in db: ' . $pre_item[0]['shipping_number'] . '\n';
+
+
+            // alert('shipping_way in pg: ' + $items[$i]['shipping_way']);
+            // alert('date_send in pg: ' + $items[$i]['date_send']);
+            // alert('date_send in db: ' +  $pre_item['date_send']);
+            // alert('shipping_number in pg: ' + $items[$i]['shipping_number']);
+            // alert('shipping_number in db: ' + $pre_item['shipping_number']);
+
+            // dennis rules
+            if($items[$i]['shipping_way'] == 'air' ){
+                if( $items[$i]['date_send'] != $pre_item[0]['date_send']  ){
+                   // 用「頁面上接收_date_sent 去更新資料表 od_item 中的 Date Sent 欄位 」;                            
+                }
+                else{
+                    if( $items[$i]['shipping_number'] != $pre_item[0]['shipping_number']  ){
+                        if( $items[$i]['shipping_number'] != '' ){
+                            //用「使用者點擊 Save 按鈕的日期 去更新資料表 od_item 中的 Date Sent 欄位 」; 
+                            $items[$i]['date_send'] = date("Y-m-d");
+                        }
+                        else{
+                            // 用「空值 去更新資料表 od_item 中的 Date Sent 欄位 」; 
+                            $items[$i]['date_send'] = '';
+                        }
+                    }
+                    else{
+                        //用「頁面上接收_date_sent 去更新資料表 od_item 中的 Date Sent 欄位 」;
+                    }
+                }
+            }
+            else{
+                //用「頁面上接收_date_sent 去更新資料表 od_item 中的 Date Sent 欄位 」;
+            }
+
+            // 每一個品項在 Delivery Info 都有值了，那系統會發出的通知信件
+            if($items[$i]["check_d"] == "" && $items[$i]["remark_d"] == "" && $items[$i]["confirm"] != "E")
+            {
+                $all_delivery = "";
+            }
+
+
             $test_update = false;
             $delivery_updeate = false;
+
+            $date_needed_update = false;
 
             if(count($pre_item) > 0)
             {
@@ -132,6 +204,11 @@ switch ($method) {
                     {
                         $delivery_updeate = true;
                     }
+
+                    if(strpos($ret, "date_needed") !== false)
+                    {
+                        $date_needed_update = true;
+                    }
                     
                 }
             }
@@ -140,6 +217,7 @@ switch ($method) {
             $shipping_number = $items[$i]['shipping_number'];
             $shipping_vendor = $items[$i]['shipping_vendor'];
             $eta = $items[$i]['eta'];
+            $date_send = $items[$i]['date_send'];
             $arrive = $items[$i]['arrive'];
             $charge = $items[$i]['charge'];
             $test = $items[$i]['test'];
@@ -150,6 +228,8 @@ switch ($method) {
             $remark_d = $items[$i]['remark_d'];
             $check_t = $items[$i]['check_t'];
             $check_d = $items[$i]['check_d'];
+
+            $date_needed = $items[$i]['date_needed'];
 
             $photo4 = $items[$i]['photo4'];
             $photo5 = $items[$i]['photo5'];
@@ -164,6 +244,7 @@ switch ($method) {
                 `shipping_number` = :shipping_number,
                 `shipping_vendor` = :shipping_vendor,
                 `eta` = :eta,
+                `date_send` = :date_send,
                 `arrive` = :arrive,
                 `charge` = :charge,
                 `test` = :test,
@@ -197,6 +278,11 @@ switch ($method) {
                     $query .= " `delivery_updated_name` = '$user_name',
                     `delivery_updated_at` = now(), ";
                 }
+
+                if($date_needed_update == true)
+                {
+                    $query .= " `date_needed` = '$date_needed', ";
+                }
                 
                 
             $query .= "         
@@ -213,6 +299,7 @@ switch ($method) {
             $stmt->bindParam(':shipping_number', $shipping_number);
             $stmt->bindParam(':shipping_vendor', $shipping_vendor);
             $stmt->bindParam(':eta', $eta);
+            $stmt->bindParam(':date_send', $date_send);
             $stmt->bindParam(':arrive', $arrive);
             $stmt->bindParam(':charge', $charge);
             $stmt->bindParam(':test', $test);
@@ -300,10 +387,31 @@ switch ($method) {
             }
         }
 
-        if(count($items_array) == 0)
+        if($type == 'edit_delivery' && $all_delivery == true)
         {
-            echo $jsonEncodedReturnArray;
-            break;
+            $items_array = $items;
+
+            if($type == 'edit_delivery' || $type == 'edit_test')
+            {
+                $items_array = array_filter($items_array, function($item) {
+                    return $item['confirm'] != 'E';
+                });
+            }
+        }
+        else
+        {
+            if($type == 'edit_delivery' || $type == 'edit_test')
+            {
+                $items_array = array_filter($items_array, function($item) {
+                    return $item['confirm'] != 'E';
+                });
+            }
+
+            if(count($items_array) == 0)
+            {
+                echo $jsonEncodedReturnArray;
+                break;
+            }
         }
 
         if($type == 'ship_info')
@@ -313,11 +421,13 @@ switch ($method) {
         if($type == 'assing_test')
             order_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id);
         if($type == 'edit_test')
-            order_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id);
+            order_notification02($user_name, '', '', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, $pic1, $pic2);
         if($type == 'assign_delivery')
             order_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id);
         if($type == 'edit_delivery')
-            order_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id);
+            order_notification02($user_name, '', '', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type . $all_delivery, $items_array, $o_id, $pic1, $pic2);
+        if($type == 'date_needed')
+            order_notification02($user_name, 'access2,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id);
         
         echo $jsonEncodedReturnArray;
 
@@ -353,6 +463,7 @@ function GetShipping($id, $db){
             n.shipping_number,
             n.shipping_vendor,
             n.eta,
+            n.date_send,
             n.arrive,
             n.charge,
             n.test,
@@ -368,7 +479,8 @@ function GetShipping($id, $db){
             n.updated_id,
             n.updated_at,
             n.photo4_name,
-            n.photo5_name
+            n.photo5_name,
+            n.date_needed
                 FROM   od_item n
             WHERE  n.id = " . $id . "
             ORDER BY n.id
@@ -386,6 +498,7 @@ function GetShipping($id, $db){
         $shipping_number = $row['shipping_number'];
         $shipping_vendor = $row['shipping_vendor'];
         $eta = $row['eta'];
+        $date_send = $row['date_send'];
         $arrive = $row['arrive'];
         $charge = $row['charge'];
         $test = $row['test'];
@@ -401,6 +514,8 @@ function GetShipping($id, $db){
         $photo4_name = $row['photo4_name'];
         $photo5_name = $row['photo5_name'];
 
+        $date_needed = $row['date_needed'];
+
         $created_at = $row['created_at'];
       
         $merged_results[] = array(
@@ -409,6 +524,7 @@ function GetShipping($id, $db){
             "shipping_number" => $shipping_number,
             "shipping_vendor" => $shipping_vendor,
             "eta" => $eta,
+            "date_send" => $date_send,
             "arrive" => $arrive,
             "charge" => $charge,
             "test" => $test,
@@ -425,6 +541,8 @@ function GetShipping($id, $db){
 
             "photo4_name" => $photo4_name,
             "photo5_name" => $photo5_name,
+
+            "date_needed" => $date_needed,
 
         );
     }
@@ -491,7 +609,7 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
         if(isset($_FILES[$type]['name']))
         {
             $image_name = $_FILES[$type]['name'];
-            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
+            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo","dwf","bmp");
             $extension = pathinfo($image_name, PATHINFO_EXTENSION);
             if (in_array(strtolower($extension), $valid_extensions)) 
             {
@@ -663,4 +781,126 @@ function UpdateImageRealNameVariation($sn, $upload_name, $batch_id, $db){
         echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
         die();
     }
+}
+
+
+function UpdateProductQty($od_id, $item, $db)
+{
+    $pid = $item['pid'];
+    $qty = 0;
+    $qty_str = $item['qty'];
+    $backup_qty = 0;
+    $backup_qty_str = $item['backup_qty'];
+    $org_incoming_element = [];
+
+    $new_incoming_qty = 0;
+    $new_incoming_element = [];
+
+    $v1 = $item['v1'];
+    $v2 = $item['v2'];
+    $v3 = $item['v3'];
+    $v4 = $item['v4'];
+    $ps_var = $item['ps_var'];
+
+    // check the original qty
+    $sql = "select incoming_qty, incoming_element from product_category where id = :pid ";
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+    $num = $stmt->rowCount();
+    if($num > 0)
+    {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row['incoming_element'] != '')
+            $org_incoming_element = json_decode($row['incoming_element'], true);
+        else
+            $org_incoming_element = [];
+    }
+
+    if($qty_str != '') $qty = preg_replace('/[^0-9]/', '', $qty_str);
+
+    if($backup_qty_str != '') $backup_qty = preg_replace('/[^0-9]/', '', $backup_qty_str);
+
+    // update new incoming element, if existed, update the qty else add new element
+    $found = false;
+    foreach($org_incoming_element as $element)
+    {
+        if($element['od_id'] == $od_id && $element['v1'] == $v1 && $element['v2'] == $v2 && $element['v3'] == $v3 && $element['v4'] == $v4 && $element['ps_var'] == $ps_var)
+        {
+            $element['qty'] = $qty;
+            $element['backup_qty'] = $backup_qty;
+            $new_incoming_qty += $qty + $backup_qty;
+            $found = true;
+        }
+        else
+        {
+            $new_incoming_qty += $element['qty'] + $element['backup_qty'];
+        }
+        $new_incoming_element[] = $element;
+    }
+
+    if($found == false)
+    {
+        $new_incoming_qty += $qty + $backup_qty;
+        $new_incoming_element[] = array('od_id' => $od_id, 'qty' => $qty, 'backup_qty' => $backup_qty, 'v1' => $v1, 'v2' => $v2, 'v3' => $v3, 'v4' => $v4, 'ps_var' => $ps_var, 'order_date' => date("Y-m-d H:i:s"), 'order_type' => 'taiwan');
+    }
+
+    $sql = "update product_category set incoming_qty = :incoming_qty, incoming_element = :incoming_element where id = :pid ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':incoming_qty', $new_incoming_qty);
+    $stmt->bindParam(':incoming_element', json_encode($new_incoming_element));
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+}
+
+function RemoveProductQty($od_id, $item, $db)
+{
+    $pid = $item['pid'];
+    $org_incoming_element = [];
+
+    $new_incoming_qty = 0;
+    $new_incoming_element = [];
+
+    $v1 = $item['v1'];
+    $v2 = $item['v2'];
+    $v3 = $item['v3'];
+    $v4 = $item['v4'];
+    $ps_var = $item['ps_var'];
+
+    // check the original qty
+    $sql = "select incoming_qty, incoming_element from product_category where id = :pid ";
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+    $num = $stmt->rowCount();
+    if($num > 0)
+    {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row['incoming_element'] != '')
+            $org_incoming_element = json_decode($row['incoming_element'], true);
+        else
+            $org_incoming_element = [];
+    }
+
+    foreach($org_incoming_element as $element)
+    {
+        if($element['od_id'] == $od_id && $element['v1'] == $v1 && $element['v2'] == $v2 && $element['v3'] == $v3 && $element['v4'] == $v4 && $element['ps_var'] == $ps_var)
+        {
+            $found = true;
+        }
+        else
+        {
+            $new_incoming_qty += $element['qty'] + $element['backup_qty'];
+            $new_incoming_element[] = $element;
+        }
+    }
+
+    $sql = "update product_category set incoming_qty = :incoming_qty, incoming_element = :incoming_element where id = :pid ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':incoming_qty', $new_incoming_qty);
+    $stmt->bindParam(':incoming_element', json_encode($new_incoming_element));
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
 }

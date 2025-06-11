@@ -314,7 +314,7 @@ function GetValue($str)
 }
 
 function GetProduct($id, $db){
-    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+    $sql = "SELECT *, CONCAT('https://storage.googleapis.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
 
     $merged_results = array();
 
@@ -664,7 +664,7 @@ function GetAccessoryInfomation($cat_id, $db, $product_id){
 
 function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
 
-    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.cloud.google.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
+    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.googleapis.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY id ";
 

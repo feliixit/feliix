@@ -6,7 +6,7 @@ Vue.filter("dateString", function(value, format = "YYYY-MM-DD HH:mm:ss") {
 var app = new Vue({
   el: "#app",
   data: {
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     id: 0,
 
@@ -613,7 +613,7 @@ var app = new Vue({
       let _this = this;
       _this.myVar = setTimeout(function() {
         _this.reset();
-        _this.getRecords();
+        //_this.getRecords();
       }, 1000);
     },
 
@@ -640,6 +640,69 @@ var app = new Vue({
     scrollMeTo(refName) {
         var element = this.$refs[refName];
         element.scrollIntoView({ behavior: 'smooth' });
+    },
+
+    uploadExcel: async function() {
+      let fileInput = document.getElementById("excelFile");
+      let file = fileInput.files[0];
+      let _this = this;
+
+      if (!file) {
+          alert("請選擇 Excel 檔案");
+          return;
+      }
+
+      $('.mask').toggle();
+
+      let formData = new FormData();
+      formData.append("file", file);
+
+      fetch("api/store_sales_recorder_lai_excel", {
+          method: "POST",
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log(data);
+
+          let order = 1;
+          if(_this.payments.length != 0)
+          {
+            let max = 0;
+            for(let i = 0; i < _this.payments.length; i++)
+            {
+              if(_this.payments[i].id > max)
+                max = _this.payments[i].id;
+
+            }
+            order = max + 1;
+          }
+
+          let sheets = data.data;
+
+          for (let i = 0; i < sheets.length; i++) {
+
+                  let row = sheets[i];
+                  let obj = {
+                    "id" : order,
+                    "qty" : row.QTY,
+                    "product_name": row.UnitCode + "\n" + row.Description,
+                    "price": row.Price,
+                  };
+    
+                  _this.payments.push(obj);
+                  order++;
+              
+          }
+ 
+          _this.calculate_total();
+      })
+      .catch(error => console.error("Error:", error))
+      .finally(() => {
+          $('.mask').toggle();
+
+          fileInput.value = '';
+      });
     },
   },
 });

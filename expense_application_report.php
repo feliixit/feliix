@@ -1,3 +1,4 @@
+<?php include 'check.php';?>
 <!DOCTYPE html>
 <html>
 
@@ -34,9 +35,9 @@
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+          href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
@@ -50,7 +51,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
@@ -59,7 +60,7 @@
     <script type="text/javascript" src="js/main.js" defer></script>
 
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="css/element-ui/theme-chalk/index.css">
 
 
 
@@ -781,10 +782,22 @@
                                     <li>{{(record.request_type == "New") ? record.liquidate_date : "---"}}</li>
                                 </ul>
                                 <ul>
+                                <li class="head">Total Amount in Liquidation Listing</li>
+                                    <li>{{ (record.request_type == "New") ?  (!record.total_amount_liquidate ? "" : Number(record.total_amount_liquidate).toLocaleString()) : "---" }}</li>
+                                </ul>
+                                
+                                <ul>
                                     <li class="head">Amount Liquidated</li>
                                     <li>{{ (record.request_type == "New") ?  (!record.amount_liquidated ? "" : Number(record.amount_liquidated).toLocaleString()) : "---" }}</li>
                                 </ul>
-
+                                <ul>
+                                    <li class="head">Amount of Return Money</li>
+                                    <li>{{ (record.request_type == "New") ?  (!record.amount_of_return ? "" : Number(record.amount_of_return).toLocaleString()) : "---" }}</li>
+                                </ul>
+                                <ul>
+                                    <li class="head">Method to Return Money</li>
+                                    <li>{{ record.method_of_return }}</li>
+                                </ul>
                                 <ul>
                                     <li class="head">Liquidation Files</li>
                                     <li><a v-if="record.request_type == 'New'" v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
@@ -810,6 +823,27 @@
                                     </li>
                                 </ul>
                             </div>
+                            
+                            <span>Liquidation Listing</span>
+                            <div class="tablebox listing">
+                                <ul class="head">
+                                    <li>Vendor</li>
+                                    <li>Particulars</li>
+                                    <li>Price</li>
+                                    <li>Qty</li>
+                                    <li>Amount</li>
+                                </ul>
+                                <ul v-for='(item, index) in record.apply_for_petty_liquidate' :key="index">
+                                    <li>{{ item.payee }}</li>
+                                    <li>{{ item.particulars }}</li>
+                                    <li>{{ Number(item.price).toLocaleString() }}</li>
+                                    <li>{{ Number(item.qty).toLocaleString() }}</li>
+                                    <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
+                                </ul>
+
+                            </div>
+
+
 
                             <div class="btnbox"><a class="btn" @click="export_petty">Export Voucher</a></div>
 
@@ -821,13 +855,13 @@
         </div>
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 <script defer src="js/a076d05399.js"></script>
 
 <script>
@@ -835,7 +869,7 @@
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/expense_application_report.js"></script>
 
 </html>

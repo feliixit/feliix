@@ -416,7 +416,7 @@ function GetValue($str)
 }
 
 function GetProduct($id, $db){
-    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+    $sql = "SELECT *, CONCAT('https://storage.googleapis.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
 
     $merged_results = array();
 
@@ -428,9 +428,13 @@ function GetProduct($id, $db){
         $k1 = GetKey($row['1st_variation']);
         $k2 = GetKey($row['2rd_variation']);
         $k3 = GetKey($row['3th_variation']);
+        $k4 = GetKey($row['4th_variation']);
+
         $v1 = GetValue($row['1st_variation']);
         $v2 = GetValue($row['2rd_variation']);
         $v3 = GetValue($row['3th_variation']);
+        $v4 = GetValue($row['4th_variation']);
+
         $checked = '';
         $code = $row['code'];
         $price = $row['price'];
@@ -454,9 +458,11 @@ function GetProduct($id, $db){
                                     "k1" => $k1, 
                                     "k2" => $k2, 
                                     "k3" => $k3, 
+                                    "k4" => $k4,
                                     "v1" => $v1, 
                                     "v2" => $v2, 
                                     "v3" => $v3, 
+                                    "v4" => $v4,
                                     "checked" => $checked, 
                                     "code" => $code, 
                                     "price" => $price, 
@@ -835,7 +841,7 @@ function GetAccessoryInfomation($cat_id, $db, $product_id){
 
 function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
 
-    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.cloud.google.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
+    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.googleapis.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY id ";
 
@@ -883,7 +889,14 @@ function ParseTextAsVariant($variant_text)
             continue;
         $key_value = explode(":", $line);
         $key = $key_value[0];
-        $values = explode(",", $key_value[1]);
+
+        if(strtolower($key) == "life hours")
+        {
+            $values = [];
+            $values[] = $key_value[1];
+        }
+        else
+            $values = explode(",", $key_value[1]);
         
         $variant[] = array("category" => $key, "value" => $values);
     }

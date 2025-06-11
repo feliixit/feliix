@@ -16,9 +16,9 @@ var app = new Vue({
   },
 
   created () {
-    this.setCookie("jwt", '');
-    this.setCookie("uid", '');
-    localStorage.token = '';
+    // this.setCookie("jwt", '');
+    // this.setCookie("uid", '');
+    // localStorage.token = '';
   },
 
   watch: {
@@ -58,8 +58,8 @@ var app = new Vue({
             })
           }
           else{
-            _this.setCookie("jwt", response.data['jwt']);
-            _this.setCookie("uid", response.data['uid']);
+            _this.setCookie("jwt", response.data['jwt'], 2);
+            _this.setCookie("uid", response.data['uid'], 2);
             localStorage.token = response.data['jwt'];
 
             var url = _this.getCookie("userurl");
@@ -90,7 +90,7 @@ var app = new Vue({
         var d = new Date();
         d.setTime(d.getTime() + (exdays*24*60*60*1000));
         var expires = "expires="+ d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;SameSite=Strict;";
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     },
 
     getCookie : function(name) {

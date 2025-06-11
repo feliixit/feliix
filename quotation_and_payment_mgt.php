@@ -27,6 +27,9 @@ try {
             $username = $decoded->data->username;
             $position = $decoded->data->position;
             $department = $decoded->data->department;
+
+            if($decoded->data->limited_access == true)
+                header( 'location:index' );
             
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $test_manager = $decoded->data->test_manager;
@@ -42,11 +45,12 @@ try {
         // QOUTE AND PAYMENT Management
         if(trim(strtoupper($department)) == 'SALES')
         {
-            if(trim(strtoupper($position)) == 'JR. ACCOUNT EXECUTIVE' 
-            || trim(strtoupper($position)) == 'ACCOUNT EXECUTIVE'
-            || trim(strtoupper($position)) == 'SR. ACCOUNT EXECUTIVE'
-            || trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
-            || trim(strtoupper($position)) == 'SALES MANAGER')
+            if(trim(strtoupper($position)) == 'CUSTOMER VALUE COORDINATOR'
+            || trim(strtoupper($position)) == 'JR. ACCOUNT EXECUTIVE'
+            || trim(strtoupper($position)) == 'CUSTOMER VALUE SUPERVISOR'
+            || trim(strtoupper($position)) == 'SENIOR CUSTOMER VALUE SUPERVISOR'
+            || trim(strtoupper($position)) == 'ASSISTANT CUSTOMER VALUE DIRECTOR'
+            || trim(strtoupper($position)) == 'CUSTOMER VALUE DIRECTOR')
             {
                 $access6 = true;
             }
@@ -54,7 +58,7 @@ try {
 
         if(trim(strtoupper($department)) == 'LIGHTING')
         {
-            if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER' || trim(strtoupper($position)) == 'LIGHTING MANAGER')
+            if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING VALUE CREATION DIRECTOR' || trim(strtoupper($position)) == 'LIGHTING VALUE CREATION DIRECTOR')
             {
                 $access6 = true;
             }
@@ -62,7 +66,7 @@ try {
 
         if(trim(strtoupper($department)) == 'OFFICE')
         {
-            if(trim(strtoupper($position)) == 'ASSISTANT OFFICE SYSTEMS MANAGER' || trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+            if(trim(strtoupper($position)) == 'ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR' || trim(strtoupper($position)) == 'OFFICE SPACE VALUE CREATION DIRECTOR')
             {
                 $access6 = true;
             }
@@ -108,7 +112,7 @@ try {
             }
         }
 
-        if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 || $user_id == 139)
+        if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 || $user_id == 190 || $user_id == 198 || $user_id = 153)
             $access6 = true;
 
         if($access6 == false)
@@ -305,6 +309,13 @@ $(function(){
         }
 
         .modal-content .block .formbox dd select {
+            border: 1px solid #707070;
+            padding: 1px 3px;
+            font-size: 14px;
+            height: 30px;
+        }
+
+        .modal-content .block .formbox dd input[type="text"] {
             border: 1px solid #707070;
             padding: 1px 3px;
             font-size: 14px;
@@ -671,6 +682,17 @@ $(function(){
                                     </select>
                                 </dd>
 
+                                <dt>Has Verified Payment Proof?</dt>
+                                <dd>
+                                    <select v-model="fil_proof">
+                                        <option value=""></option>
+                                        <option value="A">Has Verified Downpayment Proof and Has Verified Fullpayment Proof</option>
+                                        <option value="D">Has Verified Downpayment Proof but Not Have Verified Fullpayment Proof</option>
+                                        <option value="F">Not Have Verified Downpayment Proof but Has Verified Fullpayment Proof</option>
+                                        <option value="N">Not Have Verified Downpayment Proof and Not Have Verified Fullpayment Proof</option>
+                                    </select>
+                                </dd>
+
                                 <dt style="margin-bottom:-18px;">Amount</dt>
                                 <div class="half">
                                     <dt>lower bound</dt>
@@ -1020,6 +1042,23 @@ $(function(){
                                         <option value="2">2307</option>
                                     </select>
                                 </dd>
+
+                                <dt class="head">Method:</dt>
+                                <dd>
+                                    <select v-model="payment_method_1" @change="payment_method_other = ''">
+                                        <option value=""></option>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Check">Check</option>
+                                        <option value="Credit Card">Credit Card</option>
+                                        <option value="GCash">GCash</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+
+                                    <input type="text" id="" placeholder="Please Specify ..." style="width: 100%; margin-top: 5px;" v-model="payment_method_other" v-show="payment_method_1 == 'Other'">
+                                </dd>
+
+
                                 <dt class="head">Remarks:</dt>
                                 <dd><textarea name="" id="" v-model="prof_remark"></textarea></dd>
                                 <dd style="display: flex; justify-content: flex_start;">
@@ -1098,7 +1137,7 @@ $(function(){
                                 <ul class="head">
                                     <li><i class="micons">view_list</i></li>
                                     <li>Type</li>
-                                    <li>Remarks</li>
+                                    <li>Method / Remarks</li>
                                     <li>Proof</li>
                                     <li>Uploader</li>
                                     <li>Status</li>
@@ -1108,7 +1147,7 @@ $(function(){
                                 <ul v-for='(receive_record, index) in displayedPayment'>
                                     <li><input type="checkbox" name="payment_id" class="alone black" :value="receive_record.id"></li>
                                     <li>{{ (receive_record.kind == 0) ? "Down Payment" : ((receive_record.kind == 1) ? "Full Payment" : "2307") }}</li>
-                                    <li>{{ receive_record.remark }}</li>
+                                    <li>{{ receive_record.payment_method_other != '' ? 'Other: ' + receive_record.payment_method_other : receive_record.payment_method_1 }}<br>{{ receive_record.remark }}</li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display: block;" v-if="view_proof || (item.username.toLowerCase() == username.toLowerCase())">
                                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
@@ -1143,9 +1182,9 @@ $(function(){
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/quotation_and_payment_mgt.js"></script>
 <script src="js/a076d05399.js"></script>
 

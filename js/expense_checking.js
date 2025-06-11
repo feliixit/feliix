@@ -12,7 +12,7 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     proof_remark: "",
     reject_reason: "",
@@ -239,6 +239,58 @@ var app = new Vue({
         });
     },
 
+    
+    approveReceiveRecord_OP_ONLY: function(id) {
+      let _this = this;
+      targetId = this.record.id;
+      var form_Data = new FormData();
+
+      var token = localStorage.getItem("token");
+      form_Data.append("jwt", token);
+
+      form_Data.append("crud", "Send To OP ONLY");
+      form_Data.append("id", id);
+      form_Data.append("remark", "");
+      form_Data.append("info_account", this.record.info_account);
+      form_Data.append("info_category", this.record.info_category);
+      if(this.record.info_category == 'Marketing' || this.record.info_category == 'Office Needs' || this.record.info_category == 'Others' || this.record.info_category == 'Projects' || this.record.info_category == 'Store')
+        form_Data.append("sub_category", this.record.sub_category);
+      else
+        form_Data.append("sub_category", "");
+      form_Data.append("info_remark", this.record.info_remark);
+      form_Data.append("info_remark_other", this.record.info_remark_other);
+
+      form_Data.append("petty_list", JSON.stringify(this.record.list));
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/petty_cash_action",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          //this.$forceUpdate();
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.resetForm();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
     approveReceiveRecord_MD: function(id) {
       let _this = this;
       targetId = this.record.id;
@@ -333,7 +385,19 @@ var app = new Vue({
         });
     },
 
-    detail: function() {
+    get_lastest_record_status : async function(id) {
+      // get api/expense_status
+      let status = await axios.get("api/expense_status", {
+        params: {
+          id: id
+        }
+      });
+
+      return status.data;
+    },
+
+
+    detail: async function() {
       let _this = this;
 
       //let favorite = [];
@@ -360,6 +424,20 @@ var app = new Vue({
         this.receive_records.find((element) => element.id == this.proof_id)
       );
 
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 1 && status != 2)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Check". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
+
       if(this.record.request_type == 'Petty Cash Replenishment')
         this.record.info_account = "Security Bank => Office Petty Cash";
 
@@ -370,8 +448,22 @@ var app = new Vue({
 
     },
 
-    approve_op: function() {
+    approve_op: async function() {
       let _this = this;
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 1 && status != 2)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Check". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
 
       if (this.proof_id < 1) {
         Swal.fire({
@@ -455,6 +547,103 @@ var app = new Vue({
       });
     },
 
+
+    
+    approve_op_only: function() {
+      let _this = this;
+
+      if (this.proof_id < 1) {
+        Swal.fire({
+          text: "Please select applicant to be approved!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.record.info_account.trim() === "") {
+        Swal.fire({
+          text: "Please select account!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if (this.record.info_category.trim() === "") {
+        Swal.fire({
+          text: "Please select category!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if ((this.record.info_category.trim() === "Marketing" || this.record.info_category.trim() === "Office Needs" || this.record.info_category.trim() === "Others" || this.record.info_category.trim() === "Projects" || this.record.info_category.trim() === "Store")) {
+        if(this.record.sub_category.trim() === "") 
+        {Swal.fire({
+          text: "Please select sub category!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;}
+        
+      }
+
+      if (this.record.info_remark.trim() === "") {
+        Swal.fire({
+          text: "Please select remark!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if (this.record.info_remark.trim() === "Other" && this.record.info_remark_other.trim() === "") {
+        Swal.fire({
+          text: "Please enter other remark!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      // if(this.record.total > 5000)
+      // {
+      //   Swal.fire({
+      //     text: 'Button of "Send OP" is only applicable to total amount requested is equal to or less than P5000.',
+      //     icon: "warning",
+      //     confirmButtonText: "OK",
+      //   });
+      //   return;
+      // }
+
+      Swal.fire({
+        title: "Are you sure to proceed this action?",
+        text: "Send to OP for approve",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.value) {
+          _this.submit = true;
+          _this.approveReceiveRecord_OP_ONLY(this.proof_id);
+
+          _this.resetForm();
+
+        }
+      });
+    },
+
     approve_md: function() {
       let _this = this;
 
@@ -518,6 +707,16 @@ var app = new Vue({
           confirmButtonText: "OK",
         });
 
+        return;
+      }
+
+      if(this.record.total <= 5000)
+      {
+        Swal.fire({
+          text: 'Button of "Send MD" is only applicable to total amount requested is more than P5000.',
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
         return;
       }
 

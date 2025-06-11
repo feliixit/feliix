@@ -2,6 +2,7 @@
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
 if ( !isset( $jwt ) ) {
+    setcookie("userurl", $_SERVER['REQUEST_URI']);
   header( 'location:index' );
 }
 
@@ -21,6 +22,12 @@ try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
+
+            $limited_access = false;
+            isset($decoded->data->limited_access) ? $limited_access = $decoded->data->limited_access : $limited_access = false;
+
+            if($limited_access == true)
+                header( 'location:index' );
             
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $access = false;
@@ -241,7 +248,7 @@ $(function(){
                     </ul>
                     <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
-                            <input type="radio" name="record_id" class="alone black" :value="record.id" @click="detail(record.id)">
+                            <input type="radio" name="record_id" class="alone black" :value="record.id" @click="detail(record.id)" v-model="proof_id">
                         </li>
                        
                         <li>{{ record.created_at }}</li>
@@ -404,20 +411,20 @@ $(function(){
     </div>
 </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script src="js/npm/vue/dist/vue.js"></script> 
 <script src="js/axios.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/a076d05399.js"></script> 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 
 <script>
   ELEMENT.locale(ELEMENT.lang.en)
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/downpayment_proof.js"></script>
 
 <!-- Awesome Font for current webpage -->

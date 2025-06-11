@@ -7,7 +7,7 @@ header("Access-Control-Allow-Methods: *");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-$jwt = (isset($_GET['jwt']) ?  $_GET['jwt'] : '');
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : '');
 $kw = (isset($_GET['kw']) ?  $_GET['kw'] : '');
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $dp = (isset($_GET['dp']) ?  $_GET['dp'] : '');
@@ -40,10 +40,37 @@ if (!isset($jwt)) {
     die();
 } else {
 
+    // decode jwt
+    $decoded = JWT::decode($jwt, $key, array('HS256'));
+    $user_email = $decoded->data->email;
+
     $merged_results = array();
     $return_result = array();
 
     $query = "";
+
+    $query_restrict = " and ut.title not in('Assistant Brand Manager',
+                        'Assistant Engineering Manager',
+                        'Assistant Lighting Value Creation Director',
+                        'Assistant Office Space Value Creation Director',
+                        'Assistant Operations Manager',
+                        'Assistant Customer Value Director',
+                        'Assistant Store Manager',
+                        'Brand Manager',
+                        'Data Manager',
+                        'Lighting Consultant',
+                        'Lighting Value Creation Director',
+                        'Office Space Value Creation Director',
+                        'Operations Manager',
+                        'Customer Value Director',
+                        'Store Manager',
+                        'Supply Chain Manager',
+                        'Value Delivery Manager',
+                        'Chief Advisor',
+                        'Managing Director',
+                        'Engineering Manager',
+                        'Owner'
+                        ) ";
 
     if($kind == '')
     {
@@ -64,6 +91,11 @@ if (!isset($jwt)) {
                     LEFT JOIN user_department ud ON u.apartment_id = ud.id
                     LEFT JOIN user uu on uu.id = sm.updated_id
                     WHERE u.status = 1 and u.id not in(3, 1, 48, 86, 87, 94) " . ($id != 0 ? " and u.id=$id" : ' ');
+    }
+
+    if($user_email == 'trin@feliix.com')
+    {
+        $query = $query . $query_restrict;
     }
 
     if($dp != '') {

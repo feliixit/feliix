@@ -70,6 +70,9 @@ switch ($method) {
             
             $apartment_id = $row['apartment_id'];
             $flow = $row['flow'];
+
+            if($flow == 2)
+                array_push($array_flow, -4);
             
             array_push($arry_apartment_id, $apartment_id);
             array_push($array_flow, $flow);
@@ -111,7 +114,7 @@ switch ($method) {
         {
             $status_str .= $list + 1 . ",";
         }
-        
+
         $sql = $sql . "
                 where pm.`status` in (" . rtrim($status_str, ",") . ")";
 
@@ -344,6 +347,9 @@ function GetStatus($loc)
             $location = "For Check";
             break;
         case 3:
+            $location = "For Approve";
+            break;
+        case -3:
             $location = "For Approve";
             break;
         case 4:

@@ -22,6 +22,15 @@ try {
         try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+            if($decoded->exp < time())
+            {
+                header( 'location:index' );
+            }
+
+            if($decoded->data->limited_access == true)
+                header( 'location:index' );
+            
             $user_id = $decoded->data->id;
             $username = $decoded->data->username;
 
@@ -36,8 +45,8 @@ try {
             // QOUTE AND PAYMENT Management
             if(trim(strtoupper($department)) == 'SALES')
             {
-                if(trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
-                || trim(strtoupper($position)) == 'SALES MANAGER')
+                if(trim(strtoupper($position)) == 'ASSISTANT CUSTOMER VALUE DIRECTOR'
+                || trim(strtoupper($position)) == 'CUSTOMER VALUE DIRECTOR')
                 {
                     $access6 = true;
                 }
@@ -45,12 +54,12 @@ try {
 
             if(trim(strtoupper($department)) == 'LIGHTING')
             {
-                if(trim(strtoupper($position)) == 'LIGHTING MANAGER')
+                if(trim(strtoupper($position)) == 'LIGHTING VALUE CREATION DIRECTOR')
                 {
                     $access6 = true;
                 }
 
-                if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER')
+                if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING VALUE CREATION DIRECTOR')
                 {
                     $access6 = true;
                 }
@@ -58,7 +67,7 @@ try {
 
             if(trim(strtoupper($department)) == 'OFFICE')
             {
-                if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+                if(trim(strtoupper($position)) == 'OFFICE SPACE VALUE CREATION DIRECTOR')
                 {
                     $access6 = true;
                 }
@@ -160,7 +169,7 @@ try {
     <script type="text/javascript" src="js/main.js" defer></script>
 
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="css/element-ui/theme-chalk/index.css">
 
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -737,13 +746,13 @@ try {
 </body>
 
 
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 
 <!-- Awesome Font for current webpage -->
 <script src="js/a076d05399.js"></script>
@@ -753,7 +762,7 @@ try {
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/template_library.js"></script>
 
 </html>

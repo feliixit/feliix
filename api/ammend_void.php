@@ -62,11 +62,21 @@ $query = "
         CASE when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
         reason, a.pic_url, a.created_at , a.leave_level, a.sil, a.vl_sl, a.vl, a.sl, a.halfday
         FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
-        WHERE a.STATUS not in (-1, -2, -3, 1) AND approval_id * re_approval_id > 0 AND reject_id = 0 AND re_reject_id = 0 
+        WHERE a.STATUS not in (-1, -2, -3, 1) AND approval_id * re_approval_id > 0 AND reject_id = 0 AND re_reject_id = 0 AND leave_type <> 'H'
         and ( approval_id = " . $user_id . "  or re_approval_id = " . $user_id . " ) and a.uid <> " . $user_id . " ORDER BY a.created_at desc ";
 
 
-
+// 20250109 
+if($user_id == 3)
+{
+    $query = "
+    SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, 
+        CASE when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
+        reason, a.pic_url, a.created_at , a.leave_level, a.sil, a.vl_sl, a.vl, a.sl, a.halfday
+        FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
+        WHERE a.STATUS not in (-1, -2, -3, 1) AND approval_id * re_approval_id > 0 AND reject_id = 0 AND re_reject_id = 0 AND leave_type = 'H'
+        and ( approval_id = " . $user_id . "  or re_approval_id = " . $user_id . " ) and a.uid <> " . $user_id . " ORDER BY a.created_at desc ";
+}
 
 $stmt = $db->prepare( $query );
 $stmt->execute();

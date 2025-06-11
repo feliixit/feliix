@@ -8,7 +8,7 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-$jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -56,7 +56,7 @@ else
 
         //echo json_encode(array("username" => $user, "department" => $department, "title" => $title));
 
-        echo json_encode(array("username" => $user->username, "department" => $department, "title" => $title, "is_manager" => $is_manager, "sick_leave" => $sick_leave, "annual_leave" => $annual_leave, "manager_leave" => $manager_leave,  "head_of_department" => $head_of_department , "is_viewer" => $is_viewer, "user_id" => $user_id, "leave_level" => $leave_level));
+        echo json_encode(array("username" => $user->username, "department" => $department, "title" => $title, "is_manager" => $is_manager, "sick_leave" => $sick_leave, "annual_leave" => $annual_leave, "manager_leave" => $manager_leave,  "head_of_department" => $head_of_department , "is_viewer" => $is_viewer, "user_id" => $user_id, "leave_level" => $leave_level, "email" => $user->email));
 
     }
         // if decode fails, it means jwt is invalid

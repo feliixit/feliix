@@ -24,13 +24,13 @@ else
   try {
           // decode jwt
           $decoded = JWT::decode($jwt, $key, array('HS256'));
-          if(!$decoded->data->is_admin)
-          {
-            http_response_code(401);
+        //   if(!$decoded->data->is_admin)
+        //   {
+        //     http_response_code(401);
      
-            echo json_encode(array("message" => "Access denied."));
-            die();
-          }
+        //     echo json_encode(array("message" => "Access denied."));
+        //     die();
+        //   }
 
           $user_id = $decoded->data->id;
       }
@@ -63,7 +63,7 @@ else
 
             $apartment_id = (isset($_GET['apartment_id']) ? $_GET['apartment_id'] : "");
 
-            $sql = "SELECT 0 as is_checked, id, username, COALESCE(pic_url, '') pic_url, tel, date_start_company, seniority FROM user where status = 1 ".($id ? " and id=$id" : '');
+            $sql = "SELECT 0 as is_checked, id, username, COALESCE(pic_url, '') pic_url, tel, date_start_company, seniority, date_end_company, `status` FROM user where hide_user_profile <> '1' ".($id ? " and id=$id" : '');
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -106,6 +106,7 @@ else
              
             $tel = $_POST["tel"] ? $_POST["tel"] : "";
             $date_start_company = $_POST["date_start_company"] ? $_POST["date_start_company"] : "";
+            $date_end_company = $_POST["date_end_company"] ? $_POST["date_end_company"] : "";
             $pic_url = $_POST["pic_url"] ? $_POST["pic_url"] : "";
 
             $crud = $_POST["crud"];
@@ -151,7 +152,8 @@ else
 
                 $query .= "
                     tel = :tel,
-                    `date_start_company` = :date_start_company
+                    `date_start_company` = :date_start_company,
+                    `date_end_company` = :date_end_company
                 WHERE id = :id";
     
                 // prepare the query
@@ -164,6 +166,7 @@ else
                 }
                 $stmt->bindParam(':tel', $tel);
                 $stmt->bindParam(':date_start_company', $date_start_company);
+                $stmt->bindParam(':date_end_company', $date_end_company);
               
                 $stmt->bindParam(':id', $id);
             

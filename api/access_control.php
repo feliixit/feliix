@@ -33,6 +33,27 @@ $schedule_confirm = (isset($_POST['schedule_confirm']) ?  $_POST['schedule_confi
 $halfday = (isset($_POST['halfday']) ?  $_POST['halfday'] : '');
 $tag_management = (isset($_POST['tag_management']) ?  $_POST['tag_management'] : '');
 $soa = (isset($_POST['soa']) ?  $_POST['soa'] : '');
+$transmittal = (isset($_POST['transmittal']) ?  $_POST['transmittal'] : '');
+$edit_emp = (isset($_POST['edit_emp']) ?  $_POST['edit_emp'] : '');
+$edit_basic = (isset($_POST['edit_basic']) ?  $_POST['edit_basic'] : '');
+$office_items = (isset($_POST['office_items']) ?  $_POST['office_items'] : '');
+$office_item_approve = (isset($_POST['office_item_approve']) ?  $_POST['office_item_approve'] : '');
+$office_item_release = (isset($_POST['office_item_release']) ?  $_POST['office_item_release'] : '');
+$limited_access = (isset($_POST['limited_access']) ?  $_POST['limited_access'] : '');
+$inventory_checker = (isset($_POST['inventory_checker']) ?  $_POST['inventory_checker'] : '');
+$inventory_approver = (isset($_POST['inventory_approver']) ?  $_POST['inventory_approver'] : '');
+$frozen_office = (isset($_POST['frozen_office']) ?  $_POST['frozen_office'] : '');
+$quotation_control = (isset($_POST['quotation_control']) ?  $_POST['quotation_control'] : '');
+$cost_lighting = (isset($_POST['cost_lighting']) ?  $_POST['cost_lighting'] : '');
+$cost_furniture = (isset($_POST['cost_furniture']) ?  $_POST['cost_furniture'] : '');
+$leadership_assessment = (isset($_POST['leadership_assessment']) ?  $_POST['leadership_assessment'] : '');
+$special_agreement = (isset($_POST['special_agreement']) ?  $_POST['special_agreement'] : '');
+$for_user = (isset($_POST['for_user']) ?  $_POST['for_user'] : '');
+$for_profile = (isset($_POST['for_profile']) ?  $_POST['for_profile'] : '');
+$product_edit = (isset($_POST['product_edit']) ?  $_POST['product_edit'] : '');
+$product_duplicate = (isset($_POST['product_duplicate']) ?  $_POST['product_duplicate'] : '');
+$product_delete = (isset($_POST['product_delete']) ?  $_POST['product_delete'] : '');
+$inventory_modify = (isset($_POST['inventory_modify']) ?  $_POST['inventory_modify'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -58,7 +79,14 @@ if (!isset($jwt)) {
     if ($action == 1) {
         //select all
         try {
-            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8, access1, access2, access3, access4, access5, access6, access7, knowledge, vote1, vote2, schedule_confirm, halfday, tag_management, soa from access_control where id = 1";
+            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, 
+                            payess7, payess8, access1, access2, access3, access4, access5, access6, access7, knowledge, 
+                            vote1, vote2, schedule_confirm, halfday, tag_management, soa, transmittal, 
+                            edit_emp, edit_basic, office_items, office_item_approve, office_item_release, limited_access, 
+                            inventory_checker, inventory_approver, frozen_office, quotation_control, cost_lighting, cost_furniture, 
+                            leadership_assessment, special_agreement, for_user, for_profile, product_edit, product_duplicate, product_delete,
+                            inventory_modify
+                            from access_control where id = 1";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
@@ -97,7 +125,28 @@ if (!isset($jwt)) {
                             schedule_confirm = :schedule_confirm,
                             halfday = :halfday,
                             tag_management = :tag_management,
-                            soa = :soa
+                            soa = :soa,
+                            transmittal = :transmittal,
+                            edit_emp = :edit_emp,
+                            edit_basic = :edit_basic,
+                            office_items = :office_items,
+                            office_item_approve = :office_item_approve,
+                            office_item_release = :office_item_release,
+                            limited_access = :limited_access,
+                            inventory_checker = :inventory_checker,
+                            inventory_approver = :inventory_approver,
+                            frozen_office = :frozen_office,
+                            quotation_control = :quotation_control,
+                            cost_lighting = :cost_lighting,
+                            cost_furniture = :cost_furniture,
+                            leadership_assessment = :leadership_assessment,
+                            special_agreement = :special_agreement,
+                            for_user = :for_user,
+                            for_profile = :for_profile,
+                            product_edit = :product_edit,
+                            product_duplicate = :product_duplicate,
+                            product_delete = :product_delete,
+                            inventory_modify = :inventory_modify
                         where id = :id";
 
             // prepare the query
@@ -128,6 +177,27 @@ if (!isset($jwt)) {
             $halfday = htmlspecialchars(strip_tags($halfday));
             $tag_management = htmlspecialchars(strip_tags($tag_management));
             $soa = htmlspecialchars(strip_tags($soa));
+            $transmittal = htmlspecialchars(strip_tags($transmittal));
+            $edit_emp = htmlspecialchars(strip_tags($edit_emp));
+            $edit_basic = htmlspecialchars(strip_tags($edit_basic));
+            $office_items = htmlspecialchars(strip_tags($office_items));
+            $office_item_approve = htmlspecialchars(strip_tags($office_item_approve));
+            $office_item_release = htmlspecialchars(strip_tags($office_item_release));
+            $limited_access = htmlspecialchars(strip_tags($limited_access));
+            $inventory_checker = htmlspecialchars(strip_tags($inventory_checker));
+            $inventory_approver = htmlspecialchars(strip_tags($inventory_approver));
+            $frozen_office = htmlspecialchars(strip_tags($frozen_office));
+            $quotation_control = htmlspecialchars(strip_tags($quotation_control));
+            $cost_lighting = htmlspecialchars(strip_tags($cost_lighting));
+            $cost_furniture = htmlspecialchars(strip_tags($cost_furniture));
+            $leadership_assessment = htmlspecialchars(strip_tags($leadership_assessment));
+            $special_agreement = htmlspecialchars(strip_tags($special_agreement));
+            $for_user = htmlspecialchars(strip_tags($for_user));
+            $for_profile = htmlspecialchars(strip_tags($for_profile));
+            $product_edit = htmlspecialchars(strip_tags($product_edit));
+            $product_duplicate = htmlspecialchars(strip_tags($product_duplicate));
+            $product_delete = htmlspecialchars(strip_tags($product_delete));
+            $inventory_modify = htmlspecialchars(strip_tags($inventory_modify));
 
             // bind the values
             $stmt->bindParam(':id', $id);
@@ -153,6 +223,27 @@ if (!isset($jwt)) {
             $stmt->bindParam(':halfday', $halfday);
             $stmt->bindParam(':tag_management', $tag_management);
             $stmt->bindParam(':soa', $soa);
+            $stmt->bindParam(':transmittal', $transmittal);
+            $stmt->bindParam(':edit_emp', $edit_emp);
+            $stmt->bindParam(':edit_basic', $edit_basic);
+            $stmt->bindParam(':office_items', $office_items);
+            $stmt->bindParam(':office_item_approve', $office_item_approve);
+            $stmt->bindParam(':office_item_release', $office_item_release);
+            $stmt->bindParam(':limited_access', $limited_access);
+            $stmt->bindParam(':inventory_checker', $inventory_checker);
+            $stmt->bindParam(':inventory_approver', $inventory_approver);
+            $stmt->bindParam(':frozen_office', $frozen_office);
+            $stmt->bindParam(':quotation_control', $quotation_control);
+            $stmt->bindParam(':cost_lighting', $cost_lighting);
+            $stmt->bindParam(':cost_furniture', $cost_furniture);
+            $stmt->bindParam(':leadership_assessment', $leadership_assessment);
+            $stmt->bindParam(':special_agreement', $special_agreement);
+            $stmt->bindParam(':for_user', $for_user);
+            $stmt->bindParam(':for_profile', $for_profile);
+            $stmt->bindParam(':product_edit', $product_edit);
+            $stmt->bindParam(':product_duplicate', $product_duplicate);
+            $stmt->bindParam(':product_delete', $product_delete);
+            $stmt->bindParam(':inventory_modify', $inventory_modify);
 
             try {
                 // execute the query, also check if query was successful

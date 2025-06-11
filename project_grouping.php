@@ -23,6 +23,9 @@ try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
+            
+            if($decoded->data->limited_access == true)
+                header( 'location:index' );
 
 $username = $decoded->data->username;
 $position = $decoded->data->position;
@@ -43,10 +46,10 @@ $access6 = false;
 if(trim(strtoupper($department)) == 'SALES')
 {
 if(trim(strtoupper($position)) == 'JR. ACCOUNT EXECUTIVE'
-|| trim(strtoupper($position)) == 'ACCOUNT EXECUTIVE'
-|| trim(strtoupper($position)) == 'SR. ACCOUNT EXECUTIVE'
-|| trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
-|| trim(strtoupper($position)) == 'SALES MANAGER')
+|| trim(strtoupper($position)) == 'CUSTOMER VALUE SUPERVISOR'
+|| trim(strtoupper($position)) == 'SENIOR CUSTOMER VALUE SUPERVISOR'
+|| trim(strtoupper($position)) == 'ASSISTANT CUSTOMER VALUE DIRECTOR'
+|| trim(strtoupper($position)) == 'CUSTOMER VALUE DIRECTOR')
 {
 $access6 = true;
 }
@@ -54,7 +57,7 @@ $access6 = true;
 
 if(trim(strtoupper($department)) == 'LIGHTING')
 {
-if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER' || trim(strtoupper($position)) == 'LIGHTING MANAGER')
+if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING VALUE CREATION DIRECTOR' || trim(strtoupper($position)) == 'LIGHTING VALUE CREATION DIRECTOR')
 {
 $access6 = true;
 }
@@ -62,7 +65,7 @@ $access6 = true;
 
 if(trim(strtoupper($department)) == 'OFFICE')
 {
-if(trim(strtoupper($position)) == 'ASSISTANT OFFICE SYSTEMS MANAGER' || trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+if(trim(strtoupper($position)) == 'ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR' || trim(strtoupper($position)) == 'OFFICE SPACE VALUE CREATION DIRECTOR')
 {
 $access6 = true;
 }
@@ -366,9 +369,9 @@ header( 'location:index' );
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/project_grouping.js"></script>
 <script src="js/a076d05399.js"></script>
 

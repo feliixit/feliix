@@ -70,7 +70,7 @@ try {
 <script type="text/javascript" src="js/main.js" defer></script>
 
 <!-- import CSS -->
-<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="css/element-ui/theme-chalk/index.css">
 
 
 
@@ -230,19 +230,19 @@ $(function(){
     </div>
 </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script src="js/npm/vue/dist/vue.js"></script> 
 <script src="js/axios.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 
 <script>
   ELEMENT.locale(ELEMENT.lang.en)
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/apply_for_leave_v2.js"></script>
 </html>

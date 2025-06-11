@@ -1,3 +1,4 @@
+<?php include 'check.php';?>
 <?php
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
@@ -64,14 +65,14 @@ try {
 
     <link rel="stylesheet" href="css/vue-select.css" type="text/css">
 
-    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css'>
-    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.0/main.min.css'>
+    <link rel='stylesheet' href='css/@fullcalendar/core@4.3.1/main.min.css'>
+    <link rel='stylesheet' href='css/@fullcalendar/core@4.3.0/main.min.css'>
     <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css'>
     <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/timegrid@4.3.0/main.min.css'>
 
 
-    <script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
-    <script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+    <script src='js/@fullcalendar/core@4.3.1/main.min.js'></script>
+    <script src='js/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
     <script src='https://unpkg.com/@fullcalendar/timegrid@4.3.0/main.min.js'></script>
 
     <script src="js/moment.js"></script>
@@ -890,7 +891,12 @@ try {
     <!-- 具有 Order for Taiwan (Role 3) 權限的人，才能看到以下區塊 -->
     <div class="order_for_approval" v-if="access3">
         <span>Order for Approval</span>
-        <a :href="od.order_type = 'taiwan' ? 'order_taiwan_p2?id=' + od.id : 'order_taiwan_stock_p2?id=' + od.id" target="_blank" v-for="(od, index) in orders">• {{ od.serial_name }}  {{ od.od_name }}</a>
+        <template v-for="(od, index) in orders">
+            <a v-if="od.order_type == 'taiwan'" v-bind:href="'order_taiwan_p2?id=' + od.id" target="_blank">• {{ od.serial_name }}  {{ od.od_name }}</a>
+            <a v-if="od.order_type == 'stock'" v-bind:href="'order_taiwan_stock_p2?id=' + od.id" target="_blank">• {{ od.serial_name }}  {{ od.od_name }}</a>
+            <a v-if="od.order_type == 'sample'" v-bind:href="'order_taiwan_sample_p2?id=' + od.id" target="_blank">• {{ od.serial_name }}  {{ od.od_name }}</a>
+            <a v-if="od.order_type == 'mockup'" v-bind:href="'order_taiwan_mockup_p2?id=' + od.id" target="_blank">• {{ od.serial_name }}  {{ od.od_name }}</a>
+        </template>
     </div>
 
 </div>
@@ -925,25 +931,25 @@ try {
             }
                 
 
-            if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
+            if(level === "LIGHTING VALUE CREATION DIRECTOR" || level === "OPERATIONS MANAGER" )
             {
-                if(creator_level === "ASSISTANT LIGHTING MANAGER" || creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "ASSISTANT LIGHTING VALUE CREATION DIRECTOR" || creator_level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "ASSISTANT LIGHTING MANAGER" )
+            if(level === "ASSISTANT LIGHTING VALUE CREATION DIRECTOR" )
             {
-                if(creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. LIGHTING DESIGNER" )
+            if(level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR" )
             {
-                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
@@ -962,25 +968,25 @@ try {
                     can_close = true;
             }
 
-            if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
+            if(level === "OFFICE SPACE VALUE CREATION DIRECTOR" || level === "OPERATIONS MANAGER" )
             {
-                if(creator_level === "ASSISTANT OFFICE SYSTEMS MANAGER" || creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR" || creator_level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "ASSISTANT OFFICE SYSTEMS MANAGER" )
+            if(level === "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR" )
             {
-                if(creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. OFFICE SYSTEMS DESIGNER" )
+            if(level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR" )
             {
-                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
@@ -1042,25 +1048,25 @@ try {
             }
                 
 
-            if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
+            if(level === "LIGHTING VALUE CREATION DIRECTOR" || level === "OPERATIONS MANAGER" )
             {
-                if(creator_level === "ASSISTANT LIGHTING MANAGER" || creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "ASSISTANT LIGHTING VALUE CREATION DIRECTOR" || creator_level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "ASSISTANT LIGHTING MANAGER" )
+            if(level === "ASSISTANT LIGHTING VALUE CREATION DIRECTOR" )
             {
-                if(creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. LIGHTING DESIGNER" )
+            if(level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR" )
             {
-                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
@@ -1079,25 +1085,25 @@ try {
                     can_close = true;
             }
 
-            if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
+            if(level === "OFFICE SPACE VALUE CREATION DIRECTOR" || level === "OPERATIONS MANAGER" )
             {
-                if(creator_level === "ASSISTANT OFFICE SYSTEMS MANAGER" || creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR" || creator_level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "ASSISTANT OFFICE SYSTEMS MANAGER" )
+            if(level === "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR" )
             {
-                if(creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. OFFICE SYSTEMS DESIGNER" )
+            if(level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR" )
             {
-                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
@@ -1116,7 +1122,7 @@ try {
                     can_close = true;
             }
 
-            if(level === "SALES MANAGER" || level === "STORE MANAGER")
+            if(level === "CUSTOMER VALUE DIRECTOR" || level === "STORE MANAGER")
             {
                 if(creator_level !== "MANAGING DIRECTOR" && creator_level != "CHIEF ADVISOR")
                 {
@@ -1124,27 +1130,27 @@ try {
                 }
             }
 
-            if(level === "ASSISTANT SALES MANAGER" || level === "ASSISTANT STORE MANAGER")
+            if(level === "ASSISTANT CUSTOMER VALUE DIRECTOR" || level === "ASSISTANT STORE MANAGER")
             {
                 if(creator_level !== "MANAGING DIRECTOR" && 
                    creator_level != "CHIEF ADVISOR" && 
-                   creator_level != "SALES MANAGER" && 
+                   creator_level != "CUSTOMER VALUE DIRECTOR" && 
                    creator_level != "STORE MANAGER")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. ACCOUNT EXECUTIVE" || level === "ACCOUNT EXECUTIVE" || level === "JR. ACCOUNT EXECUTIVE" || level === "SR. STORE SALES EXECUTIVE" || level === "STORE SALES EXECUTIVE")
+            if(level === "SENIOR CUSTOMER VALUE SUPERVISOR" || level === "CUSTOMER VALUE SUPERVISOR" || level === "JR. ACCOUNT EXECUTIVE" || level === "SR. STORE SALES EXECUTIVE" || level === "STORE SALES EXECUTIVE")
             {
                 if(creator_level !== "MANAGING DIRECTOR" && 
                    creator_level != "CHIEF ADVISOR" && 
-                   creator_level != "SALES MANAGER" && 
+                   creator_level != "CUSTOMER VALUE DIRECTOR" && 
                    creator_level != "STORE MANAGER" && 
-                   creator_level != "ASSISTANT SALES MANAGER" && 
+                   creator_level != "ASSISTANT CUSTOMER VALUE DIRECTOR" && 
                    creator_level != "ASSISTANT STORE MANAGER" && 
-                   creator_level != "SR. ACCOUNT EXECUTIVE" && 
-                   creator_level != "ACCOUNT EXECUTIVE" && 
+                   creator_level != "SENIOR CUSTOMER VALUE SUPERVISOR" && 
+                   creator_level != "CUSTOMER VALUE SUPERVISOR" && 
                    creator_level != "JR. ACCOUNT EXECUTIVE" && 
                    creator_level != "SR. STORE SALES EXECUTIVE" && 
                    creator_level != "STORE SALES EXECUTIVE")
@@ -1154,7 +1160,7 @@ try {
             }
         }
 
-        if(department === 'ENG' || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
+        if(department === 'ENG' || level === 'LIGHTING VALUE CREATION DIRECTOR' || level === 'OFFICE SPACE VALUE CREATION DIRECTOR')  // 20220321 for service leave
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
             {
@@ -1166,7 +1172,7 @@ try {
                     can_close = true;
             }
 
-            if(level === "ENGINEERING MANAGER" || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
+            if(level === "ENGINEERING MANAGER" || level === 'LIGHTING VALUE CREATION DIRECTOR' || level === 'OFFICE SPACE VALUE CREATION DIRECTOR')  // 20220321 for service leave
             {
                 if(creator_level === "ASSISTANT ENGINEERING MANAGER")
                 {
@@ -1344,7 +1350,7 @@ try {
             success: function (result) {
                 console.log(result);
 
-                _func.notify_mail(id, 2);
+                //_func.notify_mail(id, 2);
 
                 var obj_meeting = {
                     title: $("#oldSubject_note").val().trim(),
@@ -1430,7 +1436,7 @@ try {
                 var elm = '<div class="file-element">' +
                     '<input type="checkbox" id="' + element + '" name="file_elements_old_note" value="' + element + '" checked disabled>' +
                     '<label for="' + element + '">' + 
-                        '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                        '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
                     '</label>' +
                 '</div>';
 
@@ -1795,7 +1801,7 @@ try {
                 var elm = '<div class="file-element">' +
                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
                     '<label for="' + element + '">' + 
-                        '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                        '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
                     '</label>' +
                     '</div>';
 
@@ -2185,7 +2191,7 @@ try {
                                                         var elm = '<div class="file-element">' +
                                                             '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
                                                             '<label for="' + element + '">' + 
-                                                                '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                                                                '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
                                                             '</label>' +
                                                         '</div>';
                                     
@@ -2300,7 +2306,7 @@ try {
                                                         var elm = '<div class="file-element">' +
                                                             '<input type="checkbox" id="' + element + '" name="file_elements_old_note" value="' + element + '" checked disabled>' +
                                                             '<label for="' + element + '">' + 
-                                                                '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                                                                '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
                                                             '</label>' +
                                                         '</div>';
                                     
@@ -2394,11 +2400,11 @@ try {
 
 </script>
 
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/exif-js.js"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/individual_calendar.js"></script>
 
 </html>

@@ -19,7 +19,7 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     proof_remark: "",
     reject_reason: "",
@@ -598,7 +598,18 @@ var app = new Vue({
         });
     },
 
-    detail: function() {
+    get_lastest_record_status : async function(id) {
+      // get api/expense_status
+      let status = await axios.get("api/expense_status", {
+        params: {
+          id: id
+        }
+      });
+
+      return status.data;
+    },
+
+    detail: async function() {
       let _this = this;
 
       //let favorite = [];
@@ -625,6 +636,20 @@ var app = new Vue({
         this.receive_records.find((element) => element.id == this.proof_id)
       );
 
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 5)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Release". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
+
       this.new_info_account = this.record.info_account;
       this.new_info_category = this.record.info_category;
       this.new_info_sub_category = (this.record.sub_category == undefined ? '' : this.record.sub_category);
@@ -637,10 +662,10 @@ var app = new Vue({
 
     account_privileges: function() {
 
-      if(this.record.info_account === 'Office Petty Cash' && (this.name.trim() === 'Mary Jude Jeng Articulo' || this.name.trim() === 'Dennis Lin' || this.name.trim() === 'Ronnie Fernando Dela Cruz'))
+      if(this.record.info_account === 'Office Petty Cash' && (this.name.trim() === 'Mary Jude Jeng Articulo' || this.name.trim() === 'Dennis Lin' || this.name.trim() === 'Marie Kayla Patricia Dequina' || this.name.trim() === "Stephanie De dios"))
         return true;
       
-      if(this.record.info_account === 'Online Transactions' && (this.name.trim() === 'Mary Jude Jeng Articulo' || this.name.trim() === 'Dennis Lin' || this.name.trim() === 'Ronnie Fernando Dela Cruz'))
+      if(this.record.info_account === 'Online Transactions' && (this.name.trim() === 'Mary Jude Jeng Articulo' || this.name.trim() === 'Dennis Lin' || this.name.trim() === 'Marie Kayla Patricia Dequina' || this.name.trim() === "Stephanie De dios"))
         return true;
 
       if(this.record.info_account === 'Security Bank' && (this.name.trim() === 'Glendon Wendell Co' || this.name.trim() === 'Dennis Lin'))
@@ -652,8 +677,22 @@ var app = new Vue({
       return false;
     },
 
-    approve_op: function() {
+    approve_op: async function() {
       let _this = this;
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 5)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Release". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
 
       if (this.proof_id < 1) {
         Swal.fire({
@@ -708,7 +747,7 @@ var app = new Vue({
       });
     },
 
-    approve_md: function() {
+    approve_md: async function() {
       let _this = this;
 
       if (this.proof_id < 1) {
@@ -721,6 +760,20 @@ var app = new Vue({
         //$(window).scrollTop(0);
         return;
       }
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 5)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Release". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
 
       // check account privileges
       if(this.account_privileges() === false)
@@ -766,8 +819,22 @@ var app = new Vue({
     },
 
     
-    approve_pcr: function() {
+    approve_pcr: async function() {
       let _this = this;
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 5)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Release". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
 
       if (this.proof_id < 1) {
         Swal.fire({

@@ -63,7 +63,7 @@ switch ($method) {
         $iq_id = (isset($_POST['iq_id']) ?  $_POST['iq_id'] : 0);
         $block = (isset($_POST['block']) ?  $_POST['block'] : []);
 
-        $item = (isset($_POST['item']) ?  $_POST['item'] : []);
+        $item = (isset($_POST['item']) ?  $_POST['item'] : "[]");
 
         $page = (isset($_POST['page']) ?  $_POST['page'] : 0);
         $access2 = (isset($_POST['access2']) ? $_POST['access2'] : false);
@@ -134,12 +134,21 @@ if($block_array[$i]['photo3'] == '')
                     `qty` = :qty,
                     `srp` = :srp,
                     `date_needed` = :date_needed,
-                    `shipping_way` = :shipping_way,
-                    `shipping_number` = :shipping_number,
+                    ";
+
+                if(isset($block_array[$i]['shipping_way']))
+                    $query .= " `shipping_way` = :shipping_way, ";
+
+                if(isset($block_array[$i]['shipping_number']))
+                    $query .= " `shipping_number` = :shipping_number, ";
+
+                $query .= "
                     `pid` = :pid,
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
+                    `v4` = :v4,
+                    `ps_var` = :ps_var,
                     updated_id = :updated_id,
                     updated_at = now()
                     where id = :id
@@ -172,6 +181,10 @@ if($block_array[$i]['photo3'] == '')
                 $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
                 $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
                 $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+                $v4 = isset($block_array[$i]['v4']) ? $block_array[$i]['v4'] : '';
+
+                $ps_var = isset($block_array[$i]['ps_var']) ? $block_array[$i]['ps_var'] : [];
+                $json_ps_var = json_encode($ps_var);
 
                 // bind the values
                 $stmt->bindParam(':id', $id);
@@ -187,14 +200,20 @@ if($block_array[$i]['photo3'] == '')
                 $stmt->bindParam(':srp', $srp);
                 $stmt->bindParam(':date_needed', $date_needed);
 
-                $stmt->bindParam(':shipping_way', $shipping_way);
-                $stmt->bindParam(':shipping_number', $shipping_number);
+                if(isset($block_array[$i]['shipping_way']))
+                    $stmt->bindParam(':shipping_way', $shipping_way);
+
+                if(isset($block_array[$i]['shipping_number']))
+                    $stmt->bindParam(':shipping_number', $shipping_number);
 
                 $stmt->bindParam(':pid', $pid);
 
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+                $stmt->bindParam(':v4', $v4);
+
+                $stmt->bindParam(':ps_var', $json_ps_var);
               
                 $stmt->bindParam(':updated_id', $user_id);
                
@@ -341,7 +360,7 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
         if(isset($_FILES[$type]['name']))
         {
             $image_name = $_FILES[$type]['name'];
-            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
+            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo","dwf","bmp");
             $extension = pathinfo($image_name, PATHINFO_EXTENSION);
             if (in_array(strtolower($extension), $valid_extensions)) 
             {

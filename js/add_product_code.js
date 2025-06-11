@@ -1,4 +1,5 @@
 var app = new Vue({
+  // vuetify: new Vuetify(),
   el: "#app",
   data: {
     submit: false,
@@ -53,15 +54,32 @@ var app = new Vue({
     variation1: "",
     variation2: "",
     variation3: "",
+    variation4: "",
     variation1_custom: "",
     variation2_custom: "",
     variation3_custom: "",
+    variation4_custom: "",
 
     variation1_text: "1st Variation",
     variation2_text: "2nd Variation",
     variation3_text: "3rd Variation",
+    variation4_text: "4th Variation",
 
     variation_product: [],
+
+    // product set
+    p1_code : "",
+    p1_qty : "",
+    p1_id : "",
+
+    p2_code : "",
+    p2_qty : "",
+    p2_id : "",
+
+    p3_code : "",
+    p3_qty : "",
+    p3_id : "",
+
 
     // info
     name :"",
@@ -100,6 +118,14 @@ var app = new Vue({
 
     tag_group : [],
 
+    brand_handler: '',
+
+    cost_lighting : false,
+    cost_furniture : false,
+
+    // replacement
+    replacement_json: [],
+
   },
 
   created() {
@@ -107,11 +133,13 @@ var app = new Vue({
     this.accessory_get_category_item();
     this.getUserName();
     this.getTagGroup();
+    this.getProductControl();
   },
 
   computed: {
     show_ntd : function() {
-      if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+      // if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan' || this.name.toLowerCase() ==='testmanager')
+      if((this.cost_lighting == true && this.category == '10000000') || (this.cost_furniture == true && this.category == '20000000'))
        return true;
       else
       return false;
@@ -132,8 +160,8 @@ var app = new Vue({
         this.accessory_item.find((element) => element.cat_id == this.category)
       ).lv2[0];
 
-      if(this.category == "10000000")
-        this.sub_category = "10010000";
+      // if(this.category == "10000000")
+      //   this.sub_category = "10010000";
     },
 
     sub_category() {
@@ -164,9 +192,55 @@ var app = new Vue({
       this.quoted_price_change = new Date().toISOString().slice(0, 10);
     },
 
+
   },
 
   methods: {
+
+    getProductControl: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'get',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/product_control',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.cost_lighting = response.data.cost_lighting;
+          _this.cost_furniture = response.data.cost_furniture;
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
+
+    
+    auto_complete_product_code: async function(key) {
+      let _this = this;
+      let token = localStorage.getItem("accessToken");
+      let params = {
+        code: key,
+      };
+
+      let ret = await axios.get("api/product_code_auto_complete", { params, headers: {"Authorization" : `Bearer ${token}`} });
+
+      return ret.data;
+    },
+
     getTagGroup: function() {
       let _this = this;
         
@@ -222,14 +296,27 @@ var app = new Vue({
       });
     },
 
-    search() {
-      this.filter_apply();
-    },
+    // search() {
+    //   this.filter_apply();
+    // },
 
     edit_category() {
       this.edit_mode = true;
 $("#tag01").selectpicker("refresh");
+$("#tag0102").selectpicker("refresh");
       console.log("edit category");
+
+      if(this.category == '10000000')
+      {
+        this.brand_handler = "";
+        this.currency = "NTD";
+      }
+
+      if(this.category == '20000000')
+      {
+        this.brand_handler = "PH";
+        this.currency = "PHP";
+      }
     },
 
     product_get_category_item: function() {
@@ -262,6 +349,8 @@ $("#tag01").selectpicker("refresh");
         this.variation2 === "custom" ? this.variation2_custom : this.variation2;
       this.variation3_text =
         this.variation3 === "custom" ? this.variation3_custom : this.variation3;
+      this.variation4_text =
+        this.variation4 === "custom" ? this.variation4_custom : this.variation4;
 
       let variation1_value = document
         .getElementById("variation1_value")
@@ -272,6 +361,9 @@ $("#tag01").selectpicker("refresh");
       let variation3_value = document
         .getElementById("variation3_value")
         .value.split(",");
+      let variation4_value = document
+        .getElementById("variation4_value")
+        .value.split(",");
 
         let variation_product_preserved = JSON.parse(JSON.stringify(this.variation_product));
 
@@ -281,111 +373,135 @@ $("#tag01").selectpicker("refresh");
       for (let i = 0; i < variation1_value.length; i++) {
         for (let j = 0; j < variation2_value.length; j++) {
           for (let k = 0; k < variation3_value.length; k++) {
-            sn = sn + 1;
+            for (let l = 0; l < variation4_value.length; l++) {
+              sn = sn + 1;
 
-            pre_url = "";
-            pre_price_ntd = "";
-            pre_price = "";
-            pre_price_change = "";
-            pre_price_ntd_change = "";
-            pre_price_org = "";
-            pre_price_ntd_org = "";
-            pre_photo = "";
-            pre_quoted_price = "";
-            pre_quoted_price_org = "";
-            pre_quoted_price_change = "";
+              pre_url = "";
+              pre_price_ntd = "";
+              pre_price = "";
+              pre_price_change = "";
+              pre_price_ntd_change = "";
+              pre_price_org = "";
+              pre_price_ntd_org = "";
+              pre_photo = "";
+              pre_quoted_price = "";
+              pre_quoted_price_org = "";
+              pre_quoted_price_change = "";
 
-            for(let m=0; m<variation_product_preserved.length; m++)
-            {
-              if(variation_product_preserved[m].k1 != '' && variation_product_preserved[m].k2 != '' && variation_product_preserved[m].k3 != '')
+              for(let m=0; m<variation_product_preserved.length; m++)
               {
-                if(variation_product_preserved[m].v1 == variation1_value[i] && variation_product_preserved[m].v2 == variation2_value[j] && variation_product_preserved[m].v3 == variation3_value[k])
+                if(variation_product_preserved[m].k1 != '' && variation_product_preserved[m].k2 != '' && variation_product_preserved[m].k3 != '' && variation_product_preserved[m].k4 != '')
                 {
-                  pre_url = variation_product_preserved[m].url;
-                  pre_price_ntd = variation_product_preserved[m].price_ntd;
-                  pre_price = variation_product_preserved[m].price;
-                  pre_price_change = variation_product_preserved[m].price_change;
-                  pre_price_ntd_change = variation_product_preserved[m].price_ntd_change;
-                  pre_price_org = variation_product_preserved[m].price_org;
-                  pre_price_ntd_org = variation_product_preserved[m].price_ntd_org;
-                  pre_photo = variation_product_preserved[m].photo;
-                  pre_quoted_price = variation_product_preserved[m].quoted_price;
-                  pre_quoted_price_org = variation_product_preserved[m].quoted_price_org;
-                  pre_quoted_price_change = variation_product_preserved[m].quoted_price_change;
-  
-                  break;
+                  if(variation_product_preserved[m].v1 == variation1_value[i] && variation_product_preserved[m].v2 == variation2_value[j] && variation_product_preserved[m].v3 == variation3_value[k] && variation_product_preserved[m].v4 == variation4_value[l])
+                  {
+                    pre_url = variation_product_preserved[m].url;
+                    pre_price_ntd = variation_product_preserved[m].price_ntd;
+                    pre_price = variation_product_preserved[m].price;
+                    pre_price_change = variation_product_preserved[m].price_change;
+                    pre_price_ntd_change = variation_product_preserved[m].price_ntd_change;
+                    pre_price_org = variation_product_preserved[m].price_org;
+                    pre_price_ntd_org = variation_product_preserved[m].price_ntd_org;
+                    pre_photo = variation_product_preserved[m].photo;
+                    pre_quoted_price = variation_product_preserved[m].quoted_price;
+                    pre_quoted_price_org = variation_product_preserved[m].quoted_price_org;
+                    pre_quoted_price_change = variation_product_preserved[m].quoted_price_change;
+    
+                    break;
+                  }
+                }
+
+                if(variation_product_preserved[m].k1 != '' && variation_product_preserved[m].k2 != '' && variation_product_preserved[m].k3 != '' && variation_product_preserved[m].k4 == '')
+                  {
+                    if(variation_product_preserved[m].v1 == variation1_value[i] && variation_product_preserved[m].v2 == variation2_value[j] && variation_product_preserved[m].v3 == variation3_value[k])
+                    {
+                      pre_url = variation_product_preserved[m].url;
+                      pre_price_ntd = variation_product_preserved[m].price_ntd;
+                      pre_price = variation_product_preserved[m].price;
+                      pre_price_change = variation_product_preserved[m].price_change;
+                      pre_price_ntd_change = variation_product_preserved[m].price_ntd_change;
+                      pre_price_org = variation_product_preserved[m].price_org;
+                      pre_price_ntd_org = variation_product_preserved[m].price_ntd_org;
+                      pre_photo = variation_product_preserved[m].photo;
+                      pre_quoted_price = variation_product_preserved[m].quoted_price;
+                      pre_quoted_price_org = variation_product_preserved[m].quoted_price_org;
+                      pre_quoted_price_change = variation_product_preserved[m].quoted_price_change;
+      
+                      break;
+                    }
+                  }
+
+                if(variation_product_preserved[m].k1 != '' && variation_product_preserved[m].k2 != '' && variation_product_preserved[m].k3 == '' && variation_product_preserved[m].k4 == '')
+                {
+                  if(variation_product_preserved[m].v1 == variation1_value[i] && variation_product_preserved[m].v2 == variation2_value[j])
+                  {
+                    pre_url = variation_product_preserved[m].url;
+                    pre_price_ntd = variation_product_preserved[m].price_ntd;
+                    pre_price = variation_product_preserved[m].price;
+                    pre_price_change = variation_product_preserved[m].price_change;
+                    pre_price_ntd_change = variation_product_preserved[m].price_ntd_change;
+                    pre_price_org = variation_product_preserved[m].price_org;
+                    pre_price_ntd_org = variation_product_preserved[m].price_ntd_org;
+                    pre_photo = variation_product_preserved[m].photo;
+                    pre_quoted_price = variation_product_preserved[m].quoted_price;
+                    pre_quoted_price_org = variation_product_preserved[m].quoted_price_org;
+                    pre_quoted_price_change = variation_product_preserved[m].quoted_price_change;
+    
+                    break;
+                  }
+                }
+
+                if(variation_product_preserved[m].k1 != '' && variation_product_preserved[m].k2 == '' && variation_product_preserved[m].k3 == '' && variation_product_preserved[m].k4 == '')
+                {
+                  if(variation_product_preserved[m].v1 == variation1_value[i])
+                  {
+                    pre_url = variation_product_preserved[m].url;
+                    pre_price_ntd = variation_product_preserved[m].price_ntd;
+                    pre_price = variation_product_preserved[m].price;
+                    pre_price_change = variation_product_preserved[m].price_change;
+                    pre_price_ntd_change = variation_product_preserved[m].price_ntd_change;
+                    pre_price_org = variation_product_preserved[m].price_org;
+                    pre_price_ntd_org = variation_product_preserved[m].price_ntd_org;
+                    pre_photo = variation_product_preserved[m].photo;
+                    pre_quoted_price = variation_product_preserved[m].quoted_price;
+                    pre_quoted_price_org = variation_product_preserved[m].quoted_price_org;
+                    pre_quoted_price_change = variation_product_preserved[m].quoted_price_change;
+    
+                    break;
+                  }
                 }
               }
 
-              if(variation_product_preserved[m].k1 != '' && variation_product_preserved[m].k2 != '' && variation_product_preserved[m].k3 == '')
-              {
-                if(variation_product_preserved[m].v1 == variation1_value[i] && variation_product_preserved[m].v2 == variation2_value[j])
-                {
-                  pre_url = variation_product_preserved[m].url;
-                  pre_price_ntd = variation_product_preserved[m].price_ntd;
-                  pre_price = variation_product_preserved[m].price;
-                  pre_price_change = variation_product_preserved[m].price_change;
-                  pre_price_ntd_change = variation_product_preserved[m].price_ntd_change;
-                  pre_price_org = variation_product_preserved[m].price_org;
-                  pre_price_ntd_org = variation_product_preserved[m].price_ntd_org;
-                  pre_photo = variation_product_preserved[m].photo;
-                  pre_quoted_price = variation_product_preserved[m].quoted_price;
-                  pre_quoted_price_org = variation_product_preserved[m].quoted_price_org;
-                  pre_quoted_price_change = variation_product_preserved[m].quoted_price_change;
-  
-                  break;
-                }
-              }
+              variation_item = {
+                id: sn,
+                checked: 0,
+                k1: this.variation1_text,
+                k2: this.variation2_text,
+                k3: this.variation3_text,
+                k4: this.variation4_text,
+                v1: variation1_value[i],
+                v2: variation2_value[j],
+                v3: variation3_value[k],
+                v4: variation4_value[l],
+                url: pre_url,
+                file: {
+                  name: "",
+                },
+                code: "",
+                price_ntd: pre_price_ntd,
+                price: pre_price,
+                price_change: pre_price_change,
+                price_ntd_change: pre_price_ntd_change,
+                price_org : pre_price_org,
+                price_ntd_org : pre_price_ntd_org,
+                photo: pre_photo,
+                status: "1",
+                quoted_price: pre_quoted_price,
+                quoted_price_org: pre_quoted_price_org,
+                quoted_price_change: pre_quoted_price_change,
+              };
 
-              if(variation_product_preserved[m].k1 != '' && variation_product_preserved[m].k2 == '' && variation_product_preserved[m].k3 == '')
-              {
-                if(variation_product_preserved[m].v1 == variation1_value[i])
-                {
-                  pre_url = variation_product_preserved[m].url;
-                  pre_price_ntd = variation_product_preserved[m].price_ntd;
-                  pre_price = variation_product_preserved[m].price;
-                  pre_price_change = variation_product_preserved[m].price_change;
-                  pre_price_ntd_change = variation_product_preserved[m].price_ntd_change;
-                  pre_price_org = variation_product_preserved[m].price_org;
-                  pre_price_ntd_org = variation_product_preserved[m].price_ntd_org;
-                  pre_photo = variation_product_preserved[m].photo;
-                  pre_quoted_price = variation_product_preserved[m].quoted_price;
-                  pre_quoted_price_org = variation_product_preserved[m].quoted_price_org;
-                  pre_quoted_price_change = variation_product_preserved[m].quoted_price_change;
-  
-                  break;
-                }
-              }
+              this.variation_product.push(variation_item);
             }
-
-            variation_item = {
-              id: sn,
-              checked: 0,
-              k1: this.variation1_text,
-              k2: this.variation2_text,
-              k3: this.variation3_text,
-              v1: variation1_value[i],
-              v2: variation2_value[j],
-              v3: variation3_value[k],
-              url: pre_url,
-              file: {
-                name: "",
-              },
-              code: "",
-              price_ntd: pre_price_ntd,
-              price: pre_price,
-              price_change: pre_price_change,
-              price_ntd_change: pre_price_ntd_change,
-              price_org : pre_price_org,
-              price_ntd_org : pre_price_ntd_org,
-              photo: pre_photo,
-              status: "1",
-              quoted_price: pre_quoted_price,
-              quoted_price_org: pre_quoted_price_org,
-              quoted_price_change: pre_quoted_price_change,
-            };
-
-            this.variation_product.push(variation_item);
           }
         }
       }
@@ -504,6 +620,108 @@ $("#tag01").selectpicker("refresh");
         });
     },
 
+    check_ics(e)
+    {
+      // check extension and file size
+      let files = e.target.files;
+      for (var i = 0; i < files.length; i++)
+      {
+        let file = files[i];
+        if(file.name.split('.').pop().toLowerCase() != 'ies')
+        {
+          Swal.fire({
+            text: "The extension of all selected files need to be “.ies”.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          e.target.value = '';
+          return;
+        }
+
+        if(file.size > 1024 * 1024 * 10)
+        {
+          Swal.fire({
+            text: "The size of selected file should be less than 10MB.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          e.target.value = '';
+          return;
+        }
+      }
+    },
+
+    check_skp(e)
+    {
+      // check extension and file size
+      let files = e.target.files;
+      for (var i = 0; i < files.length; i++)
+      {
+        let file = files[i];
+        if(file.name.split('.').pop().toLowerCase() != 'skp')
+        {
+          Swal.fire({
+            text: "The extension of all selected files need to be “.skp”.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          e.target.value = '';
+          return;
+        }
+
+        if(file.size > 1024 * 1024 * 10)
+        {
+          Swal.fire({
+            text: "The size of selected file should be less than 10MB.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          e.target.value = '';
+          return;
+        }
+      }
+    },
+
+    check_manual(e)
+    {
+      let files = e.target.files;
+      for (var i = 0; i < files.length; i++)
+      {
+        let file = files[i];
+
+        if(file.name.split('.').pop() != 'zip' && file.name.split('.').pop() != 'rar' && 
+          file.name.split('.').pop() != '7z' && file.name.split('.').pop() != 'pdf' && 
+          file.name.split('.').pop() != 'doc' && file.name.split('.').pop() != 'docx' && 
+          file.name.split('.').pop() != 'xls' && file.name.split('.').pop() != 'xlsx' && 
+          file.name.split('.').pop() != 'ppt' && file.name.split('.').pop() != 'pptx' && 
+          file.name.split('.').pop() != 'jpg' && file.name.split('.').pop() != 'jpeg' && 
+          file.name.split('.').pop() != 'png' && file.name.split('.').pop() != 'gif' && 
+          file.name.split('.').pop() != 'bmp' && file.name.split('.').pop() != 'tiff' && 
+          file.name.split('.').pop() != 'svg')
+        {
+          Swal.fire({
+            text: "Each selected file needs to be picture, Microsoft office document, pdf or compressed file.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          e.target.value = '';
+          return;
+        }
+        
+        if(file.size > 1024 * 1024 * 10)
+        {
+          Swal.fire({
+            text: "The size of selected file should be less than 10MB.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          e.target.value = '';
+          return;
+        }
+      }
+
+    },
+
     onFileChange(e, num) {
       const file = e.target.files[0];
 
@@ -611,6 +829,17 @@ $("#tag01").selectpicker("refresh");
       window.jQuery("#modal_quick_assign2_3").toggle();
     },
 
+    get_special_infomation_detail_variantion4: function() {
+      if(this.variation4 == "" || this.variation4 == "custom") 
+        return;
+      this.special_infomation_detail = this.shallowCopy(
+        this.special_infomation.find((element) => element.category == this.variation4)
+      ).detail[0];
+
+      window.jQuery(".mask").toggle();
+      window.jQuery("#modal_quick_assign2_4").toggle();
+    },
+
     apply_special_infomation_detail: function(cat_id, option) {
       this.$refs[cat_id][0].value = option;
 
@@ -690,6 +919,32 @@ $("#tag01").selectpicker("refresh");
 
       window.jQuery(".mask").toggle();
       window.jQuery("#modal_quick_assign2_3").toggle();
+
+      //$('variation3_value').tagsinput('refresh');
+    },
+
+    
+    apply_special_infomation_detail_variantion4: function() {
+      var checkboxes = document.getElementsByName("apply_special_infomation_4");
+      
+      checkboxes.forEach(function(box) {
+        if (box.checked) 
+        {
+          $('#variation4_value').tagsinput('add', box.value);
+          box.checked = false;
+        }
+      })
+
+      // let variation_value = document
+      //   .getElementById("variation3_value")
+      //   .value.split(",");
+
+      // variation_value.push(values);
+
+      // document.getElementById("variation3_value").value = variation_value.join(",");
+
+      window.jQuery(".mask").toggle();
+      window.jQuery("#modal_quick_assign2_4").toggle();
 
       //$('variation3_value').tagsinput('refresh');
     },
@@ -854,6 +1109,17 @@ $("#tag01").selectpicker("refresh");
       return "";
     },
 
+    is_code_existed: async function(code) {
+      let ret = await axios.get("api/product_code_existed_check", { params: { code: code, id: 0 } });
+
+      return ret.data;
+    },
+
+    is_code_existed_in_product_set: async function(code) {
+      let ret = await axios.get("api/product_code_existed_in_product_set_check", { params: { code: code, id: 0 } });
+
+      return ret.data;
+    },
 
 
     save: async function() {
@@ -867,6 +1133,299 @@ $("#tag01").selectpicker("refresh");
         });
         return;
       }
+
+      let replacement = [];
+      let replacement_product = $('#replacement_product').val();
+      
+      if(replacement_product != undefined)
+      {
+        replacement = replacement_product.split(",");
+        replacement = replacement.filter(function (el) {
+          return el != "";
+        });
+      }
+
+      let err = '';
+      let replacement_data = [];
+      this.replacement_id = [];
+
+      for (let index = 0; index < replacement.length; ++index) {
+        const element = replacement[index];
+
+        replacement_data = await this.is_code_existed(element.trim());
+        if(replacement_data.length > 0)
+          this.replacement_json.push({code: element.trim(), id: replacement_data[0].id});
+        else
+          err = err + element.trim() + '<br> ';
+      }
+
+      if(err.trim() != '')
+      {
+        Swal.fire({
+          html: "The code of replacement product doesn’t exist.<br>" + err.trim(),
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      if(this.sub_category == '10020000')
+      {
+        if(this.p1_code.trim() == '' || this.p2_code.trim() == '')
+        {
+          Swal.fire({
+            text: "You have to input the code and qty for Product 1 and Product 2. Qty should be greater than 0.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+  
+        // p1_qty and p2_qty string to number > 0
+        this.p1_qty = Number(this.p1_qty);
+        this.p2_qty = Number(this.p2_qty);
+        
+        if(this.p1_qty <= 0 || this.p2_qty <= 0)
+        {
+          Swal.fire({
+            text: "You have to input the code and qty for Product 1 and Product 2. Qty should be greater than 0.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        this.p3_qty = Number(this.p3_qty);
+
+        if(this.p3_code.trim() != '' && this.p3_qty <= 0)
+        {
+          Swal.fire({
+            text: "Qty for Product 3 should be greater than 0.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        
+  
+        let p1_data = [];
+        let p2_data = [];
+        let p3_data = [];
+  
+        this.p1_id = "";
+        this.p2_id = "";
+        this.p3_id = "";
+  
+        let error_msg = '';
+        let err_product_set = '';
+  
+        if(this.p1_code.trim() != '')
+        {
+          p1_data = await this.is_code_existed(this.p1_code.trim());
+          if(p1_data.length > 0)
+            this.p1_id = p1_data[0].id;
+          else
+            error_msg = error_msg + 'Product 1, ';
+
+          p1_data = await this.is_code_existed_in_product_set(this.p1_code.trim());
+          if(p1_data.length > 0)
+            err_product_set = err_product_set + 'Product 1, ';
+        }
+  
+        if(this.p2_code.trim() != '')
+        {
+          p2_data = await this.is_code_existed(this.p2_code.trim());
+          if(p2_data.length > 0)
+            this.p2_id = p2_data[0].id;
+          else
+            error_msg = error_msg + 'Product 2, ';
+
+          p2_data = await this.is_code_existed_in_product_set(this.p2_code.trim());
+          if(p2_data.length > 0)
+            err_product_set = err_product_set + 'Product 2, ';
+        }
+  
+        if(this.p3_code.trim() != '')
+        {
+          p3_data = await this.is_code_existed(this.p3_code.trim());
+          if(p3_data.length > 0)
+            this.p3_id = p3_data[0].id;
+          else
+            error_msg = error_msg + 'Product 3, ';
+
+          p3_data = await this.is_code_existed_in_product_set(this.p3_code.trim());
+          if(p3_data.length > 0)
+            err_product_set = err_product_set + 'Product 3, ';
+
+        }
+
+        // trim the last comma
+        error_msg = error_msg.replace(/,\s*$/, "");
+        err_product_set = err_product_set.replace(/,\s*$/, "");
+  
+        if(error_msg != '')
+        {
+          Swal.fire({
+            text: error_msg + ' that you input is not an existing product in the product database. Please check product code again!!',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        if(err_product_set != '')
+        {
+          Swal.fire({
+            text: 'User is not allowed to input any product belonging to "Product Set" sub category into Product 1/2/3. Please revise the code of ' + err_product_set + '.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+      }
+
+      
+      if(this.sub_category == '10010000')
+        {
+  
+          // check if file_ics file ext is .ics
+          for (var i = 0; i < this.$refs.file_ics.files.length; i++)
+            {
+              let file = this.$refs.file_ics.files[i];
+              if(file.name.split('.').pop() != 'ies')
+              {
+                Swal.fire({
+                  text: "The extension of all selected files need to be “.ies”.",
+                  icon: "warning",
+                  confirmButtonText: "OK",
+                });
+                return;
+              }
+            }
+    
+            for (var i = 0; i < this.$refs.file_manual.files.length; i++)
+              {
+                let file = this.$refs.file_manual.files[i];
+                if(file.name.split('.').pop() != 'zip' && file.name.split('.').pop() != 'rar' && 
+                  file.name.split('.').pop() != '7z' && file.name.split('.').pop() != 'pdf' && 
+                  file.name.split('.').pop() != 'doc' && file.name.split('.').pop() != 'docx' && 
+                  file.name.split('.').pop() != 'xls' && file.name.split('.').pop() != 'xlsx' && 
+                  file.name.split('.').pop() != 'ppt' && file.name.split('.').pop() != 'pptx' && 
+                  file.name.split('.').pop() != 'jpg' && file.name.split('.').pop() != 'jpeg' && 
+                  file.name.split('.').pop() != 'png' && file.name.split('.').pop() != 'gif' && 
+                  file.name.split('.').pop() != 'bmp' && file.name.split('.').pop() != 'tiff' && 
+                  file.name.split('.').pop() != 'svg')
+                {
+                  Swal.fire({
+                    text: "Each selected file needs to be picture, Microsoft office document, pdf or compressed file.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                  });
+                  return;
+                }
+              }
+    
+            // check if file size < 10MB
+            for (var i = 0; i < this.$refs.file_ics.files.length; i++)
+            {
+              let file = this.$refs.file_ics.files[i];
+              if(file.size > 10 * 1024 * 1024)
+              {
+                Swal.fire({
+                  text: "The size of each selected file needs to be lower than “10MB”.",
+                  icon: "warning",
+                  confirmButtonText: "OK",
+                });
+                return;
+              }
+            }
+    
+            for (var i = 0; i < this.$refs.file_manual.files.length; i++)
+              {
+                let file = this.$refs.file_manual.files[i];
+                if(file.size > 10 * 1024 * 1024)
+                {
+                  Swal.fire({
+                    text: "The size of each selected file needs to be lower than “10MB”.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                  });
+                  return;
+                }
+              }
+        }
+
+        if(this.sub_category == '20000000')
+          {
+    
+            // check if file_skp file ext is .ics
+            for (var i = 0; i < this.$refs.file_skp.files.length; i++)
+              {
+                let file = this.$refs.file_skp.files[i];
+                if(file.name.split('.').pop().toLowerCase() != 'skp')
+                {
+                  Swal.fire({
+                    text: "The extension of all selected files need to be “.skp.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                  });
+                  return;
+                }
+              }
+      
+              for (var i = 0; i < this.$refs.file_manual.files.length; i++)
+                {
+                  let file = this.$refs.file_manual.files[i];
+                  if(file.name.split('.').pop() != 'zip' && file.name.split('.').pop() != 'rar' && 
+                    file.name.split('.').pop() != '7z' && file.name.split('.').pop() != 'pdf' && 
+                    file.name.split('.').pop() != 'doc' && file.name.split('.').pop() != 'docx' && 
+                    file.name.split('.').pop() != 'xls' && file.name.split('.').pop() != 'xlsx' && 
+                    file.name.split('.').pop() != 'ppt' && file.name.split('.').pop() != 'pptx' && 
+                    file.name.split('.').pop() != 'jpg' && file.name.split('.').pop() != 'jpeg' && 
+                    file.name.split('.').pop() != 'png' && file.name.split('.').pop() != 'gif' && 
+                    file.name.split('.').pop() != 'bmp' && file.name.split('.').pop() != 'tiff' && 
+                    file.name.split('.').pop() != 'svg')
+                  {
+                    Swal.fire({
+                      text: "Each selected file needs to be picture, Microsoft office document, pdf or compressed file.",
+                      icon: "warning",
+                      confirmButtonText: "OK",
+                    });
+                    return;
+                  }
+                }
+      
+              // check if file size < 10MB
+              for (var i = 0; i < this.$refs.file_skp.files.length; i++)
+              {
+                let file = this.$refs.file_skp.files[i];
+                if(file.size > 10 * 1024 * 1024)
+                {
+                  Swal.fire({
+                    text: "The size of each selected file needs to be lower than “10MB”.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                  });
+                  return;
+                }
+              }
+      
+              for (var i = 0; i < this.$refs.file_manual.files.length; i++)
+                {
+                  let file = this.$refs.file_manual.files[i];
+                  if(file.size > 10 * 1024 * 1024)
+                  {
+                    Swal.fire({
+                      text: "The size of each selected file needs to be lower than “10MB”.",
+                      icon: "warning",
+                      confirmButtonText: "OK",
+                    });
+                    return;
+                  }
+                }
+          }
+
 
       let show_confirm = true;
 
@@ -905,6 +1464,7 @@ $("#tag01").selectpicker("refresh");
           }
         }
       }
+      
 
       if(!show_confirm)  return;
 
@@ -936,59 +1496,64 @@ $("#tag01").selectpicker("refresh");
           var form_Data = new FormData();
 
           let attributes = [];
-          // special_infomation -> attributes
-          for (var i = 0; i < this.special_infomation.length; i++) {
-            let category = this.special_infomation[i].category;
-            let cat_id = this.special_infomation[i].cat_id;
-            let value = this.$refs[cat_id][0].value
-            
-            var obj = {
-              category: category,
-              cat_id: cat_id,
-              value: value
-            };
-            attributes.push(obj);
+          if(this.sub_category != '10020000')
+          {
+            // special_infomation -> attributes
+            for (var i = 0; i < this.special_infomation.length; i++) {
+              let category = this.special_infomation[i].category;
+              let cat_id = this.special_infomation[i].cat_id;
+              let value = this.$refs[cat_id][0].value
+              
+              var obj = {
+                category: category,
+                cat_id: cat_id,
+                value: value
+              };
+              attributes.push(obj);
+            }
           }
 
           let accessory = [];
-          for(var i = 0; i < this.accessory_infomation.length; i++) {
-            let category = this.accessory_infomation[i].category;
-            let cat_id = this.accessory_infomation[i].cat_id;
-            let detail = this.accessory_infomation[i].detail[0];
-            
-            let item = [];
-            for(var j = 0; j < detail.length; j++) {
-              let id = detail[j].id;
-              let code = detail[j].code;
-              let name = detail[j].name;
-              let price = detail[j].price;
-              let price_ntd = detail[j].price_ntd;
-              let url = detail[j].url;
+
+            for(var i = 0; i < this.accessory_infomation.length; i++) {
+              let category = this.accessory_infomation[i].category;
+              let cat_id = this.accessory_infomation[i].cat_id;
+              let detail = this.accessory_infomation[i].detail[0];
               
-              let file = document.getElementById('accessory_' + cat_id + '_' + id).files[0];
-              if(typeof file !== 'undefined') 
-                form_Data.append('accessory_' + cat_id + '_' + id, file);
-
+              let item = [];
+              for(var j = 0; j < detail.length; j++) {
+                let id = detail[j].id;
+                let code = detail[j].code;
+                let name = detail[j].name;
+                let price = detail[j].price;
+                let price_ntd = detail[j].price_ntd;
+                let url = detail[j].url;
+                
+                let file = document.getElementById('accessory_' + cat_id + '_' + id).files[0];
+                if(typeof file !== 'undefined') 
+                  form_Data.append('accessory_' + cat_id + '_' + id, file);
+  
+                var obj = {
+                  id: id,
+                  code: code,
+                  name: name,
+                  price: price,
+                  price_ntd: price_ntd,
+                  url: url,
+                };
+                item.push(obj);
+              }
+  
               var obj = {
-                id: id,
-                code: code,
-                name: name,
-                price: price,
-                price_ntd: price_ntd,
-                url: url,
+                category: category,
+                cat_id: cat_id,
+                detail: item,
               };
-              item.push(obj);
+  
+              accessory.push(obj);
+  
             }
-
-            var obj = {
-              category: category,
-              cat_id: cat_id,
-              detail: item,
-            };
-
-            accessory.push(obj);
-
-          }
+          
 
           let variation = [];
           // variation
@@ -999,9 +1564,11 @@ $("#tag01").selectpicker("refresh");
             let k1 = this.variation_product[i].k1;
             let k2 = this.variation_product[i].k2;
             let k3 = this.variation_product[i].k3;
+            let k4 = this.variation_product[i].k4;
             let v1 = this.variation_product[i].v1;
             let v2 = this.variation_product[i].v2;
             let v3 = this.variation_product[i].v3;
+            let v4 = this.variation_product[i].v4;
             let price = this.variation_product[i].price;
             let quoted_price = this.variation_product[i].quoted_price;
             let price_ntd = this.variation_product[i].price_ntd;
@@ -1037,9 +1604,11 @@ $("#tag01").selectpicker("refresh");
               k1: k1,
               k2: k2,
               k3: k3,
+              k4: k4,
               v1: v1,
               v2: v2,
               v3: v3,
+              v4: v4,
               price: price,
               quoted_price: quoted_price,
               price_ntd: price_ntd,
@@ -1062,14 +1631,18 @@ $("#tag01").selectpicker("refresh");
           form_Data.append("jwt", token);
           form_Data.append("category", _this.category);
           form_Data.append("sub_category", _this.sub_category);
-          form_Data.append("brand", _this.brand);
+          form_Data.append("brand", _this.brand.toUpperCase().trim());
 
-          let tag01 = $('#tag01').val();
-         // let tag02 = $('#tag02').val();
-        //  if( _this.category === '10000000')
+          if(this.sub_category == '10020000')
+          {
+            let tag0102 = $('#tag0102').val();
+            form_Data.append("tags", tag0102.join());
+          }
+          else
+          {
+            let tag01 = $('#tag01').val();
             form_Data.append("tags", tag01.join());
-          // else
-          //   form_Data.append("tags", "");
+          }
 
           form_Data.append("code", _this.code);
           form_Data.append("price_ntd", _this.price_ntd);
@@ -1087,6 +1660,10 @@ $("#tag01").selectpicker("refresh");
           let related_product = $('#related_product').val();
           form_Data.append("related_product", related_product);
 
+          let replacement_product = $('#replacement_product').val();
+          form_Data.append("replacement_product", replacement_product);
+          form_Data.append("replacement_json", JSON.stringify(_this.replacement_json));
+
           form_Data.append("notes", _this.notes);
 
           form_Data.append("accessory_mode", _this.accessory_mode === true || _this.accessory_mode === "1" ? 1 : 0);
@@ -1096,11 +1673,53 @@ $("#tag01").selectpicker("refresh");
           form_Data.append("accessory", JSON.stringify(accessory));
           form_Data.append("variation", JSON.stringify(variation));
 
+          form_Data.append("p1_code", _this.p1_code);
+          form_Data.append("p1_qty", _this.p1_qty);
+          form_Data.append("p1_id", _this.p1_id);
+
+          form_Data.append("p2_code", _this.p2_code);
+          form_Data.append("p2_qty", _this.p2_qty);
+          form_Data.append("p2_id", _this.p2_id);
+
+          form_Data.append("p3_code", _this.p3_code);
+          form_Data.append("p3_qty", _this.p3_qty);
+          form_Data.append("p3_id", _this.p3_id);
+
+          form_Data.append("brand_handler", _this.brand_handler);
+
           for (var i = 1; i < 4; i++) {
             let file = document.getElementById('photo' + i).files[0];
             if(typeof file !== 'undefined') 
               form_Data.append('photo' + i, file);
           }
+
+          // ics
+          if(this.$refs.file_ics != undefined)
+          {
+            for (var i = 0; i < this.$refs.file_ics.files.length; i++) {
+              let file = this.$refs.file_ics.files[i];
+              form_Data.append("file_ics[" + i + "]", file);
+            }
+          }
+
+          // skp
+          if(this.$refs.file_skp != undefined)
+            {
+              for (var i = 0; i < this.$refs.file_skp.files.length; i++) {
+                let file = this.$refs.file_skp.files[i];
+                form_Data.append("file_skp[" + i + "]", file);
+              }
+            }
+
+          // manual
+          if(this.$refs.file_manual != undefined)
+          {
+            for (var i = 0; i < this.$refs.file_manual.files.length; i++) {
+              let file = this.$refs.file_manual.files[i];
+              form_Data.append("file_manual[" + i + "]", file);
+            }
+          }
+          
 
           //for (var i = 0; i < this.$refs.file.files.length; i++) {
           //  let file = this.$refs.file.files[i];
@@ -1161,6 +1780,9 @@ $("#tag01").selectpicker("refresh");
       $('#tag01').val('default');
       $('#tag01').selectpicker('refresh');
 
+      $('#tag0102').val('default');
+      $('#tag0102').selectpicker('refresh');
+
      // $('#tag02').val('default');
      // $('#tag02').selectpicker('refresh');
       
@@ -1183,7 +1805,9 @@ $("#tag01").selectpicker("refresh");
       this.variation1_text = '';
       this.variation2_text = '';
       this.variation3_text = '';
+      this.variation4_text = '';
 
+      this.variation4 = '';
       this.variation3 = '';
       this.variation2 = '';
       this.variation1 = '';
@@ -1194,12 +1818,16 @@ $("#tag01").selectpicker("refresh");
       $('#variation2_value').tagsinput('removeAll');
       this.variation3_value = '';
       $('#variation3_value').tagsinput('removeAll');
+      this.variation4_value = '';
+      $('#variation4_value').tagsinput('removeAll');
 
       $('#related_product').tagsinput('removeAll');
+      $('#replacement_product').tagsinput('removeAll');
 
       this.variation1_custom = '';
       this.variation2_custom = '';
       this.variation3_custom = '';
+      this.variation4_custom = '';
 
       this.submit = false;
 
@@ -1238,6 +1866,25 @@ $("#tag01").selectpicker("refresh");
       if(f2) f2.value = "";
       var f3 = document.getElementById('photo3');
       if(f3) f3.value = "";
+
+      var f_ics = this.$refs.file_ics;
+      if(f_ics) f_ics.value = "";
+      var f_skp = this.$refs.file_skp;
+      if(f_skp) f_skp.value = "";
+      var f_manual = this.$refs.file_manual;
+      if(f_manual) f_manual.value = "";
+
+      this.p1_code = '';
+      this.p1_qty = '';
+      this.p1_id = '';
+
+      this.p2_code = '';
+      this.p2_qty = '';
+      this.p2_id = '';
+
+      this.p3_code = '';
+      this.p3_qty = '';
+      this.p3_id = '';
 
     },
 

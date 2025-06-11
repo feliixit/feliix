@@ -25,6 +25,11 @@ try {
             $user_id = $decoded->data->id;
 $username = $decoded->data->username;
 
+
+if($decoded->data->limited_access == true)
+                header( 'location:index' );
+            
+
 $database = new Database();
 $db = $database->getConnection();
 
@@ -73,13 +78,13 @@ header( 'location:index' );
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Recorder of PO to Mr. Lai</title>
+    <title>Recorder of PO from Office Team</title>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="css/hierarchy-select.min.css" type="text/css">
     <link rel="stylesheet" href="css/vue-select.css" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+    <link href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css"
           rel="stylesheet">
     <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
 
@@ -263,13 +268,23 @@ header( 'location:index' );
             outline: none !important;
         }
 
+        #app .mask {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            z-index: 1;
+            display: none;
+        }
+
     </style>
 
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/hierarchy-select.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
 
 
 </head>
@@ -278,7 +293,7 @@ header( 'location:index' );
 
 
 <div id="app">
-
+    <div class="mask"></div>
     <div class="header">
         <div style="display: flex; align-items: center;">
             <a href="default" style="margin-left: 42px; transform: scaleX(1.4); text-decoration: none;">
@@ -341,8 +356,14 @@ header( 'location:index' );
                                 <li>
                                     <select class="form-control"  v-model="company">
                                         <option></option>
+                                        <option>Buildrite</option>
                                         <option>HFNAC</option>
+                                        <option>Mandaue Foam / PhilFoam Furnishing Industries, Inc.</option>
                                         <option>Muebles De Oficina</option>
+                                        <option>Office Essentials</option>
+                                        <option>Queens Arts and Trends Corp</option>
+                                        <option>Sylpauljoyce Corporation</option>
+                                        <option>Other (Specify in Notes)</option>
                                     </select>
                                 </li>
                             </ul>
@@ -361,7 +382,7 @@ header( 'location:index' );
                                 <table>
                                     <tr>
                                         <td>
-                                            <input type="text" class="form-control" v-model="product_name"  maxlength="512">
+                                            <textarea class="form-control" style="resize: none;" v-model="product_name"></textarea>
                                         </td>
 
                                         <td>
@@ -389,7 +410,7 @@ header( 'location:index' );
                                     </tr>
 
                                     <tr v-for="(item, index) in payments">
-                                        <td style="text-align: left;">{{item.product_name}}</td>
+                                        <td style="text-align: left; white-space: pre-line;">{{item.product_name}}</td>
                                         <td>{{item.qty}}</td>
                                         <td>{{item.price}}</td>
                                         <td>
@@ -502,6 +523,13 @@ header( 'location:index' );
                                     aria-expanded="true" aria-controls="collapseOne" v-on:click="reset()">Cancel
                             </button>
 
+                            <input type="file" id="excelFile" accept=".xls,.xlsx" style="display:none;"
+                                   v-on:change="uploadExcel">
+
+                            <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;"
+                                    onclick="document.getElementById('excelFile').click()">Upload PO
+                            </button>
+
                             <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;"
                                     data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
                                     aria-expanded="true" aria-controls="collapseOne" v-on:click="apply()">Save
@@ -520,8 +548,15 @@ header( 'location:index' );
 
             <select style="width: 10vw; margin-left: 1vw;" v-model="comp">
                 <option value="">All Companies</option>
+                <option></option>
+                <option>Buildrite</option>
                 <option>HFNAC</option>
+                <option>Mandaue Foam / PhilFoam Furnishing Industries, Inc.</option>
                 <option>Muebles De Oficina</option>
+                <option>Office Essentials</option>
+                <option>Queens Arts and Trends Corp</option>
+                <option>Sylpauljoyce Corporation</option>
+                <option>Other (Specify in Notes)</option>
             </select>
 
             <input type="text" v-model="keyword" style="width:15vw; margin-left:1vw;"
@@ -596,7 +631,7 @@ header( 'location:index' );
 
                         <td style="text-align: left;" v-if="j == 0" :rowspan="row.payment.length">{{ row.client }}</td>
 
-                        <td style="text-align: left;">{{ item.product_name }}</td>
+                        <td style="text-align: left; white-space: pre-line;">{{ item.product_name }}</td>
 
                         <td>{{ item.qty == "" ? "" : Number(item.qty).toLocaleString() }}</td>
 
@@ -658,16 +693,16 @@ header( 'location:index' );
 
 
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
+<script src="js/npm/exif-js.js"></script>
 <script src="js/moment.js"></script>
 <script src="js/vue-select.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 <script src="js/a076d05399.js"></script>
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 
 <script>
 
@@ -681,6 +716,29 @@ header( 'location:index' );
         $("#todays_date").attr("value", today);
     });
 
+    function uploadFile() {
+        let fileInput = document.getElementById("excelFile");
+        let file = fileInput.files[0];
+
+        if (!file) {
+            alert("請選擇 Excel 檔案");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("file", file);
+
+        fetch("upload.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("output").textContent = JSON.stringify(data, null, 4);
+        })
+        .catch(error => console.error("Error:", error));
+    }
+
 </script>
 
 <script>
@@ -688,7 +746,7 @@ header( 'location:index' );
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script defer src="js/store_sales_recorder_lai.js"></script>
 
 </html>

@@ -50,7 +50,7 @@ var app = new Vue({
 
     perPage: 10,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     // I&AM
     my_department: "",
@@ -859,7 +859,7 @@ var app = new Vue({
       )
         can_save = true;
 
-      if (this.my_title == "SALES MANAGER" || this.my_title == "STORE MANAGER") {
+      if (this.my_title == "CUSTOMER VALUE DIRECTOR" || this.my_title == "STORE MANAGER") {
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR"
@@ -867,18 +867,18 @@ var app = new Vue({
           can_save = true;
       }
 
-      if (this.my_title == "ASSISTANT SALES MANAGER" || this.my_title == "ASSISTANT STORE MANAGER") {
+      if (this.my_title == "ASSISTANT CUSTOMER VALUE DIRECTOR" || this.my_title == "ASSISTANT STORE MANAGER") {
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR" &&
-          _creator_title != "SALES MANAGER" &&
+          _creator_title != "CUSTOMER VALUE DIRECTOR" &&
           _creator_title != "STORE MANAGER"
         )
           can_save = true;
       }
 
-      if (this.my_title == "SR. ACCOUNT EXECUTIVE" || 
-          this.my_title == "ACCOUNT EXECUTIVE" ||
+      if (this.my_title == "SENIOR CUSTOMER VALUE SUPERVISOR" || 
+          this.my_title == "CUSTOMER VALUE SUPERVISOR" ||
           this.my_title == "JR. ACCOUNT EXECUTIVE" ||
           this.my_title == "SR. STORE SALES EXECUTIVE" ||
           this.my_title == "STORE SALES EXECUTIVE"
@@ -886,12 +886,12 @@ var app = new Vue({
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR" &&
-          _creator_title != "SALES MANAGER" &&
+          _creator_title != "CUSTOMER VALUE DIRECTOR" &&
           _creator_title != "STORE MANAGER" &&
-          _creator_title != "ASSISTANT SALES MANAGER" &&
+          _creator_title != "ASSISTANT CUSTOMER VALUE DIRECTOR" &&
           _creator_title != "ASSISTANT STORE MANAGER" &&
-          _creator_title != "SR. ACCOUNT EXECUTIVE" &&
-          _creator_title != "ACCOUNT EXECUTIVE" &&
+          _creator_title != "SENIOR CUSTOMER VALUE SUPERVISOR" &&
+          _creator_title != "CUSTOMER VALUE SUPERVISOR" &&
           _creator_title != "JR. ACCOUNT EXECUTIVE" &&
           _creator_title != "SR. STORE SALES EXECUTIVE" &&
           _creator_title != "STORE SALES EXECUTIVE" 
@@ -1636,6 +1636,9 @@ var app = new Vue({
         .getElementById("task_reply_dlg_" + item_id)
         .classList.remove("show");
 
+        var cnt = this.$refs['task_reply_msg_cnt_' + item_id][0];
+        cnt.innerHTML = "0";
+
       this.reload_task(this.proof_id);
     },
 
@@ -1701,12 +1704,20 @@ var app = new Vue({
         });
     },
 
+    count_reply(message_id, ref_id) {
+      var comment = this.$refs['task_reply_msg_' + message_id + '_' + ref_id][0];
+
+      var cnt = this.$refs['task_reply_msg_cnt_' + message_id + '_' + ref_id][0];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+    },
+
     comment_clear(task_id) {
       this.current_task_id = task_id;
       this.arrTask[task_id] = [];
       Vue.set(this.arrTask, 0, "");
       this.$refs["comment_task_" + task_id].value = "";
 
+      this.clear_message(task_id);
       this.reload_task(task_id);
     },
 
@@ -2100,6 +2111,18 @@ var app = new Vue({
       });
 
       this.canSub = true;
+    },
+
+    count_message(task_id) {
+      var comment = this.$refs['comment_task_' + task_id];
+
+      var cnt = this.$refs['comment_task_cnt' + task_id];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+    },
+
+    clear_message(task_id) {
+      var cnt = this.$refs['comment_task_cnt' + task_id];
+      cnt.innerHTML = "0";
     },
 
     comment_create(task_id) {
@@ -2739,7 +2762,7 @@ var app1 = new Vue({
     ],
     perPage: 5,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     // calendar
     attendee: [],

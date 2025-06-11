@@ -24,6 +24,9 @@ try {
 
     $user_name = $decoded->data->username;
 
+    if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 }
@@ -60,6 +63,9 @@ $sql = "SELECT  pm.id,
         pm.amount_verified,
         pm.amount_liquidated,
         pm.remark_liquidated,
+        pm.total_amount_liquidate,
+        pm.amount_of_return,
+        pm.method_of_return,
                         pm.rtype,
                         pm.dept_name
 from apply_for_petty pm 
@@ -99,6 +105,11 @@ $release_date = "";
 $release_items = [];
 $liquidate_date = "";
 $liquidate_items = [];
+
+$total_amount_liquidate = "";
+        $amount_of_return = "";
+        $method_of_return = "";
+        $apply_for_petty_liquidate = [];
 
 $amount_liquidated = 0;
 $remark_liquidated = "";
@@ -145,6 +156,37 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $amount_liquidated = $row['amount_liquidated'];
     $remark_liquidated = $row['remark_liquidated'];
+
+    $apply_for_petty_liquidate = GetAmountPettyLiquidate($row['id'], $db);
+
+    $total_amount_liquidate = $row['total_amount_liquidate'];
+    $amount_of_return = $row['amount_of_return'];
+    $method_of_return = $row['method_of_return'];
+
+    $combine_liquidate = [];
+    if($amount_liquidated == null)
+    {
+        //$total_amount_liquidate = 0;
+        foreach ($list as &$value) {
+            $obj = array(
+                "id" => $value['id'],
+                "sn" => $value['sn'],
+                "payee" => $value['payee'],
+                "particulars" => $value['particulars'],
+                "price" => $value['price'],
+                "qty" => $value['qty'],
+                "status" => $value['status']
+            );
+
+            //$total_amount_liquidate += $value['price'] * $value['qty'];
+            $combine_liquidate[] = $obj;
+        }
+    }
+    else
+    {
+        $combine_liquidate = $apply_for_petty_liquidate;
+    }
+
 
     $amount_verified = $row['amount_verified'];
 
@@ -334,8 +376,23 @@ $table4->addCell(3000, ['borderSize' => 6])->addText("Date Liquidated", ['bold' 
 $table4->addCell(7500, ['borderSize' => 6])->addText($liquidate_date, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table4->addRow();
+$table4->addCell(3000, ['borderSize' => 6])->addText("Total Amount in Liquidation Listing", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table4->addCell(7500, ['borderSize' => 6])->addText(number_format($total_amount_liquidate, 2), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+
+
+$table4->addRow();
 $table4->addCell(3000, ['borderSize' => 6])->addText("Amount Liquidated", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 $table4->addCell(7500, ['borderSize' => 6])->addText(number_format($amount_liquidated, 2), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+
+
+$table4->addRow();
+$table4->addCell(3000, ['borderSize' => 6])->addText("Amount of Return Money", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table4->addCell(7500, ['borderSize' => 6])->addText(number_format($amount_of_return, 2), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+
+
+$table4->addRow();
+$table4->addCell(3000, ['borderSize' => 6])->addText("Amount of Return Money", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table4->addCell(7500, ['borderSize' => 6])->addText($method_of_return, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 
 $table4->addRow();
@@ -346,6 +403,36 @@ addMultiLineAttach($cell, $liquidate_items);
 $table4->addRow();
 $table4->addCell(3000, ['borderSize' => 6])->addText("Remarks", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 $table4->addCell(7500, ['borderSize' => 6])->addText($remark_liquidated, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+
+
+$section->addText("Liquidation Listing");
+
+$table6 = $section->addTable('table6', [
+    'borderSize' => 6,
+    'borderColor' => 'F73605',
+    'afterSpacing' => 0,
+    'Spacing' => 0,
+    'cellMargin' => 0,
+    'textAlign' => 'center'
+]);
+
+$table6->addRow();
+$table6->addCell(2500, ['borderSize' => 6, 'bgColor' => 'EFEFEF'])->addText("Vendor", ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table6->addCell(5000, ['borderSize' => 6, 'bgColor' => 'EFEFEF'])->addText("Particulars",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table6->addCell(1000, ['borderSize' => 6, 'bgColor' => 'EFEFEF'])->addText("Price",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table6->addCell(1000, ['borderSize' => 6, 'bgColor' => 'EFEFEF'])->addText("Qty",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table6->addCell(1000, ['borderSize' => 6, 'bgColor' => 'EFEFEF'])->addText("Amount",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+
+
+foreach ($combine_liquidate as &$value) {
+    $table6->addRow();
+    $table6->addCell(2600, ['borderSize' => 6])->addText($value['payee'], [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table6->addCell(6100, ['borderSize' => 6])->addText($value['particulars'], [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table6->addCell(600, ['borderSize' => 6])->addText(number_format($value['price'], 2), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table6->addCell(600, ['borderSize' => 6])->addText(number_format($value['qty']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table6->addCell(600, ['borderSize' => 6])->addText(number_format($value['price'] * $value['qty'], 2), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+}
+
 
 $section->addText("");
 
@@ -384,7 +471,7 @@ $table3->addCell(5250, ['borderSize' => 'none'])->addText("_____________________
 
 $wording1 = "";
 $wording2 = "";
-if($amount_liquidated >= $total)
+if($amount_liquidated > $total)
 {
     $wording1 = "Released by " . $user_name;
     $wording2 = "Received by " . $requestor;
@@ -441,7 +528,7 @@ function addMultiLineAttach($cell, $strArr)
 {
     // add text line together
     foreach ($strArr as $v) {
-        $cell->addLink("https://storage.cloud.google.com/feliiximg/" . $v['gcp_name'], $v['filename'], 'Link', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+        $cell->addLink("https://storage.googleapis.com/feliiximg/" . $v['gcp_name'], $v['filename'], 'Link', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
     }
 }
 
@@ -719,6 +806,24 @@ function fiter_str($str)
 {
     $str = str_replace("&", "AND", $str);
     return $str;
+}
+
+function GetAmountPettyLiquidate($_id, $db)
+{
+    $sql = "select pm.id, sn, vendor payee, particulars, price, qty, `status`
+    from apply_for_petty_liquidate pm 
+    where `status` <> -1 and petty_id = " . $_id . " order by sn ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }
 
 function GetDepartment($dept_name)

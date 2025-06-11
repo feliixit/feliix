@@ -69,16 +69,19 @@ if($jwt){
             listing,
             qty,
             backup_qty,
+            unit,
             srp,
             date_needed,
             pid,
             v1,
             v2,
             v3,
+            v4,
             shipping_way,
             shipping_number,
             shipping_vendor,
             eta,
+            date_send,
             arrive,
             remark,
             remark_t,
@@ -100,6 +103,7 @@ if($jwt){
         $stmt->execute();
 
         $date_needed_array = [];
+        $currecny_array = [];
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
@@ -115,7 +119,14 @@ if($jwt){
             $confirm_text = GetConfirmText($confirm, $db);
             
             $product = "";
-            $product = GetProductMain($row['pid'], $row['v1'], $row['v2'], $row['v3'], $db);
+            $product = GetProductMain($row['pid'], $row['v1'], $row['v2'], $row['v3'], $row['v4'], $db);
+
+            $product_currency = GetProductCurrency($row['pid'], $db);
+            
+
+            if(in_array($product_currency, $currecny_array) == false)
+                $currecny_array[] = $product_currency;
+
 
             $brand = $row['brand'];
             $brand_other = $row['brand_other'];
@@ -127,6 +138,7 @@ if($jwt){
             $listing = $row['listing'];
             $qty = $row['qty'];
             $backup_qty = $row['backup_qty'];
+            $unit = $row['unit'];
             $srp = $row['srp'];
             $date_needed = $row['date_needed'];
 
@@ -138,6 +150,7 @@ if($jwt){
             $shipping_vendor = $row['shipping_vendor'];
 
             $eta = $row['eta'];
+            $date_send = $row['date_send'];
             $arrive = $row['arrive'];
             $remark = $row['remark'];
             $remark_t = $row['remark_t'];
@@ -150,6 +163,16 @@ if($jwt){
             $final = $row['final'];
 
             $status = $row['status'];
+
+            if($row['photo1'] == "" && $row['pid'] != "0")
+            {
+                $query = "SELECT photo1 FROM product_category WHERE id = $row[pid]";
+                $stmt2 = $db->prepare($query);
+                $stmt2->execute();
+                while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                    $photo1 = $row2['photo1'];
+                }
+            }
         
 
             $merged_results[] = array(
@@ -169,6 +192,7 @@ if($jwt){
             "listing" => $listing,
             "qty" => $qty,
             "backup_qty" => $backup_qty,
+            "unit" => $unit,
             "srp" => $srp,
             "date_needed" => $date_needed,
             "shipping_way" => $shipping_way,
@@ -178,6 +202,7 @@ if($jwt){
             "product" => $product,
 
             "eta" => $eta,
+            "date_send" => $date_send,
             "arrive" => $arrive,
             "remark" => $remark,
             "remark_t" => $remark_t,
@@ -194,6 +219,10 @@ if($jwt){
             "pid" => $row['pid'],
             );
         }
+
+        $currency_string = "";
+        sort($currecny_array);
+        $currecny_string = implode(' ', $currecny_array);
 
         $od_name = "";
         $stage_id = 0;
@@ -454,8 +483,8 @@ if($jwt){
             $sheet->setCellValue('D10', '品名/型號' . "\n" . 'CODE');
             $sheet->setCellValue('E10', '顏色/規格' . "\n" . 'COLOR/SPEC');
             $sheet->setCellValue('F10', '數量' . "\n" . 'QTY');
-            $sheet->setCellValue('G10', '單價' . "\n" . 'PRICE');
-            $sheet->setCellValue('H10', '總價' . "\n" . 'AMOUNT');
+            $sheet->setCellValue('G10', '單價' . "\n" . 'PRICE' . "\n" . '(' . $currecny_string . ')');
+            $sheet->setCellValue('H10', '總價' . "\n" . 'AMOUNT' . "\n" . '(' . $currecny_string . ')');
             $sheet->setCellValue('I10', '交期' . "\n" . 'DELIVERY');
             $sheet->setCellValue('J10', '寄送地址');
             $sheet->setCellValue('K10', '海運或空運');
@@ -595,7 +624,7 @@ if($jwt){
             $j = $i + 2;
             $sheet->mergeCells('B' . $i . ':E' . $j );
 
-            $sheet->setCellValue('F' . $i, '小計');
+            $sheet->setCellValue('F' . $i, '小計' . " " . '(' . $currecny_string . ')');
             $sheet->getStyle('F'. $i)->applyFromArray($center_style);
             $sheet->mergeCells('G' . $i . ':J' . $i);
 
@@ -622,7 +651,7 @@ if($jwt){
             $i++;
 
 
-            $sheet->setCellValue('F' . $i, '總計');
+            $sheet->setCellValue('F' . $i, '總計' . " " . '(' . $currecny_string . ')');
             $sheet->getStyle('F'. $i)->applyFromArray($center_style);
             $sheet->mergeCells('G' . $i . ':J' . $i);
 
@@ -660,14 +689,20 @@ if($jwt){
                 $short_brand = "ET";
             if(strtoupper($brand) == 'EVERLIGHT')
                 $short_brand = "EL";
+            if(strtoupper($brand) == 'GAMMA')
+                $short_brand = "GM";
             if(strtoupper($brand) == 'GENTECH')
                 $short_brand = "GT";
+            if(strtoupper($brand) == 'GLEDOPTO')
+                $short_brand = "GD";
             if(strtoupper($brand) == 'HUANG GONG')
                 $short_brand = "HG";
             if(strtoupper($brand) == 'LEDOUX')
                 $short_brand = "LD";
             if(strtoupper($brand) == 'ROOSTER')
                 $short_brand = "RT";
+            if(strtoupper($brand) == 'SASUGAS')
+                $short_brand = "SG";
             if(strtoupper($brand) == 'SEEDDESIGN')
                 $short_brand = "SD";
             if(strtoupper($brand) == 'SHAN BEN')
@@ -691,11 +726,7 @@ if($jwt){
             $payable->getFont()->setBold(true);
             $payable->getFont()->setSize(22);
             $payable->getFont()->setName('M+ 1c regular');
-            $payable = $richText->createTextRun("\n" . $serial_name . " " . $project_name . "\n" . 'C/NO. ' . $short_brand . "1 (2, 3, …)\n" . '寄件人: ');
-            $payable->getFont()->setSize(18);
-            $payable->getFont()->setName('M+ 1c regular');
-            $payable = $richText->createTextRun('盛盛國際 SSIT');
-            $payable->getFont()->setBold(true);
+            $payable = $richText->createTextRun("\n" . $serial_name . " " . $project_name . "\n" . 'C/NO. ' . $short_brand . "1 (2, 3, …)");
             $payable->getFont()->setSize(18);
             $payable->getFont()->setName('M+ 1c regular');
             $sheet->getCell('B' . $i)->setValue($richText);
@@ -788,25 +819,25 @@ if($jwt){
 
             $sheet->getRowDimension($i)->setRowHeight(126.6);
             $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
-            $payable = $richText->createTextRun('FELIIX Inc.');
+            $payable = $richText->createTextRun('FELIIX INC' . "\n" . 'Address:');
             $payable->getFont()->setBold(true);
             $payable->getFont()->setSize(18);
             $payable->getFont()->setName('M+ 1c regular');
-            $payable = $richText->createTextRun("\n" . '664 7th Avenue corner, 7th St, Caloocan, 1405 Metro Manila' . "\n" . 'Contact person: ');
+            $payable = $richText->createTextRun(' 664 7th Avenue corner, 7th St, Caloocan, 1405 Metro Manila' . "\n");
             $payable->getFont()->setSize(18);
             $payable->getFont()->setName('M+ 1c regular');
-            $payable = $richText->createTextRun('KRISTEL TAN');
+            $payable = $richText->createTextRun('Contact Person:');
             $payable->getFont()->setBold(true);
             $payable->getFont()->setSize(18);
             $payable->getFont()->setName('M+ 1c regular');
-            $payable = $richText->createTextRun("\n" . 'Mobile: 0917-625-1198');
+            $payable = $richText->createTextRun(" Lailani Ong 0938-7388808\n" . '                             Ronnie Paredes 0956-4082194');
             $payable->getFont()->setSize(18);
             $payable->getFont()->setName('M+ 1c regular');
             $sheet->getCell('B' . $i)->setValue($richText);
-            $sheet->mergeCells('B' . $i . ':D' . $i);
-            $sheet->getStyle('B' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
-            $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setSize(18);
-            $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setName('M+ 1c regular');
+            $sheet->mergeCells('B' . $i . ':E' . $i);
+            $sheet->getStyle('B' . $i . ':E' . $i)->getAlignment()->setHorizontal('left');
+            $sheet->getStyle('B' . $i . ':E' . $i)->getFont()->setSize(18);
+            $sheet->getStyle('B' . $i . ':E' . $i)->getFont()->setName('M+ 1c regular');
             $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style2);
             $sheet->getStyle('B'. $i)->getAlignment()->setWrapText(true);
             $i++;
@@ -925,6 +956,9 @@ function GetConfirmText($loc)
             break;
         case "N":
             $location = "Not Yet Confirmed";
+            break;
+        case "J":
+            $location = "From Warehouse";
             break;
         case "D":
             $location = "Deleted";
@@ -1093,7 +1127,24 @@ function GetValue($str)
     return isset($obj[1]) ? trim($obj[1]) : "";
 }
 
-function GetProductMain($id, $v1, $v2, $v3, $db)
+function GetProductCurrency($id, $db)
+{
+    $sql = "SELECT currency FROM product_category WHERE id = ". $id . " and STATUS <> -1";
+    $currency = "";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        if($row['currency'] != '')
+            $currency = $row['currency'];
+    }
+
+    return $currency;
+}
+
+function GetProductMain($id, $v1, $v2, $v3, $v4, $db)
 {
     $sql = "SELECT * FROM product_category WHERE id = ". $id . " and STATUS <> -1";
     $merged_results = array();
@@ -1108,7 +1159,7 @@ function GetProductMain($id, $v1, $v2, $v3, $db)
         if($row['price_ntd'] != '')
             $price_ntd = $row['price_ntd'];
        
-        $product = GetProduct($id, $v1, $v2, $v3, $db);
+        $product = GetProduct($id, $v1, $v2, $v3, $v4, $db);
         if($product != '')
             $price_ntd = $product;
     }
@@ -1116,8 +1167,8 @@ function GetProductMain($id, $v1, $v2, $v3, $db)
     return $price_ntd;
 }
 
-function GetProduct($id, $pv1, $pv2, $pv3, $db){
-    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+function GetProduct($id, $pv1, $pv2, $pv3, $pv4, $db){
+    $sql = "SELECT *, CONCAT('https://storage.googleapis.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
 
     $merged_results = array();
 
@@ -1129,9 +1180,11 @@ function GetProduct($id, $pv1, $pv2, $pv3, $db){
         $k1 = GetKey($row['1st_variation']);
         $k2 = GetKey($row['2rd_variation']);
         $k3 = GetKey($row['3th_variation']);
+        $k4 = GetKey($row['4th_variation']);
         $v1 = GetValue($row['1st_variation']);
         $v2 = GetValue($row['2rd_variation']);
         $v3 = GetValue($row['3th_variation']);
+        $v4 = GetValue($row['4th_variation']);
         $checked = '';
         $code = $row['code'];
         $price = $row['price'];
@@ -1154,9 +1207,11 @@ function GetProduct($id, $pv1, $pv2, $pv3, $db){
                                     "k1" => $k1, 
                                     "k2" => $k2, 
                                     "k3" => $k3, 
+                                    "k4" => $k4,
                                     "v1" => $v1, 
                                     "v2" => $v2, 
                                     "v3" => $v3, 
+                                    "v4" => $v4,
                                     "checked" => $checked, 
                                     "code" => $code, 
                                     "price" => $price, 
@@ -1181,7 +1236,7 @@ function GetProduct($id, $pv1, $pv2, $pv3, $db){
     // find in merged_results with v1, v2 and v3
     $price_ntd = "";
     foreach($merged_results as $item) {
-        if($item['v1'] == $pv1 && $item['v2'] == $pv2 && $item['v3'] == $pv3) {
+        if($item['v1'] == $pv1 && $item['v2'] == $pv2 && $item['v3'] == $pv3 && $item['v4'] == $pv4) {
             if($item['price_ntd'] != '')
                 $price_ntd = $item['price_ntd'];
         }

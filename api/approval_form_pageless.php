@@ -468,6 +468,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                         `v1` = :v1,
                         `v2` = :v2,
                         `v3` = :v3,
+                        `v4` = :v4,
+                        `ps_var` = :ps_var,
                         `photo` = :photo,
                         `photo2` = :photo2,
                         `photo3` = :photo3,
@@ -491,6 +493,11 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $v1 = isset($block_array[$k]['v1']) ? $block_array[$k]['v1'] : '';
                     $v2 = isset($block_array[$k]['v2']) ? $block_array[$k]['v2'] : '';
                     $v3 = isset($block_array[$k]['v3']) ? $block_array[$k]['v3'] : '';
+                    $v4 = isset($block_array[$k]['v4']) ? $block_array[$k]['v4'] : '';
+
+                    $ps_var = isset($block_array[$k]['ps_var']) ? $block_array[$k]['ps_var'] : [];
+                    $json_ps_var = json_encode($ps_var);
+
                     $listing = isset($block_array[$k]['list']) ? $block_array[$k]['list'] : '';
 
                     $notes = isset($block_array[$k]['notes']) ? $block_array[$k]['notes'] : '';
@@ -515,6 +522,9 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $stmt->bindParam(':v1', $v1);
                     $stmt->bindParam(':v2', $v2);
                     $stmt->bindParam(':v3', $v3);
+                    $stmt->bindParam(':v4', $v4);
+                    $stmt->bindParam(':ps_var', $json_ps_var);
+                    
                     $stmt->bindParam(':listing', $listing);
                     
                     $stmt->bindParam(':create_id', $user_id);
@@ -832,9 +842,9 @@ function GetSubTotalInfo($qid, $db, $prefix)
 
     $query = "
             select COALESCE(sum(amount), 0) amt from " . $prefix . "quotation_page_type_block
-            WHERE `status` <> -1 and  type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount = 0)
+            WHERE `status` <> -1 and  type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount = 0 and status <> -1)
             union all
-            select COALESCE(sum(real_amount), 0) from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0
+            select COALESCE(sum(real_amount), 0) from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and status <> -1
     ";
 
     // prepare the query
@@ -858,9 +868,9 @@ function GetSubTotalInfoNotShowA($qid, $db, $prefix)
 
     $query = "
             select COALESCE(sum(amount), 0) amt from " . $prefix . "quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A'  and real_amount = 0)
+            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A'  and real_amount = 0 and status <> -1)
             union all
-            select COALESCE(sum(real_amount), 0) from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'A' 
+            select COALESCE(sum(real_amount), 0) from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'A'  and status <> -1
     ";
 
     // prepare the query
@@ -885,9 +895,9 @@ function GetSubTotalInfoNotShowB($qid, $db, $prefix)
 
     $query = "
             select COALESCE(sum(amount), 0) amt from " . $prefix . "quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B'  and real_amount = 0)
+            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B'  and real_amount = 0 and status <> -1)
             union all
-            select COALESCE(sum(real_amount), 0) from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'B' 
+            select COALESCE(sum(real_amount), 0) from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'B'  and status <> -1
     ";
 
     // prepare the query
@@ -911,7 +921,7 @@ function GetSubTotalNoVat($qid, $db, $prefix)
 
     $query = "
             select sum(qty * price * (1 - discount / 100) * ratio) amt from " . $prefix . "quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' )
+            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and status <> -1 )
     ";
 
     // prepare the query
@@ -936,7 +946,7 @@ function GetSubTotalNoVatA($qid, $db, $prefix)
 
     $query = "
             select sum(qty * price * (1 - discount / 100) * ratio) amt from " . $prefix . "quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A')
+            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A' and status <> -1)
     ";
 
     // prepare the query
@@ -961,7 +971,7 @@ function GetSubTotalNoVatB($qid, $db, $prefix)
 
     $query = "
             select sum(qty * price * (1 - discount / 100) * ratio) amt from " . $prefix . "quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B')
+            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B' and status <> -1)
     ";
 
     // prepare the query
@@ -985,7 +995,7 @@ function GetSubTotalNoVatNotShow($qid, $db, $prefix)
 
     $query = "
             select COALESCE(sum(qty * ratio * price * (1 - discount / 100)), 0) amt from " . $prefix . "quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '')
+            WHERE `status` <> -1 and type_id in (select id from " . $prefix . "quotation_page_type where quotation_id = " . $qid . " and not_show = '' and status <> -1)
     ";
 
     // prepare the query
@@ -1150,7 +1160,7 @@ function GetPages($qid, $db, $prefix){
         WHERE  quotation_id = " . $qid . " ";
 
     if($prefix != "")
-        $query .= " and page = 1 ";
+        $query .= " and page = 1 and create_id is not null ";
 
     $query .= "
         AND `status` <> -1 
@@ -1394,7 +1404,7 @@ function GetSigInfo($qid, $db, $prefix)
                 "id" => $id,
                 "type" => $type,
                 "photo" => $photo,
-                "url" =>  $photo != '' ? 'https://storage.cloud.google.com/feliiximg/' . $photo : '',
+                "url" =>  $photo != '' ? 'https://storage.googleapis.com/feliiximg/' . $photo : '',
                 "name" => $name,
                 "position" => $position,
                 "phone" => $phone,
@@ -1484,7 +1494,7 @@ function GetSig($qid, $page, $db, $prefix)
                 "id" => $id,
                 "type" => $type,
                 "photo" => $photo,
-                "url" =>  $photo != '' ? 'https://storage.cloud.google.com/feliiximg/' . $photo : '',
+                "url" =>  $photo != '' ? 'https://storage.googleapis.com/feliiximg/' . $photo : '',
                 "name" => $name,
                 "position" => $position,
                 "phone" => $phone,
@@ -1761,6 +1771,8 @@ function GetBlocks($qid, $db, $prefix){
         v1,
         v2,
         v3,
+        v4,
+        ps_var,
         listing,
         num,
         notes, ";
@@ -1802,6 +1814,9 @@ $query .= "
         $v1 = $row['v1'];
         $v2 = $row['v2'];
         $v3 = $row['v3'];
+        $v4 = $row['v4'];
+        $ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
+
         $listing = $row['listing'];
         $approval = [];
 if($prefix == 'approval_form_'){
@@ -1838,6 +1853,8 @@ if($prefix == 'approval_form_'){
             "v1" => $v1,
             "v2" => $v2,
             "v3" => $v3,
+            "v4" => $v4,
+            "ps_var" => $ps_var,
             "list" => $listing,
             "approval" => $approval,
         );
@@ -1909,10 +1926,14 @@ function GetProductItems($pages, $q_id, $db)
                 $v1 = $row['v1'];
                 $v2 = $row['v2'];
                 $v3 = $row['v3'];
+                $v4 = $row['v4'];
+
+                // $ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
+
                 $listing = $row['list'];
             
                 $type == "" ? "" : "image";
-                $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+                $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
             
                 $merged_results[] = array(
                     "id" => $id,
@@ -1934,6 +1955,7 @@ function GetProductItems($pages, $q_id, $db)
                     "v1" => $v1,
                     "v2" => $v2,
                     "v3" => $v3,
+                    "v4" => $v4,
                     "list" => $listing,
                 );
                 

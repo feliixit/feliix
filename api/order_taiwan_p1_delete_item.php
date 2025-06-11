@@ -60,6 +60,7 @@ try{
         $query = "update od_item
         SET
             status = -1,
+            status_at = now(),
             updated_id = :updated_id,
             updated_at = now()
         where id = :id ";

@@ -49,15 +49,136 @@ $(function(){
 
 <style type="text/css"> 
 
-li.a
-{ 
-overflow-x:hidden;
-white-space:nowrap; 
-height: 1em;
-width: 100%;
-display:inline; 
-}       
-    </style>
+    li.a
+    {
+        overflow-x:hidden;
+        white-space:nowrap;
+        height: 1em;
+        width: 100%;
+        display:inline;
+    }
+    
+    .block .tablebox2.group1,
+    .block .tablebox2.group2,
+    .block .tablebox2.group3,
+    .block .tablebox2.group4,
+    .block .tablebox2.group5,
+    .block .tablebox2.group6
+     {
+        position: relative;
+        padding-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    .block .tablebox2.group7
+     {
+        position: relative;
+        padding-top: 30px;
+    }
+
+    div.tablebox2.group1::before {
+        content: 'Business Relationship Team';
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
+        background: rgba(253, 183, 47, 0.7);
+        text-align: center;
+        padding: 3px 0 4px;
+    }
+
+    div.tablebox2.group2::before {
+        content: 'Lighting Team';
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
+        background: rgba(253, 183, 47, 0.7);
+        text-align: center;
+        padding: 3px 0 4px;
+    }
+
+    div.tablebox2.group3::before {
+        content: 'Office Team';
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
+        background: rgba(253, 183, 47, 0.7);
+        text-align: center;
+        padding: 3px 0 4px;
+    }
+
+    div.tablebox2.group4::before {
+        content: 'Engineering Team';
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
+        background: rgba(253, 183, 47, 0.7);
+        text-align: center;
+        padding: 3px 0 4px;
+    }
+
+    div.tablebox2.group5::before {
+        content: 'Design Team';
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
+        background: rgba(253, 183, 47, 0.7);
+        text-align: center;
+        padding: 3px 0 4px;
+    }
+
+    div.tablebox2.group6::before {
+        content: 'Admin Team';
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
+        background: rgba(253, 183, 47, 0.7);
+        text-align: center;
+        padding: 3px 0 4px;
+    }
+
+    div.tablebox2.group7::before {
+        content: 'Other';
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
+        background: rgba(253, 183, 47, 0.7);
+        text-align: center;
+        padding: 3px 0 4px;
+    }
+
+    .block .tablebox2.group1 ul li:nth-of-type(2),
+    .block .tablebox2.group2 ul li:nth-of-type(2),
+    .block .tablebox2.group3 ul li:nth-of-type(2),
+    .block .tablebox2.group4 ul li:nth-of-type(2),
+    .block .tablebox2.group5 ul li:nth-of-type(2),
+    .block .tablebox2.group6 ul li:nth-of-type(2),
+    .block .tablebox2.group7 ul li:nth-of-type(2)
+     {
+        min-width: 132.5px;
+    }
+
+</style>
     
 <body class="second">
  	
@@ -155,7 +276,8 @@ display:inline;
             </h6>
             <div class="box-content">
                 <!-- 表單樣式 -->
-                <div class="tablebox2">
+                <!-- 放入部門為 Sales 的所有成員 -->
+                <div class="tablebox2 group1">
                     <ul class="head">
                         <li>Status</li>
                         <li>Name</li>
@@ -163,14 +285,121 @@ display:inline;
                         <li>Location</li>
                         <li>Detail</li>
                     </ul>
-                    <ul v-for='(record, index) in displayedRecord'>
+                    <ul v-for='(record, index) in displayedRecordSales'>
                         <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
                         <li>{{ record.username }}</li>
                         <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
                         <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
                         <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
                     </ul>
+                </div>
 
+                <!-- 放入部門為 Lighting 的所有成員 -->
+                <div class="tablebox2 group2">
+                    <ul class="head">
+                        <li>Status</li>
+                        <li>Name</li>
+                        <li>Time In</li>
+                        <li>Location</li>
+                        <li>Detail</li>
+                    </ul>
+                    <ul v-for='(record, index) in displayedRecordLighting'>
+                        <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
+                        <li>{{ record.username }}</li>
+                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
+                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
+                        <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
+                    </ul>
+                </div>
+
+                <!-- 放入部門為 Office 的所有成員 -->
+                <div class="tablebox2 group3">
+                    <ul class="head">
+                        <li>Status</li>
+                        <li>Name</li>
+                        <li>Time In</li>
+                        <li>Location</li>
+                        <li>Detail</li>
+                    </ul>
+                    <ul v-for='(record, index) in displayedRecordOffice'>
+                        <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
+                        <li>{{ record.username }}</li>
+                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
+                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
+                        <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
+                    </ul>
+                </div>
+
+                <!-- 放入部門為 Engineering 的所有成員 -->
+                <div class="tablebox2 group4">
+                    <ul class="head">
+                        <li>Status</li>
+                        <li>Name</li>
+                        <li>Time In</li>
+                        <li>Location</li>
+                        <li>Detail</li>
+                    </ul>
+                    <ul v-for='(record, index) in displayedRecordEngineering'>
+                        <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
+                        <li>{{ record.username }}</li>
+                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
+                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
+                        <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
+                    </ul>
+                </div>
+
+                <!-- 放入部門為 Design 的所有成員 -->
+                <div class="tablebox2 group5">
+                    <ul class="head">
+                        <li>Status</li>
+                        <li>Name</li>
+                        <li>Time In</li>
+                        <li>Location</li>
+                        <li>Detail</li>
+                    </ul>
+                    <ul v-for='(record, index) in displayedRecordDesign'>
+                        <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
+                        <li>{{ record.username }}</li>
+                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
+                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
+                        <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
+                    </ul>
+                </div>
+
+                <!-- 放入部門為 Admin 的所有成員 -->
+                <div class="tablebox2 group6">
+                    <ul class="head">
+                        <li>Status</li>
+                        <li>Name</li>
+                        <li>Time In</li>
+                        <li>Location</li>
+                        <li>Detail</li>
+                    </ul>
+                    <ul v-for='(record, index) in displayedRecordAdmin'>
+                        <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
+                        <li>{{ record.username }}</li>
+                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
+                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
+                        <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
+                    </ul>
+                </div>
+
+                <!-- 不屬於上面六群的使用者，都放到這裡 -->
+                <div class="tablebox2 group7">
+                    <ul class="head">
+                        <li>Status</li>
+                        <li>Name</li>
+                        <li>Time In</li>
+                        <li>Location</li>
+                        <li>Detail</li>
+                    </ul>
+                    <ul v-for='(record, index) in displayedRecordOthers'>
+                        <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
+                        <li>{{ record.username }}</li>
+                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
+                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
+                        <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
+                    </ul>
                 </div>
                 <!-- 表單樣式 -->
             </div>
@@ -178,8 +407,8 @@ display:inline;
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/attendance.js"></script>
 </html>

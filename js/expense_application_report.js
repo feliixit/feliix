@@ -14,7 +14,7 @@ var app = new Vue({
 
     total: 0,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     proof_remark: "",
 
@@ -104,7 +104,14 @@ var app = new Vue({
               _this.fil_type = tmp[1];
               break;
             case "fs":
-              _this.fil_status = tmp[1].split(",");
+              var temp = tmp[1].split(",");
+              if(temp.length > 0)
+              {
+                // remove the first empty element
+                if(temp[0] == "")
+                  temp.shift();
+              }
+                _this.fil_status = temp;
               break;
             case "fat":
               _this.fil_amount_type = tmp[1];

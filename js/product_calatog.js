@@ -4,7 +4,7 @@ var app = new Vue({
     
     submit: false,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
 
     //
@@ -124,7 +124,7 @@ var app = new Vue({
     },
 
     show_ntd : function() {
-      if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+      if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan' || this.name.toLowerCase() ==='testmanager')
        return true;
       else
       return false;

@@ -58,6 +58,8 @@ var app = new Vue({
         schedule_confirm: false,
 
         content : {},
+
+        innova: false,
     },
     created() {
 
@@ -88,6 +90,7 @@ var app = new Vue({
         this.getUsers();
 
         this.getAccess();
+        this.getInnovaStatus();
     
     },
     methods: {
@@ -995,6 +998,27 @@ var app = new Vue({
             this.schedule_confirm = res.data.schedule_confirm;
           },
 
+          getInnovaStatus: function() {
+            let _this = this;
+      
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+              .get('api/car_use_switcher', { headers: { "Authorization": `Bearer ${token}` }, params: { car: 'Innova' } })
+              .then(
+                (res) => {
+                    _this.innova = res.data.Innova;
+                  
+                },
+                (err) => {
+                  alert(err.response);
+                },
+              )
+              .finally(() => {
+      
+              });
+          },
+
         updateConfirm: function (vlock) {
             this.action = 9; //update lock status
             var token = localStorage.getItem("token");
@@ -1313,12 +1337,18 @@ var app = new Vue({
         document.getElementById("btn_withdraw").style.display = "none";
     }
 
-    if (app.name == "Dennis Lin" ||
-        app.name == "dereck" ||
-        app.name == "Aiza Eisma" ||
-        app.name == "Kristel Tan" ||
-        app.name == "Alleah Belmonte" 
-    ) {
+    if( app.name == "Dennis Lin" ||
+    app.name == "dereck" ||
+    app.name == "Aiza Eisma" ||
+    app.name == "Kristel Tan" ||
+    app.name == "Alleah Belmonte" ||
+    app.name == "Bea Claudine M. Zara" ||
+    app.name == "Aurielyn P. Paralejas" ||
+app.name == "Charlenne Cosejo" ||
+app.name == "Ranel Villanueva" ||
+app.name == "Michael Angelo Noveros" ||
+app.name == "Francis Custodio" ||
+app.name == "Marvic Perez") {
         if(app.content.status == '1' || app.content.status == '2')
         {
             document.getElementById("btn_request").style.display = "none";
@@ -1332,7 +1362,13 @@ var app = new Vue({
         }
     }
 
-    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    if(sc_content.Service == 'Innova' && app.innova)
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if(sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
     {
         document.getElementById("btn_request").style.display = "none";
         document.getElementById("btn_withdraw").style.display = "none";
@@ -2041,12 +2077,18 @@ var initial = async (_id) =>  {
         document.getElementById("btn_withdraw").style.display = "none";
     }
 
-    if (app.name == "Dennis Lin" ||
+    if( app.name == "Dennis Lin" ||
         app.name == "dereck" ||
         app.name == "Aiza Eisma" ||
         app.name == "Kristel Tan" ||
-        app.name == "Alleah Belmonte" 
-    ) {
+        app.name == "Alleah Belmonte" ||
+        app.name == "Bea Claudine M. Zara" ||
+        app.name == "Aurielyn P. Paralejas" ||
+	app.name == "Charlenne Cosejo" ||
+	app.name == "Ranel Villanueva" ||
+	app.name == "Michael Angelo Noveros" ||
+	app.name == "Francis Custodio" ||
+	app.name == "Marvic Perez") {
         if(sc_content.status == '1' || sc_content.status == '2')
         {
             document.getElementById("btn_request").style.display = "none";
@@ -2075,7 +2117,14 @@ var initial = async (_id) =>  {
         }
     }
 
-    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    
+    if(sc_content.Service == 'Innova' && app.innova)
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if(sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
     {
         document.getElementById("btn_request").style.display = "none";
         document.getElementById("btn_withdraw").style.display = "none";
@@ -2999,12 +3048,18 @@ $(document).on("click", "#btn_cancel", async function () {
         document.getElementById("btn_withdraw").style.display = "none";
     }
 
-    if (app.name == "Dennis Lin" ||
+    if( app.name == "Dennis Lin" ||
         app.name == "dereck" ||
         app.name == "Aiza Eisma" ||
         app.name == "Kristel Tan" ||
-        app.name == "Alleah Belmonte" 
-    ) {
+        app.name == "Alleah Belmonte" ||
+        app.name == "Bea Claudine M. Zara" ||
+        app.name == "Aurielyn P. Paralejas" ||
+	app.name == "Charlenne Cosejo" ||
+	app.name == "Ranel Villanueva" ||
+	app.name == "Michael Angelo Noveros" ||
+	app.name == "Francis Custodio" ||
+	app.name == "Marvic Perez") {
         if(sc_content.status == '1' || sc_content.status == '2')
         {
             document.getElementById("btn_request").style.display = "none";
@@ -3018,7 +3073,14 @@ $(document).on("click", "#btn_cancel", async function () {
         }
     }
 
-    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    
+    if(sc_content.Service == 'Innova' && app.innova)
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if(sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
     {
         document.getElementById("btn_request").style.display = "none";
         document.getElementById("btn_withdraw").style.display = "none";

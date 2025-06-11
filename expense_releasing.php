@@ -1,3 +1,4 @@
+<?php include 'check.php';?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +39,7 @@
 <script type="text/javascript" src="js/main.js" defer></script>
 
 <!-- import CSS -->
-<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="css/element-ui/theme-chalk/index.css">
 
 
 
@@ -267,7 +268,7 @@ $(function(){
                             <li>
                                 <select style="width:100%" v-model="new_info_account">
                                     <option value="Office Petty Cash">Office Petty Cash</option>
-                                    <option value="Online Transactions">Online Transactions</option>
+                                    <option value="Online Transactions" disabled>Online Transactions</option>
                                     <option value="Security Bank">Security Bank</option>
                                 </select>
                             </li>
@@ -298,7 +299,7 @@ $(function(){
                             <li v-if="new_info_category == 'Marketing' || new_info_category == 'Office Needs' || new_info_category == 'Others' || new_info_category == 'Projects' || new_info_category == 'Store'" >
                                 <select style="width:100%" v-model="new_info_sub_category">
                                     <option value=""></option>
-
+                                    <option value="Accommodation">Accommodation</option>
                                     <option value="Allowance">Allowance</option>
                                     <option value="Commission">Commission</option>
                                     <option value="Delivery">Delivery</option>
@@ -310,10 +311,12 @@ $(function(){
                                     <option value="Mock-up">Mock-up</option>
                                     <option value="Others">Others</option>
                                     <option value="Outsource">Outsource</option>
+                                    <option value="Payroll/Salary">Payroll/Salary</option>
                                     <option value="Petty cash">Petty cash</option>
                                     <option value="Products">Products</option>
                                     <option value="Site Visit">Site Visit</option>
                                     <option value="Supplies">Supplies</option>
+                                    <option value="Team Building">Team Building</option>
                                     <option value="Tools and Materials">Tools and Materials</option>
                                     <option value="Transportation">Transportation</option>
                                 </select>
@@ -324,7 +327,9 @@ $(function(){
                                 <select style="width:100%" v-model="new_info_remark">
                                     <option value=""></option>
                                     <option value="Cash">Cash</option>
+                                    <option value="GCash">GCash</option>
                                     <option value="Check">Check</option>
+                                    <option value="DigiBanker">DigiBanker</option>
                                     <option value="Other">Other</option>
                                 </select>
                                 <input v-if="new_info_remark == 'Other'" type="text" id="specific_payableto" ref="specific_payableto" v-model="new_info_remark_other" style="width:100%; margin-top: 5px;" placeholder="Please Specify ...">
@@ -369,13 +374,13 @@ $(function(){
         </div>
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 <script defer src="js/a076d05399.js"></script>
 
 <script>
@@ -383,6 +388,6 @@ $(function(){
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/expense_releasing.js?random=<?php echo uniqid(); ?>"></script>
 </html>

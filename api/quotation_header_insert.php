@@ -19,6 +19,7 @@ $prepare_for_second_line = isset($_POST['prepare_for_second_line']) ? $_POST['pr
 $prepare_for_third_line = isset($_POST['prepare_for_third_line']) ? $_POST['prepare_for_third_line'] : '';
 $prepare_by_first_line = isset($_POST['prepare_by_first_line']) ? $_POST['prepare_by_first_line'] : '';
 $prepare_by_second_line = isset($_POST['prepare_by_second_line']) ? $_POST['prepare_by_second_line'] : '';
+$prepare_by_third_line = isset($_POST['prepare_by_third_line']) ? $_POST['prepare_by_third_line'] : '';
 $pageless = isset($_POST['pageless']) ? $_POST['pageless'] : '';
 
 include_once 'config/core.php';
@@ -68,6 +69,7 @@ else
             `prepare_for_third_line` = :prepare_for_third_line,
             `prepare_by_first_line` = :prepare_by_first_line,
             `prepare_by_second_line` = :prepare_by_second_line,
+            `prepare_by_third_line` = :prepare_by_third_line,
             `pageless` = :pageless,
             `status` = 0,
             `create_id` = :create_id,
@@ -87,6 +89,7 @@ else
         $stmt->bindParam(':prepare_for_third_line', $prepare_for_third_line);
         $stmt->bindParam(':prepare_by_first_line', $prepare_by_first_line);
         $stmt->bindParam(':prepare_by_second_line', $prepare_by_second_line);
+        $stmt->bindParam(':prepare_by_third_line', $prepare_by_third_line);
         $stmt->bindParam(':pageless', $pageless);
 
         $stmt->bindParam(':create_id', $user_id);

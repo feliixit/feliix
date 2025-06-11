@@ -14,6 +14,7 @@ var app = new Vue({
     project_approves: {},
     project_quotes: {},
     project_action_detials: {},
+    project_specials: {},
 
     project_groups: {},
     categorys : {},
@@ -178,6 +179,12 @@ var app = new Vue({
     // Quotation name
     quotation_name: '',
 
+        // special agreement
+        special_remark:'',
+        special_fileArray: [],
+        special_canSub: true,
+        special_finish: false,
+
     verified_quotation: false,
 
     submit : false,
@@ -207,6 +214,9 @@ var app = new Vue({
 
     project_orders: [],
 
+    // transmittal
+    transmittal: [],
+
   },
 
   created () {
@@ -229,6 +239,7 @@ var app = new Vue({
         _this.getProjectQuotation(_this.project_id);
         _this.getProjectApprove(_this.project_id);
         _this.getProjectActionDetails(_this.project_id);
+        _this.getProjectSpecial(_this.project_id);
         _this.getUsers();
         _this.getUsersDeleted(_this.project_id);
         _this.getFileManagement(_this.project_id);
@@ -238,6 +249,7 @@ var app = new Vue({
         _this.getExpenseRecord(_this.project_id);
         
         _this.getOrderRecord(_this.project_id);
+        _this.getTransmittal(_this.project_id);
       });
     }
 
@@ -392,6 +404,32 @@ var app = new Vue({
       deep: true
     },
 
+    special_fileArray: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.special_fileArray.length) {
+          this.special_finish = true;
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.special_finish = true;
+            _this.getProjectActionDetails(_this.project_id);
+
+          });;
+          this.special_clear();
+        }
+      },
+      deep: true
+    },
 
     comm_fileArray: {
       handler(newValue, oldValue) {
@@ -453,6 +491,12 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    special_deleteFile(index) {
+      this.special_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.special_file;
+      fileTarget.value = "";
+    },
+
     quote_deleteFile(index) {
       this.quote_fileArray.splice(index, 1);
       var fileTarget = this.$refs.quote_file;
@@ -487,6 +531,23 @@ var app = new Vue({
           ) {
             var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
             this.approve_fileArray.push(fileItem);
+          }else{
+            fileTarget.value = "";
+          }
+        }
+    },
+
+    special_changeFile() {
+      var fileTarget = this.$refs.special_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+          // remove duplicate
+          if (
+            this.special_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+            this.special_fileArray.length == 0
+          ) {
+            var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+            this.special_fileArray.push(fileItem);
           }else{
             fileTarget.value = "";
           }
@@ -792,6 +853,35 @@ var app = new Vue({
                 });
         },
 
+        getTransmittal: function(keyword) {
+          let _this = this;
+    
+          if(keyword == 0)
+            return;
+    
+          const params = {
+                  pid : keyword,
+                };
+    
+              let token = localStorage.getItem('accessToken');
+        
+              axios
+                  .get('api/project_transmittal', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                  .then(
+                  (res) => {
+
+                      _this.transmittal = res.data;
+
+                  },
+                  (err) => {
+                      alert(err.response);
+                  },
+                  )
+                  .finally(() => {
+                      
+                  });
+          },
+
       apply_for_expense : function() {
         location.href = "apply_for_expense?prj_id=" + this.project_id;
       },
@@ -1004,6 +1094,33 @@ var app = new Vue({
                   .then(
                   (res) => {
                       _this.project_approves = res.data;
+                  },
+                  (err) => {
+                      alert(err.response);
+                  },
+                  )
+                  .finally(() => {
+                      
+                  });
+          },
+
+        getProjectSpecial: function(keyword) {
+          let _this = this;
+    
+          if(keyword == 0)
+            return;
+    
+          const params = {
+                  pid : keyword,
+                };
+    
+              let token = localStorage.getItem('accessToken');
+        
+              axios
+                  .get('api/project_special_agreement_get', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                  .then(
+                  (res) => {
+                      _this.project_specials = res.data;
                   },
                   (err) => {
                       alert(err.response);
@@ -1712,6 +1829,21 @@ var app = new Vue({
           document.getElementById('status_fn8').classList.remove("focus");
       },
 
+        special_clear() {
+
+          this.special_remark = '';
+          this.special_fileArray = [];
+          this.$refs.special_file.value = '';
+
+          //this.getProjectDetail(this.project_id);
+          this.special_canSub = true;
+
+          this.getProjectSpecial(this.project_id);
+          
+          document.getElementById('special_dialog').classList.remove("show");
+          document.getElementById('status_fn10').classList.remove("focus");
+      },
+
         quote_clear() {
 
           this.quote_remark = '';
@@ -1905,6 +2037,64 @@ var app = new Vue({
                   _this.getProject(_this.project_id);
                   _this.getFileManagement(_this.project_id);
                   _this.getProjectApprove(_this.project_id);
+              })
+              .catch(function(response) {
+                  //handle error
+                  Swal.fire({
+                    text: response.data,
+                    icon: "info",
+                    confirmButtonText: "OK",
+                  });
+              });
+      },
+
+        special_create() {
+          let _this = this;
+
+          if (this.special_remark.trim() == '') {
+            Swal.fire({
+              text: 'Description is required, please input the content.',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+              
+              //$(window).scrollTop(0);
+              return;
+          }
+
+          var token = localStorage.getItem("token");
+
+          _this.submit = true;
+          var form_Data = new FormData();
+
+          form_Data.append('pid', this.project_id);
+          form_Data.append('remark', this.special_remark.trim());
+          form_Data.append("jwt", token);
+
+          for (var i = 0; i < this.special_fileArray.length; i++) {
+            let file = this.special_fileArray[i];
+            form_Data.append("files[" + i + "]", file);
+          }
+
+          axios({
+                  method: 'post',
+                  headers: {
+                      'Content-Type': 'multipart/form-data',
+                      Authorization: `Bearer ${token}`
+                  },
+                  url: 'api/project_special',
+                  data: form_Data
+              })
+              .then(function(response) {
+                  Swal.fire({
+                    text: response.data.message,
+                    icon: "info",
+                    confirmButtonText: "OK",
+                  });
+                  _this.special_clear();
+                  _this.getProject(_this.project_id);
+
+                  _this.getProjectSpecial(_this.project_id);
               })
               .catch(function(response) {
                   //handle error

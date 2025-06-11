@@ -12,7 +12,7 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     proof_remark: "",
     reject_reason: "",
@@ -28,6 +28,29 @@ var app = new Vue({
     perPage: 10000,
 
     is_approval: false,
+
+    pid:0,
+    e_editing: false,
+
+    petty_list: [],
+
+    list_payee: "",
+    list_particulars: "",
+    list_price: 0,
+    list_qty: 0,
+
+    e_org_payee: "",
+    e_org_particulars: "",
+    e_org_price: 0,
+    e_org_qty: 0,
+
+    e_org_id: 0,
+
+    list_sn: 0,
+
+    amount_of_return:"",
+    method_of_return:"",
+    total_amount_liquidate:"",
   },
 
   created() {
@@ -42,6 +65,20 @@ var app = new Vue({
 
     wrongNumber: function () {
       return this.isNumeric(this.record.total) === false
+    },
+
+    list_amonut: function() {
+      return this.list_price * this.list_qty;
+    },
+
+    sum_amonut: function() {
+      let sum = 0.0;
+      for (i = 0; i < this.petty_list.length; i++) {
+        sum += this.petty_list[i].qty * this.petty_list[i].price;
+      }
+
+      this.total_amount_liquidate = sum;
+      return sum;
     },
     
   },
@@ -179,7 +216,12 @@ var app = new Vue({
       form_Data.append("crud", "Liquidated");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
-      form_Data.append("amount", this.amount_liquidated.replaceAll(',', ''));
+      form_Data.append("amount", this.parsenumber(this.amount_liquidated));
+
+      form_Data.append("amount_of_return", this.amount_of_return);
+      form_Data.append("method_of_return", this.method_of_return);
+      form_Data.append("total_amount_liquidate", this.total_amount_liquidate);
+      form_Data.append("items", JSON.stringify(this.petty_list));
 
       if(this.record.status == 7)
       {
@@ -383,7 +425,91 @@ var app = new Vue({
         this.amount_liquidated = this.record.amount_liquidated;
       else
         this.amount_liquidated = Number(this.record.amount_liquidated).toLocaleString();
+
+      if(!this.record.total_amount_liquidate)
+        this.total_amount_liquidate = this.record.total_amount_liquidate;
+      else
+        this.total_amount_liquidate = Number(this.record.total_amount_liquidate).toLocaleString();
+
+      if(!this.record.amount_of_return)
+        this.amount_of_return = this.record.amount_of_return;
+      else
+        this.amount_of_return = Number(this.record.amount_of_return).toLocaleString();
+
+        this.method_of_return = this.record.method_of_return;
+
+      this.petty_list = JSON.parse(JSON.stringify(this.record.apply_for_petty_liquidate));
+
       this.view_detail = true;
+    },
+
+    caculate_total: function() {
+      var total = Math.min(this.parsenumber(this.record.total), this.parsenumber(this.sum_amonut));
+
+      if(this.parsenumber(this.amount_liquidated) > total)
+      {
+        Swal.fire({
+          text: 'User is not allowed to liquidate the amount more than the minimal of “Total Amount Requested” and “Amount in Liquidation Listing”.',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        });
+
+        this.amount_liquidated = total;
+        this.amount_of_return = this.parsenumber(this.record.total) - this.parsenumber(this.amount_liquidated);
+
+        return false;
+      }
+      else
+      {
+        this.amount_of_return = this.parsenumber(this.record.total) - this.parsenumber(this.amount_liquidated);
+
+        return true;
+      }
+
+    },
+    
+    _edit: function(eid) {
+      var element = this.petty_list.find(({ id }) => id === eid);
+
+      this.e_org_id = eid;
+      this.e_org_payee = element.payee;
+      this.e_org_particulars = element.particulars;
+      this.e_org_price = element.price;
+      this.e_org_qty = element.qty;
+      this.e_org_check_remark = element.check_remark;
+
+      this.list_id = eid;
+      this.list_payee = element.payee;
+      this.list_particulars = element.particulars;
+      this.list_price = element.price;
+      this.list_qty = element.qty;
+      this.list_check_remark = element.check_remark;
+
+      this.e_editing = true;
+    },
+
+    _del: function(eid) {
+      var index = this.petty_list.findIndex(({ id }) => id === eid);
+      if (index > -1) {
+        this.petty_list.splice(index, 1);
+      }
+    },
+
+
+    e_clear_edit: function() {
+
+      this.e_org_id = 0;
+      this.e_org_payee = "";
+      this.e_org_particulars = "";
+      this.e_org_price = 0;
+      this.e_org_qty = 0;
+
+      this.list_payee = "";
+      this.list_particulars = "";
+      this.list_price = 0;
+      this.list_qty = 0;
+
+      this.e_editing = false;
     },
 
     approve_op: function() {
@@ -412,7 +538,7 @@ var app = new Vue({
         return false;
       }
 
-      if(isNaN(this.amount_liquidated.replaceAll(',', '')))
+      if(isNaN(this.parsenumber(this.amount_liquidated)))
       {
         Swal.fire({
           text: 'Amount format invalid',
@@ -446,6 +572,9 @@ var app = new Vue({
             //$(window).scrollTop(0);
             return false;
           }
+
+      if(!this.caculate_total())
+        return;
 
       Swal.fire({
         title: "Are you sure to proceed this action?",
@@ -612,5 +741,171 @@ var app = new Vue({
       }
       return result;
     },
+
+    _set_up: function(fromIndex, eid) {
+      var toIndex = fromIndex - 1;
+
+      if (toIndex < 0) toIndex = 0;
+
+      var element = this.petty_list.find(({ id }) => id === eid);
+      this.petty_list.splice(fromIndex, 1);
+      this.petty_list.splice(toIndex, 0, element);
+    },
+
+    _set_down: function(fromIndex, eid) {
+      var toIndex = fromIndex + 1;
+
+      if (toIndex > this.petty_list.length - 1)
+        toIndex = this.petty_list.length - 1;
+
+      var element = this.petty_list.find(({ id }) => id === eid);
+      this.petty_list.splice(fromIndex, 1);
+      this.petty_list.splice(toIndex, 0, element);
+    },
+
+    add_list: function() {
+      if (this.check_input() == false) return;
+
+      this.petty_list.push({
+        is_checked: 0,
+        payee: this.list_payee,
+        particulars: this.list_particulars,
+        price: this.list_price,
+        qty: this.list_qty,
+      });
+      this.list_payee = "";
+      this.list_particulars = "";
+      this.list_price = 0;
+      this.list_qty = 0;
+    },
+
+    remove_list: function() {
+      for (i = 0; i < this.petty_list.length; i++) {
+        if (this.petty_list[i].is_checked == 1) {
+          this.petty_list.splice(i, 1);
+          i = i - 1;
+        }
+      }
+    },
+
+    // parse if string, then remove comma and return as number
+    // if number, return as number
+    parsenumber: function(nu) {
+      if(nu === null || nu === undefined || nu === '')
+        return 0;
+
+      if(typeof nu === 'string')
+        return parseFloat(nu.replace(/,/g, ""));
+      else
+        return parseFloat(nu);
+    },
+    
+    validateNumber: function(obj) {
+      var number = obj;
+
+      if (isNaN(parseFloat(number))) {
+        return false;
+      }
+      return true;
+    },
+
+    check_input: function() {
+      if (this.list_payee.trim() == "") {
+        Swal.fire({
+          text: "Please input Payee.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return false;
+      }
+
+      if (this.list_particulars.trim() == "") {
+        Swal.fire({
+          text: "Please input Particulars.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return false;
+      }
+
+      if (!this.validateNumber(this.list_price)) {
+        Swal.fire({
+          text: "Please input Price.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return false;
+      }
+
+      if (this.list_qty < 1 || !this.validateNumber(this.list_qty)) {
+        Swal.fire({
+          text: "Please input Quantity.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return false;
+      }
+
+      return true;
+    },
+
+    _add_criterion: function() {
+      if (
+        this.list_payee.trim() == "" ||
+        this.list_particulars.trim() == "" 
+      ) {
+        Swal.fire({
+          text: "Please enter the required fields",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+        var ad = {
+          id: ++this.list_sn,
+          sn: this.list_sn,
+          payee: this.list_payee,
+          particulars: this.list_particulars,
+          price: this.list_price,
+          qty: this.list_qty,
+          status : 1,
+          check_remark: '',
+        };
+        this.petty_list.push(ad);
+      
+        this.e_clear_edit();
+    },
+
+    _cancel_criterion: function() {
+      this.list_payee = this.e_org_payee;
+      this.list_particulars = this.e_org_particulars;
+      this.list_price = this.e_org_price;
+      this.list_qty = this.e_org_qty;
+
+      this.e_clear_edit();
+    },
+
+    _update_criterion: function() {
+      if (this.list_payee.trim() == "" || this.list_particulars.trim() == "") {
+        Swal.fire({
+          text: "Please enter the required fields",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      var element = this.petty_list.find(({ id }) => id === this.e_org_id);
+      element.payee = this.list_payee;
+      element.particulars = this.list_particulars;
+      element.price = this.list_price;
+      element.qty = this.list_qty;
+    
+      this.e_clear_edit();
+    },
+
   },
 });

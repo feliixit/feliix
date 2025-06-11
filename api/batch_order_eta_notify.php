@@ -56,6 +56,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $shipping_number = $item['shipping_number'];
         $eta = $item['eta'];
         $arrived = $item['arrive'];
+        $date_send = $item['date_send'];
 
         $shipping_way = $item['shipping_way'];
 
@@ -69,9 +70,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 
                 if (strpos($loading['container_number'], $shipping_number) !== false)
                 {
-                    if($eta != $loading['eta_date'] || $arrived != $loading['date_arrive'])
+                    if($eta != $loading['eta_date'] || $arrived != $loading['date_arrive'] || $date_send != $loading['date_sent'])
                     {
-                        update_item($item, $loading['eta_date'], $loading['date_arrive'], $db);
+                        update_item_sea($item, $loading['eta_date'], $loading['date_arrive'], $loading['date_sent'], $db);
 
                         // if not contain changes then added
                         if(!in_array($item, $changes))
@@ -110,6 +111,17 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 }
 
+function update_item_sea($item, $eta, $arrive, $date_send, $db)
+{
+    $sql = "UPDATE od_item SET eta = :eta, arrive = :arrive, date_send = :date_send WHERE id = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id', $item['id']);
+    $stmt->bindParam(':eta', $eta);
+    $stmt->bindParam(':arrive', $arrive);
+    $stmt->bindParam(':date_send', $date_send);
+    $stmt->execute();
+}
+
 function update_item($item, $eta, $arrive, $db)
 {
     $sql = "UPDATE od_item SET eta = :eta, arrive = :arrive WHERE id = :id";
@@ -117,6 +129,7 @@ function update_item($item, $eta, $arrive, $db)
     $stmt->bindParam(':id', $item['id']);
     $stmt->bindParam(':eta', $eta);
     $stmt->bindParam(':arrive', $arrive);
+
     $stmt->execute();
 }
 
@@ -142,6 +155,7 @@ function get_all_items($od_id, $db)
                     shipping_vendor,
                     pid,
                     eta,
+                    date_send,
                     arrive,
                     remark,
                     remark_t,
@@ -191,6 +205,7 @@ function get_all_items($od_id, $db)
         $shipping_number = $row['shipping_number'];
         $shipping_vendor = $row['shipping_vendor'];
         $eta = $row['eta'];
+        $date_send = $row['date_send'];
         $arrive = $row['arrive'];
         $remark = $row['remark'];
         $remark_t = $row['remark_t'];
@@ -234,6 +249,7 @@ function get_all_items($od_id, $db)
             "shipping_vendor" => $shipping_vendor,
             "pid" => $pid,
             "eta" => $eta,
+            "date_send" => $date_send,
             "arrive" => $arrive,
             "remark" => $remark,
             "remark_t" => $remark_t,
@@ -260,7 +276,8 @@ function get_all_container_eta_arrived($db) {
     $sql = "select 
                 lo.id, container_number, 
                 COALESCE(lo.eta_date, '') eta_date, 
-                COALESCE(lo.date_arrive, '') date_arrive
+                COALESCE(lo.date_arrive, '') date_arrive,
+                COALESCE(lo.date_sent, '') date_sent
             FROM loading lo 
             WHERE lo.status = '' order by lo.id ";
 

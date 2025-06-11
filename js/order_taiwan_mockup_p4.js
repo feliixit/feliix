@@ -7,7 +7,7 @@ var app = new Vue({
       l_id:0,
       id:0,
 
-      //img_url: 'https://storage.cloud.google.com/feliiximg/',
+      //img_url: 'https://storage.googleapis.com/feliiximg/',
 
       img_url: 'https://storage.googleapis.com/feliiximg/',
        
@@ -212,6 +212,7 @@ var app = new Vue({
         related_product: [],
         specification: [],
         description: "",
+        replacement_product: [],
 
         // vat for each product
         product_vat : '',
@@ -237,6 +238,7 @@ var app = new Vue({
         toggle_type:'A',
 
         groupedItems : [],
+        groupedItems_replacement : [],
 
         //
         fil_project_category:'',
@@ -301,6 +303,9 @@ var app = new Vue({
 
         out : "",
         out_cnt : 0,
+
+        cost_lighting : false,
+        cost_furniture : false,
     },
   
     created() {
@@ -351,7 +356,7 @@ var app = new Vue({
       }
       
       this.get_product_records();
-      this.getQuoMasterRecords();
+      //this.getQuoMasterRecords();
       this.getRecord();
       this.getUserName();
       this.get_brands();
@@ -361,6 +366,7 @@ var app = new Vue({
       this.getAccess();
       this.getOdMain();
       this.getTagGroup();
+      this.getProductControl();
     },
   
     computed: {
@@ -406,7 +412,37 @@ var app = new Vue({
     },
   
     methods: {
-
+      getProductControl: function() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append('jwt', token);
+  
+        axios({
+            method: 'get',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/product_control',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            _this.cost_lighting = response.data.cost_lighting;
+            _this.cost_furniture = response.data.cost_furniture;
+  
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
+      },
+      
       getTagGroup: function() {
         let _this = this;
           
@@ -638,6 +674,22 @@ var app = new Vue({
       ShipwayWrite(item)
       {
         if(item.is_info && this.access2 == true)
+          return true;
+        else
+          return false;
+      },
+
+      SentRead(item)
+      {
+        if(!item.is_info )
+          return true;
+        else
+          return false;
+      },
+
+      SentWrite(item)
+      {
+        if(item.is_info && (this.access2 == true || this.access4 == true || this.access5 == true))
           return true;
         else
           return false;
@@ -1327,6 +1379,14 @@ var app = new Vue({
         });
       },
 
+      replacement_info: function(info) {
+        Swal.fire({
+          title: "<i>Replacement Product:</i>", 
+          html: info,  
+          confirmButtonText: "Close", 
+        });
+      },
+
       add_with_image(all) {
 
         var photo = "";
@@ -1443,6 +1503,7 @@ var app = new Vue({
             listing:"",
               qty:"",
               backup_qty:"",
+              unit:"",
               srp:price,
               date_needed:"",
               pid:this.product.id,
@@ -1604,6 +1665,7 @@ var app = new Vue({
             listing:"",
             qty:"",
             backup_qty:"",
+            unit:"",
             srp:price,
             date_needed:"",
             pid:this.product.id,
@@ -1664,28 +1726,28 @@ var app = new Vue({
 
         this.specification = [];
  
-       for(var i=0; i < this.special_infomation.length; i++)
-       {
-         if(this.special_infomation[i].value != "")
-         {
-           if(k1 == "")
-           {
-             k1 = this.special_infomation[i].category;
-             v1 = this.special_infomation[i].value;
-           }else if(k1 !== "" && k2 == "")
-           {
-             k2 = this.special_infomation[i].category;
-             v2 = this.special_infomation[i].value;
- 
-             obj = {k1: k1, v1: v1, k2: k2, v2: v2};
-             this.specification.push(obj);
-             k1  = '';
-             k2  = '';
-             v1  = '';
-             v2  = '';
-           }
-         }
-       }
+        for(var i=0; i < this.attributes.length; i++)
+          {
+            if(this.attributes[i].type != "custom")
+            {
+              if(k1 == "")
+              {
+                k1 = this.attributes[i].category;
+                v1 = this.attributes[i].value.join(' ');
+              }else if(k1 !== "" && k2 == "")
+              {
+                k2 = this.attributes[i].category;
+                v2 = this.attributes[i].value.join(' ');
+    
+                obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+                this.specification.push(obj);
+                k1  = '';
+                k2  = '';
+                v1  = '';
+                v2  = '';
+              }
+            }
+          }
  
        if(k1 == "" && this.product.moq !== "")
        {
@@ -1720,6 +1782,14 @@ var app = new Vue({
           newArr.push(arr.slice(i, i+size));
         }
         this.groupedItems  = newArr;
+      },
+
+      chunk_replacement: function(arr, size) {
+        var newArr = [];
+        for (var i=0; i<arr.length; i+=size) {
+          newArr.push(arr.slice(i, i+size));
+        }
+        this.groupedItems_replacement  = newArr;
       },
 
       set_up_variants() {
@@ -1765,6 +1835,7 @@ var app = new Vue({
         this.attributes = product.attribute_list;
 
         this.related_product  = product.related_product;
+        this.replacement_product = product.replacement_product;
 
         this.quoted_price = product.quoted_price;
         this.price = product.price;
@@ -1777,10 +1848,75 @@ var app = new Vue({
         this.out_cnt = product.phased_out_cnt;
 
         this.chunk(this.related_product, 4);
+        this.chunk_replacement(this.replacement_product, 4);
 
         this.set_up_variants();
         this.set_up_specification();
       },
+
+      
+    getSingleProduct : function(id) {
+
+
+      let _this = this;
+
+
+      const params = {
+        sd: id,
+        c: '',
+        t: '',
+        b: '',
+        of1: '',
+        ofd1: '',
+        of2: '',
+        ofd2: '',
+        page: 1,
+        size: 10,
+      };
+  
+      let token = localStorage.getItem("accessToken");
+  
+      axios
+        .get("api/product_calatog", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(function(response) {
+          console.log(response.data);
+          let res = response.data;
+          if(res.length > 0) 
+          {
+            _this.product = response.data[0];
+            _this.url = _this.product.photo1 !== '' ? _this.img_url + _this.product.photo1 : '';
+
+            _this.special_infomation = _this.product.special_information[0].lv3[0];
+            _this.attributes = _this.product.attribute_list;
+    
+            _this.related_product  = _this.product.related_product;
+            _this.replacement_product = _this.product.replacement_product;
+
+            _this.quoted_price = _this.product.quoted_price;
+            _this.price = _this.product.price;
+
+            _this.v1 = "";
+            _this.v2 = "";
+            _this.v3 = "";
+            _this.v4 = "";
+    
+            _this.chunk(_this.related_product, 4);
+            _this.chunk_replacement(_this.replacement_product, 4);
+    
+            _this.set_up_variants();
+            _this.set_up_specification();
+          }
+
+    
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+    },
       
     filter_apply_new: function() {
       let _this = this;
@@ -2073,6 +2209,7 @@ var app = new Vue({
         if(item.shipping_way != '' 
         || item.shipping_number != '' 
         || item.eta != '' 
+        || item.date_send != '' 
         || item.arrive != '' 
         || item.charge != '' 
         || item.remark != '' 
@@ -2311,6 +2448,16 @@ var app = new Vue({
         },
 
         confirmItem(item) {
+          // qty and backup_qty must be numeric or space
+          if((item.qty.trim() != "" && /^-?\d+$/.test(item.qty.trim()) == false) || (item.backup_qty.trim() != "" && /^-?\d+$/.test(item.backup_qty.trim()) == false)) {
+            Swal.fire({
+              text: 'Valid value for columns "Qty Needed" and "Backup Qty" is blank or numbers. It cannot include texts.',
+              icon: "warning",
+              confirmButtonText: "OK",
+            });
+
+            return;
+          }
             item.is_edit = false;
             let _this = this;
 
@@ -2322,7 +2469,7 @@ var app = new Vue({
                 confirm: item.confirm,
                 confirm_text: "",
                 brand:item.brand,
-                brand_other:item.brand_other,
+                brand_other:item.brand_other.toUpperCase().trim(),
                 photo1:item.photo1,
                 photo2:item.photo2,
                 photo3:item.photo3,
@@ -2331,12 +2478,14 @@ var app = new Vue({
                 listing:item.listing,
                 qty:item.qty,
                 backup_qty:item.backup_qty,
+                unit:item.unit,
                 srp:item.srp,
                 date_needed:item.date_needed,
                 pid:item.pid,
                 v1:item.v1,
                 v2:item.v2,
                 v3:item.v3,
+                ps_var:item.ps_var,
                 status:item.status,
                 notes:[]
               };
@@ -2421,6 +2570,7 @@ var app = new Vue({
                 listing:"",
                 qty:"",
                 backup_qty:"",
+                unit:"",
                 srp:"",
                 date_needed:"",
                 pid:0,
@@ -2784,6 +2934,74 @@ var app = new Vue({
             });
       },
 
+      print_petty() {
+        let element = [];
+        let serial = [];
+        let _this = this;
+        var id_serial_mapping = {};
+
+        for (let i = 0; i < this.items.length; i++) {
+          if (this.items[i].is_checked == 1) {
+            
+            element.push(this.items[i].id);
+            id_serial_mapping = {id: this.items[i].id, serial_number: this.items[i].serial_number};
+            serial.push(id_serial_mapping);
+      }
+    }
+
+      if(element.length == 0)
+        {
+          Swal.fire({
+            text: "Please choose at least one item for exporting.",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+        form_Data.append("order_type", "ORDER – MOCKUP");
+        form_Data.append("serial_name", this.serial_name);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("url", "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" + this.id);
+        form_Data.append("items", JSON.stringify(element));
+        form_Data.append("kind", "PROJECT");
+        form_Data.append("link", 'https://feliix.myvnc.com/project03_other?sid=' + this.stage_id);
+        form_Data.append("serial", JSON.stringify(serial));
+  
+        axios({
+          method: "post",
+          url: "api/order_taiwan_p4_print",
+          data: form_Data,
+          responseType: "blob",
+        })
+            .then(function(response) {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                 
+                    link.setAttribute('download', _this.serial_name + '.xlsx');
+                 
+                  document.body.appendChild(link);
+                  link.click();
+  
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+              })
+              .finally(function() {
+                for (let i = 0; i < _this.items.length; i++) {
+                  if (_this.items[i].is_checked == 1) {
+                    _this.items[i].is_checked = 0;
+                  }
+                }
+              });
+      },
 
       do_print_me(item, text){
         let _this = this;

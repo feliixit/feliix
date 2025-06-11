@@ -26,6 +26,9 @@ try {
 
             $GLOBALS['position'] = $decoded->data->position;
             $GLOBALS['department'] = $decoded->data->department;
+
+            if($decoded->data->limited_access == true)
+                header( 'location:index' );
             
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $test_manager = $decoded->data->test_manager;
@@ -542,8 +545,8 @@ $(function(){
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/project01_disapproved.js"></script>
 </html>

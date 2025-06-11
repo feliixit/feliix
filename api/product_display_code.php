@@ -91,6 +91,7 @@ else
             $accessory = [];
 
             $related_product = [];
+            $replacement_product = [];
 
             $tags = '';
             $moq = '';
@@ -102,6 +103,7 @@ else
             $variation1_text = "1st Variation";
             $variation2_text = "2nd Variation";
             $variation3_text = "3rd Variation";
+            $variation4_text = "4th Variation";
 
             $special_infomation = [];
             $accessory_information = [];
@@ -157,10 +159,83 @@ else
                 $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : '';
                 $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : '';
 
+                $p1_id = $row['p1_id'];
+                $p2_id = $row['p2_id'];
+                $p3_id = $row['p3_id'];
+
+                $p1_qty = $row['p1_qty'];
+                $p2_qty = $row['p2_qty'];
+                $p3_qty = $row['p3_qty'];
+
+                $qp_max = $row['qp_max'];
+                $qp_min = $row['qp_min'];
+
+                $srp_max = $row['srp_max'];
+                $srp_min = $row['srp_min'];
+
+                $product_set_1 = [];
+                $product_set_2 = [];
+                $product_set_3 = [];
+
+                $product_set = [];
+
+                $last_order = $row['last_order'];
+                $last_order_name = $row['last_order_name'];
+                $last_order_at = $row['last_order_at'];
+
+                $previous_print_option = ['pid' => 'true', 'brand' => 'true', 'srp' => 'true', 'qp' => 'true' ];
+                if($row['print_option'] != "")
+                    $previous_print_option = json_decode($row['print_option']);
+
+                $product_set_cnt = 0;
+
+                if($sub_category == '10020000')
+                {
+                    if($p1_id != '')
+                    {
+                        $product_set_cnt++;
+                        $product_set_1 = GetProductSet($p1_id, $p1_qty, $db);
+
+                        // $product_set_1[0]['record']  is a copy of $product_set_1[0]
+                        $product_set_1[0]['record'] = json_decode(json_encode($product_set_1));
+
+                        array_push($product_set, $product_set_1[0]);
+                    }
+                    if($p2_id != '')
+                    {
+                        $product_set_cnt++;
+                        $product_set_2 = GetProductSet($p2_id, $p2_qty, $db);
+
+                        // $product_set_1[0]['record']  is a copy of $product_set_1[0]
+                        $product_set_2[0]['record'] = json_decode(json_encode($product_set_2));
+
+                        array_push($product_set, $product_set_2[0]);
+                    }
+                    if($p3_id != '')
+                    {
+                        $product_set_cnt++;
+                        $product_set_3 = GetProductSet($p3_id, $p3_qty, $db);
+
+                        // $product_set_1[0]['record']  is a copy of $product_set_1[0]
+                        $product_set_3[0]['record'] = json_decode(json_encode($product_set_3));
+
+                        array_push($product_set, $product_set_3[0]);
+                    }
+                }
 
                 $product = GetProduct($id, $db, $currency);
+
+                $product_ics = GetAttachment($id, 'product_ics', $db);
+                $product_skp = GetAttachment($id, 'product_skp', $db);
+                $product_manual = GetAttachment($id, 'product_manual', $db);
+
                 $phased_out_cnt = 0;
                 $phased_out_text = [];
+
+                // for last order
+                $is_last_order_product = "";
+                $order_sn = 1;
+
                 for($i = 0; $i < count($product); $i++)
                 {
                     if($product[$i]['enabled'] != 1)
@@ -174,20 +249,54 @@ else
                             $key_value_text .= $product[$i]['k2'] . " = " . $product[$i]['v2'] . ", ";
                         if($product[$i]['v3'] != "")
                             $key_value_text .= $product[$i]['k3'] . " = " . $product[$i]['v3'] . ", ";
+                        if($product[$i]['v4'] != "")
+                            $key_value_text .= $product[$i]['k4'] . " = " . $product[$i]['v4'] . ", ";
 
                         $key_value_text = substr($key_value_text, 0, -2);
 
                         array_push($phased_out_text, $key_value_text);
                     }
                         
+                    if($product[$i]['last_order_name'] != '')
+                    {
+                        $order_info = getOrderInfo($product[$i]['last_order'], $db);
+                        $url = "";
+
+                        if(isset($order_info["order_type"]))
+                        {
+                            if($order_info["order_type"] == "taiwan")
+                                $url = "https://feliix.myvnc.com/order_taiwan_p4?id=" . $product[$i]['last_order'];
+                            
+                            if($order_info["order_type"] == "mockup")
+                                $url = "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" . $product[$i]['last_order'];
+                            
+                            if($order_info["order_type"] == "sample")
+                                $url = "https://feliix.myvnc.com/order_taiwan_sample_p4?id=" . $product[$i]['last_order'];
+                            
+                            if($order_info["order_type"] == "stock")
+                                $url = "https://feliix.myvnc.com/order_taiwan_stock_p4?id=" . $product[$i]['last_order'];
+                        }
+
+                        $params = str_replace("=>", " = ", $product[$i]['1st_variation']);
+                        if($product[$i]['2rd_variation'] != "=>")
+                            $params .= ", " . str_replace("=>", " = ", $product[$i]['2rd_variation']);
+                        if($product[$i]['3th_variation'] != "=>")
+                            $params .= ", " . str_replace("=>", " = ", $product[$i]['3th_variation']);
+                        if($product[$i]['4th_variation'] != "=>")
+                            $params .= ", " . str_replace("=>", " = ", $product[$i]['4th_variation']);
+
+                        $is_last_order_product .= "(" . $order_sn++ . ") " . $params . ": <br>" . substr($product[$i]['last_order_at'], 0, 10) . " at <a href='" . $url . "' target='_blank'>" .  $product[$i]['last_order_name'] . "</a><br><br>";
+                    }
                 }
                 //$phased_out_cnt = $phased_out_cnt;
 
                 $related_product = GetRelatedProductCode($id, $db);
+                $replacement_product = GetRelacementProductCode($id, $db);
 
                 $variation1_value = [];
                 $variation2_value = [];
                 $variation3_value = [];
+                $variation4_value = [];
 
                 // for price
                 $pro_price_ntd = [];
@@ -199,10 +308,12 @@ else
                     $variation1_text = $product[0]['k1'];
                     $variation2_text = $product[0]['k2'];
                     $variation3_text = $product[0]['k3'];
+                    $variation4_text = $product[0]['k4'];
 
                     $variation1_value = [];
                     $variation2_value = [];
                     $variation3_value = [];
+                    $variation4_value = [];
 
                     for($i = 0; $i < count($product); $i++)
                     {
@@ -217,6 +328,10 @@ else
                         if (!in_array($product[$i]['v3'],$variation3_value))
                         {
                             array_push($variation3_value,$product[$i]['v3']);
+                        }
+                        if (!in_array($product[$i]['v4'],$variation4_value))
+                        {
+                            array_push($variation4_value,$product[$i]['v4']);
                         }
 
                         // price_retail
@@ -265,7 +380,7 @@ else
                 $s_price_ntd = "";
                 if(count($pro_price_ntd) == 1)
                 {
-                    $s_price_ntd = $currency . " " . number_format($pro_price_ntd[0]);
+                    $s_price_ntd = $currency . " " . formatPrice($pro_price_ntd[0]);
                 }
                 if(count($pro_price_ntd) > 1)
                 {
@@ -278,7 +393,7 @@ else
 
                         $e = $pro_price_ntd[$i];
                     }
-                    $s_price_ntd = $currency . " " . number_format($b) . " ~ " . $currency . " " . number_format($e);
+                    $s_price_ntd = $currency . " " . formatPrice($b) . " ~ " . $currency . " " . formatPrice($e);
                 }
 
                 $s_price_quoted = "";
@@ -306,7 +421,7 @@ else
                     $price = $s_price;
 
                 if($s_price_ntd == "")
-                    $price_ntd = $currency . " " .  number_format($price_ntd);
+                    $price_ntd = $currency . " " .  formatPrice($price_ntd);
                 else
                     $price_ntd = $s_price_ntd; 
 
@@ -314,6 +429,34 @@ else
                     $price_quoted = "PHP " .  number_format($price_quoted);
                 else
                     $price_quoted = $s_price_quoted; 
+
+
+                    
+                if($sub_category == '10020000')
+                {
+                    if($srp_max == $srp_min)
+                    {
+                        $_srp = number_format($srp_max);
+                    }
+                    else
+                    {
+                        $_srp = number_format($srp_min) . " ~ PHP " . number_format($srp_max);
+                    }
+
+                    $price = "PHP " .  $_srp;
+                    
+                    if($qp_max == $qp_min)
+                    {
+                        $_qp = number_format($qp_max);
+                    }
+                    else
+                    {
+                        $_qp = number_format($qp_min) . " ~ PHP " . number_format($qp_max);
+                    }
+
+                    $price_quoted = "PHP " .  $_qp;
+                }
+
 
                 $accessory = GetAccessory($id, $db);
                 $sub_category_item = GetSubCategoryItem($category, $db);
@@ -330,6 +473,8 @@ else
                 $variation2_custom = $variation2_text;
                 $variation3 = 'custom';
                 $variation3_custom = $variation3_text;
+                $variation4 = 'custom';
+                $variation4_custom = $variation4_text;
                 
 
                 for($i = 0; $i < count($special_information); $i++)
@@ -356,6 +501,12 @@ else
                                 $variation3 = $variation3_text;
                                 $variation3_custom = "";
                             }
+
+                            if($lv3[$j]['category'] == $variation4_text)
+                            {
+                                $variation4 = $variation4_text;
+                                $variation4_custom = "";
+                            }
                         }
                     }
                    
@@ -377,6 +528,115 @@ else
                 {
                     $variation3 = "";
                     $variation3_custom = "";
+                }
+
+                if($variation4_text == "4th Variation")
+                {
+                    $variation4 = "";
+                    $variation4_custom = "";
+                }
+
+                // test 
+                if($variation1_text == "")
+                {
+                    $variation1 = "";
+                    $variation1_custom = "";
+                }
+
+                if($variation2_text == "")
+                {
+                    $variation2 = "";
+                    $variation2_custom = "";
+                }
+
+                if($variation3_text == "")
+                {
+                    $variation3 = "";
+                    $variation3_custom = "";
+                }
+
+                if($variation4_text == "")
+                {
+                    $variation4 = "";
+                    $variation4_custom = "";
+                }
+
+                $attribute_list = [];
+                if($special_info_json != null)
+                {
+                    for($i=0; $i<count($special_info_json); $i++)
+                    {
+                        $custom = "";
+                        $value = [];
+                        $_category = $special_info_json[$i]->category;
+
+                        if($special_info_json[$i]->value != "")
+                        {
+                            array_push($value, $special_info_json[$i]->value);
+                           
+                        }
+                        
+                        if($variation1_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation1_value;
+                            $custom = "custom";
+                        }
+                        if($variation2_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation2_value;
+                            $custom = "custom";
+                        }
+                        if($variation3_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation3_value;
+                            $custom = "custom";
+                        }
+                        if($variation4_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation4_value;
+                            $custom = "custom";
+                        }
+
+                        if(count($value) > 0)
+                        {
+                            $attribute_list[] = array("category" => $special_info_json[$i]->category,
+                                           "value" => $value,
+                                           "type" => $custom,
+                                        );
+                        }
+                    }
+                }
+
+                if($variation1 == "custom" && $variation1_custom != "1st Variation")
+                {
+                    $attribute_list[] = array("category" => $variation1_text,
+                                           "value" => $variation1_value,
+                                           "type" => "custom",
+                                        );
+                }
+
+                if($variation2 == "custom" && $variation2_custom != "2nd Variation")
+                {
+                    $attribute_list[] = array("category" => $variation2_text,
+                                           "value" => $variation2_value,
+                                           "type" => "custom",
+                                        );
+                }
+
+                if($variation3 == "custom" && $variation3_custom != "3rd Variation")
+                {
+                    $attribute_list[] = array("category" => $variation3_text,
+                                           "value" => $variation3_value,
+                                           "type" => "custom",
+                                        );
+                }
+
+                if($variation4 == "custom" && $variation4_custom != "4th Variation")
+                {
+                    $attribute_list[] = array("category" => $variation4_text,
+                                           "value" => $variation4_value,
+                                           "type" => "custom",
+                                        );
                 }
 
                 $str_price_change = "";
@@ -436,6 +696,32 @@ else
                     }
                 }
 
+                // for last order
+                $is_last_order_main = "";
+                if($last_order_name != '')
+                {
+                    $order_info = getOrderInfo($last_order, $db);
+                    $url = "";
+                    if(isset($order_info["order_type"]))
+                    {
+                        if($order_info["order_type"] == "taiwan")
+                            $url = "https://feliix.myvnc.com/order_taiwan_p4?id=" . $last_order;
+                        
+                        if($order_info["order_type"] == "mockup")
+                            $url = "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" . $last_order;
+                        
+                        if($order_info["order_type"] == "sample")
+                            $url = "https://feliix.myvnc.com/order_taiwan_sample_p4?id=" . $last_order;
+                        
+                        if($order_info["order_type"] == "stock")
+                            $url = "https://feliix.myvnc.com/order_taiwan_stock_p4?id=" . $last_order;
+                    }
+
+                    $is_last_order_main = "Main Product: <br>" . substr($last_order_at, 0, 10) . " at <a href='" . $url . "' target='_blank'>" .  $last_order_name . "</a><br>";
+                }
+
+                $is_last_order = $is_last_order_main . $is_last_order_product;
+
                 $merged_results[] = array( "id" => $id,
                                     "category" => $category,
                                     "sub_category" => $sub_category,
@@ -455,25 +741,31 @@ else
                                     "photo3" => $photo3,
                                     "accessory_mode" => $accessory_mode,
                                     "attributes" => $attributes,
+                                    "attribute_list" => $attribute_list,
                                     "variation_mode" => $variation_mode,
                                     "variation" => $variation,
                                     "status" => $status,
                                     "created_at" => $created_at,
                                     "create_id" => $create_id,
                                     "related_product" => $related_product,
+                                    "replacement_product" => $replacement_product,
                                     "product" => $product,
                                     "variation1_text" => $variation1_text,
                                     "variation2_text" => $variation2_text,
                                     "variation3_text" => $variation3_text,
+                                    "variation4_text" => $variation4_text,
                                     "variation1_value" => $variation1_value,
                                     "variation2_value" => $variation2_value,
                                     "variation3_value" => $variation3_value,
+                                    "variation4_value" => $variation4_value,
                                     "variation1" => $variation1,
                                     "variation2" => $variation2,
                                     "variation3" => $variation3,
+                                    "variation4" => $variation4,
                                     "variation1_custom" => $variation1_custom,
                                     "variation2_custom" => $variation2_custom,
                                     "variation3_custom" => $variation3_custom,
+                                    "variation4_custom" => $variation4_custom,
                                     "accessory" => $accessory,
                                     "special_information" => $special_information,
                                     "accessory_information" => $accessory_information,
@@ -502,7 +794,24 @@ else
                                     "phased_out_cnt" => $phased_out_cnt,
 
                                     "phased_out_text" => $phased_out_text,
+                                    "product_set" => $product_set,
 
+                                    "product_set_cnt" => $product_set_cnt,
+
+                                    "sub_cateory_item" => $sub_category_item,
+
+                                    "print_option" => $previous_print_option,
+
+                                    "last_order" => $last_order,
+                                    "last_order_name" => $last_order_name,
+                                    "is_last_order" => $is_last_order,
+
+                                    "last_order_url" => "",
+                                    "last_have_spec" => true,
+
+                                    "product_ics" => $product_ics,
+                                    "product_skp" => $product_skp,
+                                    "product_manual" => $product_manual,
             );
             }
 
@@ -554,7 +863,7 @@ function GetRelatedProduct($ids, $db)
 }
 
 function GetProduct($id, $db, $currency){
-    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+    $sql = "SELECT *, CONCAT('https://storage.googleapis.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
 
     $merged_results = array();
 
@@ -566,9 +875,18 @@ function GetProduct($id, $db, $currency){
         $k1 = GetKey($row['1st_variation']);
         $k2 = GetKey($row['2rd_variation']);
         $k3 = GetKey($row['3th_variation']);
+        $k4 = GetKey($row['4th_variation']);
+
         $v1 = GetValue($row['1st_variation']);
         $v2 = GetValue($row['2rd_variation']);
         $v3 = GetValue($row['3th_variation']);
+        $v4 = GetValue($row['4th_variation']);
+
+        $fir = $row['1st_variation'];
+        $sec = $row['2rd_variation'];
+        $thi = $row['3th_variation'];
+        $fou = $row['4th_variation'];
+
         $checked = '';
         $code = $row['code'];
         $price = $row['price'];
@@ -582,6 +900,10 @@ function GetProduct($id, $db, $currency){
         $quoted_price = $row['quoted_price'];
         $quoted_price_change = $row['quoted_price_change'];
 
+        $last_order = $row['last_order'];
+        $last_order_name = $row['last_order_name'];
+        $last_order_at = $row['last_order_at'];
+
         $status = $row['enabled'];
         $photo = trim($row['photo']);
         if($photo != '')
@@ -591,13 +913,43 @@ function GetProduct($id, $db, $currency){
 
             $enabled = $row['enabled'];
 
+            if($last_order != "")
+            {
+                $order_info = getOrderInfo($last_order, $db);
+                $last_order_url = "";
+                if(isset($order_info["order_type"]))
+                {
+                    if($order_info["order_type"] == "taiwan")
+                        $last_order_url = "https://feliix.myvnc.com/order_taiwan_p4?id=" . $last_order;
+                    
+                    if($order_info["order_type"] == "mockup")
+                        $last_order_url = "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" . $last_order;
+                    
+                    if($order_info["order_type"] == "sample")
+                        $last_order_url = "https://feliix.myvnc.com/order_taiwan_sample_p4?id=" . $last_order;
+                    
+                    if($order_info["order_type"] == "stock")
+                        $last_order_url = "https://feliix.myvnc.com/order_taiwan_stock_p4?id=" . $last_order;
+                }
+            }
+            else
+            {
+                $last_order_url = "";
+            }
+
         $merged_results[] = array(  "id" => $id, 
                                     "k1" => $k1, 
                                     "k2" => $k2, 
                                     "k3" => $k3, 
+                                    "k4" => $k4,
                                     "v1" => $v1, 
                                     "v2" => $v2, 
                                     "v3" => $v3, 
+                                    "v4" => $v4,
+                                    "1st_variation" => $fir,
+                                    "2rd_variation" => $sec,
+                                    "3th_variation" => $thi,
+                                    "4th_variation" => $fou,
                                     "checked" => $checked, 
                                     "code" => $code, 
                                     "price" => $price, 
@@ -616,7 +968,12 @@ function GetProduct($id, $db, $currency){
                                     "enabled" => $enabled,
                                    
                                     "file" => array( "value" => ''),
-                                   
+                                   "last_order" => $last_order,
+                                    "last_order_name" => $last_order_name,
+                                    "last_order_at" => substr($last_order_at,0, 10),
+                                    "last_order_url" => $last_order_url,
+                                    "last_have_spec" => true,
+
             );
     }
     
@@ -909,7 +1266,7 @@ function GetAccessoryInfomation($cat_id, $db, $product_id){
 
 function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
 
-    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.cloud.google.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
+    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.googleapis.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY id ";
 
@@ -989,6 +1346,8 @@ function GetRelatedProductCode($id, $db){
                     $key_value_text .= $product[$i]['k2'] . " = " . $product[$i]['v2'] . ", ";
                 if($product[$i]['v3'] != "")
                     $key_value_text .= $product[$i]['k3'] . " = " . $product[$i]['v3'] . ", ";
+                if($product[$i]['v4'] != "")
+                    $key_value_text .= $product[$i]['k4'] . " = " . $product[$i]['v4'] . ", ";
 
                 $key_value_text = substr($key_value_text, 0, -2);
 
@@ -1007,5 +1366,807 @@ function GetRelatedProductCode($id, $db){
 
 }
 
+function GetRelacementProductCode($id, $db){
+    $sql = "SELECT * FROM product_category where id in (SELECT replacement_id FROM product_replacement WHERE product_id = ". $id . " and STATUS <> -1) and status <> -1";
+
+    $sql = $sql . " ORDER BY code ";
+
+    $merged_results = [];
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_id = $row['id'];
+        $currency = $row['currency'];
+
+        $product = GetProduct($_id, $db, $currency);
+        $phased_out_cnt = 0;
+        $phased_out_text = [];
+        for($i = 0; $i < count($product); $i++)
+        {
+            if($product[$i]['enabled'] != 1)
+            {
+                $key_value_text = "";
+
+                $phased_out_cnt++;
+                if($product[$i]['v1'] != "")
+                    $key_value_text .= $product[$i]['k1'] . " = " . $product[$i]['v1'] . ", ";
+                if($product[$i]['v2'] != "")
+                    $key_value_text .= $product[$i]['k2'] . " = " . $product[$i]['v2'] . ", ";
+                if($product[$i]['v3'] != "")
+                    $key_value_text .= $product[$i]['k3'] . " = " . $product[$i]['v3'] . ", ";
+                if($product[$i]['v4'] != "")
+                    $key_value_text .= $product[$i]['k4'] . " = " . $product[$i]['v4'] . ", ";
+
+                $key_value_text = substr($key_value_text, 0, -2);
+
+                array_push($phased_out_text, $key_value_text);
+            }
+                
+        }
+
+        $row['phased_out_cnt'] = $phased_out_cnt;
+        $row['phased_out_text'] = $phased_out_text;
+        
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+
+}
+
+function GetProductSet($id, $qty, $db){
+    $merged_results = array();
+
+            // product main
+            $sql = "SELECT p.*, pa.category sub_category_name FROM product_category p left join product_category_attribute pa on p.sub_category = pa.cat_id WHERE p.id = " . $id . " ";
+
+            $stmt = $db->prepare( $sql );
+            $stmt->execute();
+
+            $id = '';
+            $category = '';
+            $sub_category = '';
+            $sub_category_name = '';
+            $brand = '';
+            $code = '';
+            $pid = '';
+            $price_ntd = '';
+            $price_ntd_org = '';
+            $price_ntd_change = '';
+            $price = '';
+            $price_quoted = '';
+            $price_org = '';
+            $price_change = '';
+            $description = '';
+            $notes = '';
+            $photo1 = '';
+            $photo2 = '';
+            $photo3 = '';
+            $accessory_mode = '';
+            $attributes = '';
+            $variation_mode = '';
+            $variation = '';
+            $status = '';
+            $create_id = '';
+            $created_at = '';
+            $product = [];
+            $accessory = [];
+
+            $related_product = [];
+            $replacement_product = [];
+
+            $tags = '';
+            $moq = '';
+            $quoted_price = '';
+            $quoted_price_change = '';
+
+            $phased_out_cnt = 0;
+
+            $variation1_text = "1st Variation";
+            $variation2_text = "2nd Variation";
+            $variation3_text = "3rd Variation";
+            $variation4_text = "4th Variation";
+
+            $special_infomation = [];
+            $accessory_information = [];
+
+            $sub_cateory_item = [];
+
+            $out = "";
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $id = $row['id'];
+                $category = GetCategory($row['category'], $db);
+                $sub_category = $row['sub_category'];
+                $sub_category_name = GetCategory($row['sub_category'], $db);
+                $brand = $row['brand'];
+                $pid = $row['id'];
+                $code = $row['code'];
+                $price_ntd = $row['price_ntd'];
+                $price_quoted = $row['quoted_price'];
+                $price_org = $row['price'];
+                $price_ntd_org = $row['price_ntd'];
+                $price = $row['price'];
+                $description = $row['description'];
+                $notes = $row['notes'];
+                $photo1 = $row['photo1'];
+                $photo2 = $row['photo2'];
+                $photo3 = $row['photo3'];
+                $accessory_mode = $row['accessory_mode'];
+                $attributes = $row['attributes'];
+                $variation_mode = $row['variation_mode'];
+                $variation = $row['variation'];
+                $status = $row['status'];
+                $create_id = $row['create_id'];
+                $created_at = $row['created_at'];
+
+                $tags = $row['tags'];
+                $moq = $row['moq'];
+                $quoted_price = $row['quoted_price'];
+                $quoted_price_org = $row['quoted_price'];
+                $quoted_price_change = $row['quoted_price_change'];
+                $price_change = $row['price_change'];
+                $price_ntd_change = $row['price_ntd_change'];
+
+                $currency = $row['currency'];
+
+                $out = $row['out'];
+
+                $last_order = $row['last_order'];
+                $last_order_name = $row['last_order_name'];
+                $last_order_at = $row['last_order_at'];
+
+                // for last order
+                $is_last_order_product = "";
+                $order_sn = 1;
+
+                // max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, max_quoted_price_change, min_quoted_price_change
+                $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : '';
+                $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : '';
+                $max_price_ntd_change = $row['max_price_ntd_change'] ? substr($row['max_price_ntd_change'], 0, 10) : '';
+                $min_price_ntd_change = $row['min_price_ntd_change'] ? substr($row['min_price_ntd_change'], 0, 10) : '';
+                $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : '';
+                $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : '';
+
+
+                $product = GetProduct($id, $db, $currency);
+
+                $product_ics = GetAttachment($id, 'product_ics', $db);
+                $product_skp = GetAttachment($id, 'product_skp', $db);
+                $product_manual = GetAttachment($id, 'product_manual', $db);
+
+                $phased_out_cnt = 0;
+                $phased_out_text = [];
+                $phased_out_text1 = [];
+                for($i = 0; $i < count($product); $i++)
+                {
+                    if($product[$i]['enabled'] != 1)
+                    {
+                        $key_value_text = "";
+
+                        $phased_out_cnt++;
+                        if($product[$i]['v1'] != "")
+                            $key_value_text .= $product[$i]['k1'] . " = " . $product[$i]['v1'] . ", ";
+                        if($product[$i]['v2'] != "")
+                            $key_value_text .= $product[$i]['k2'] . " = " . $product[$i]['v2'] . ", ";
+                        if($product[$i]['v3'] != "")
+                            $key_value_text .= $product[$i]['k3'] . " = " . $product[$i]['v3'] . ", ";
+                        if($product[$i]['v4'] != "")
+                            $key_value_text .= $product[$i]['k4'] . " = " . $product[$i]['v4'] . ", ";
+
+                        $key_value_text = substr($key_value_text, 0, -2);
+
+                        array_push($phased_out_text, $key_value_text);
+                        array_push($phased_out_text1, $key_value_text);
+                    }
+                    
+                    if($product[$i]['last_order_name'] != '')
+                    {
+                        $order_info = getOrderInfo($product[$i]['last_order'], $db);
+                        $url = "";
+
+                        if(isset($order_info["order_type"]))
+                        {
+                            if($order_info["order_type"] == "taiwan")
+                                $url = "https://feliix.myvnc.com/order_taiwan_p4?id=" . $product[$i]['last_order'];
+                            
+                            if($order_info["order_type"] == "mockup")
+                                $url = "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" . $product[$i]['last_order'];
+                            
+                            if($order_info["order_type"] == "sample")
+                                $url = "https://feliix.myvnc.com/order_taiwan_sample_p4?id=" . $product[$i]['last_order'];
+                            
+                            if($order_info["order_type"] == "stock")
+                                $url = "https://feliix.myvnc.com/order_taiwan_stock_p4?id=" . $product[$i]['last_order'];
+                        }
+                        $params = str_replace("=>", " = ", $product[$i]['1st_variation']);
+                        if($product[$i]['2rd_variation'] != "=>")
+                            $params .= ", " . str_replace("=>", " = ", $product[$i]['2rd_variation']);
+                        if($product[$i]['3th_variation'] != "=>")
+                            $params .= ", " . str_replace("=>", " = ", $product[$i]['3th_variation']);
+                        if($product[$i]['4th_variation'] != "=>")
+                            $params .= ", " . str_replace("=>", " = ", $product[$i]['4th_variation']);
+
+                        $is_last_order_product .= "(" . $order_sn++ . ") " . $params . ": <br>" . substr($product[$i]['last_order_at'], 0, 10) . " at <a href='" . $url . "' target='_blank'>" .  $product[$i]['last_order_name'] . "</a><br><br>";
+                    }
+                }
+                //$phased_out_cnt = $phased_out_cnt;
+
+                $related_product = GetRelatedProductCode($id, $db);
+                $replacement_product = GetRelacementProductCode($id, $db);
+
+                $groupedItems[] = array_slice($related_product, 0, 4);
+                $groupedItems_replacement[] = array_slice($replacement_product, 0, 4);
+
+
+                $variation1_value = [];
+                $variation2_value = [];
+                $variation3_value = [];
+                $variation4_value = [];
+
+                // for price
+                $pro_price_ntd = [];
+                $pro_price = [];
+                $pro_price_quoted = [];
+                
+                $srp = 0;
+                $srp_quoted = 0;
+
+                if($row['price'] != null)
+                    array_push($pro_price,$row['price']);
+                if($row['price_ntd'] != null)
+                    array_push($pro_price_ntd,$row['price_ntd']);
+                if($row['quoted_price'] != null)
+                    array_push($pro_price_quoted,$row['quoted_price']);
+
+                if(count($product) > 0)
+                {
+                    $variation1_text = $product[0]['k1'];
+                    $variation2_text = $product[0]['k2'];
+                    $variation3_text = $product[0]['k3'];
+                    $variation4_text = $product[0]['k4'];
+
+                    $variation1_value = [];
+                    $variation2_value = [];
+                    $variation3_value = [];
+                    $variation4_value = [];
+
+                    for($i = 0; $i < count($product); $i++)
+                    {
+                        if (!in_array($product[$i]['v1'],$variation1_value))
+                        {
+                            array_push($variation1_value,$product[$i]['v1']);
+                        }
+                        if (!in_array($product[$i]['v2'],$variation2_value))
+                        {
+                            array_push($variation2_value,$product[$i]['v2']);
+                        }
+                        if (!in_array($product[$i]['v3'],$variation3_value))
+                        {
+                            array_push($variation3_value,$product[$i]['v3']);
+                        }
+                        if (!in_array($product[$i]['v4'],$variation4_value))
+                        {
+                            array_push($variation4_value,$product[$i]['v4']);
+                        }
+
+                        // price_retail
+                        if (!in_array($product[$i]['price'],$pro_price) && $product[$i]['price'] != null)
+                        {
+                            array_push($pro_price,$product[$i]['price']);
+                        }
+                        // price_ntd
+                        if (!in_array($product[$i]['price_ntd'],$pro_price_ntd) && $product[$i]['price_ntd'] != null)
+                        {
+                            array_push($pro_price_ntd,$product[$i]['price_ntd']);
+                        }
+
+                         // price_quoted
+                         if (!in_array($product[$i]['quoted_price'],$pro_price_quoted) && $product[$i]['quoted_price'] != null)
+                         {
+                             array_push($pro_price_quoted,$product[$i]['quoted_price']);
+                         }
+
+                         if($product[$i]['price'] > $srp)
+                            {
+                                $srp = $product[$i]['price'];
+                            }
+                    }
+
+                }
+                
+                // for last order
+                $is_last_order_main = "";
+                if($last_order_name != '')
+                {
+                    $order_info = getOrderInfo($last_order, $db);
+                    $url = "";
+
+                    if(isset($order_info["order_type"]))
+                    {
+                        if($order_info["order_type"] == "taiwan")
+                            $url = "https://feliix.myvnc.com/order_taiwan_p4?id=" . $last_order;
+                        
+                        if($order_info["order_type"] == "mockup")
+                            $url = "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" . $last_order;
+                        
+                        if($order_info["order_type"] == "sample")
+                            $url = "https://feliix.myvnc.com/order_taiwan_sample_p4?id=" . $last_order;
+                        
+                        if($order_info["order_type"] == "stock")
+                            $url = "https://feliix.myvnc.com/order_taiwan_stock_p4?id=" . $last_order;
+                    }
+
+                    $is_last_order_main = "Main Product: <br>" . substr($last_order_at, 0, 10) . " at <a href='" . $url . "' target='_blank'>" .  $last_order_name . "</a><br>";
+                }
+
+                $is_last_order = $is_last_order_main . $is_last_order_product;
+
+                $pro_price = array_unique($pro_price);
+                $pro_price_ntd = array_unique($pro_price_ntd);
+                $pro_price_quoted = array_unique($pro_price_quoted);
+
+                sort($pro_price);
+                sort($pro_price_ntd);
+                sort($pro_price_quoted);
+
+                $s_price = "";
+                if(count($pro_price) == 1)
+                {
+                    $pro_price[0] = $pro_price[0] + 0;
+                    $s_price = "PHP " . number_format($pro_price[0]);
+                    $srp = $pro_price[0];
+                }
+                if(count($pro_price) > 1)
+                {
+                    $b = "";
+                    $e = "";
+                    for($i=0; $i<count($pro_price); $i++)
+                    {
+                        if($b == "")
+                            $b = $pro_price[$i];
+
+                        $e = $pro_price[$i];
+                    }
+                    $b = $b + 0;
+                    $e = $e + 0;
+                    $s_price = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
+                    $srp = $e;
+                }
+
+                $s_price_ntd = "";
+                if(count($pro_price_ntd) == 1)
+                {
+                    $pro_price_ntd[0] = $pro_price_ntd[0] + 0;
+                    $s_price_ntd = $currency . " " . formatPrice($pro_price_ntd[0]);
+                }
+                if(count($pro_price_ntd) > 1)
+                {
+                    $b = "";
+                    $e = "";
+                    for($i=0; $i<count($pro_price_ntd); $i++)
+                    {
+                        if($b == "")
+                            $b = $pro_price_ntd[$i];
+
+                        $e = $pro_price_ntd[$i];
+                    }
+                    $b = $b + 0;
+                    $e = $e + 0;
+                    $s_price_ntd = $currency . " " . formatPrice($b) . " ~ " . $currency . " " . formatPrice($e);
+                }
+
+                $s_price_quoted = "";
+                if(count($pro_price_quoted) == 1)
+                {
+                    $pro_price_quoted[0] = $pro_price_quoted[0] + 0;
+                    $s_price_quoted = "PHP " . number_format($pro_price_quoted[0]);
+                    $srp_quoted = $pro_price_quoted[0];
+                }
+                if(count($pro_price_quoted) > 1)
+                {
+                    $b = "";
+                    $e = "";
+                    for($i=0; $i<count($pro_price_quoted); $i++)
+                    {
+                        if($b == "")
+                            $b = $pro_price_quoted[$i];
+
+                        $e = $pro_price_quoted[$i];
+                    }
+                    $b = $b + 0;
+                    $e = $e + 0;
+                    $s_price_quoted = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
+                    $srp_quoted = $e;
+                }
+
+                $price = $price + 0;
+                $price_ntd = $price_ntd + 0;
+                $quoted_price = $quoted_price + 0;
+
+                if($s_price == "")
+                    $price = "PHP " .  number_format($price);
+                else
+                    $price = $s_price;
+
+                if($s_price_ntd == "")
+                    $price_ntd = $currency . " " .  formatPrice($price_ntd);
+                else
+                    $price_ntd = $s_price_ntd; 
+
+                if($s_price_quoted == "")
+                    $price_quoted = "PHP " .  number_format($price_quoted);
+                else
+                    $price_quoted = $s_price_quoted; 
+
+
+                $accessory = GetAccessory($id, $db);
+                $sub_category_item = GetSubCategoryItem($category, $db);
+
+                $special_info_json = json_decode($attributes);
+
+                $special_information = GetSpecialInfomation($sub_category, $db, $special_info_json);
+                $accessory_information = GetAccessoryInfomation($sub_category, $db, $id);
+
+        
+                $variation1 = 'custom';
+                $variation1_custom = $variation1_text;
+                $variation2 = 'custom';
+                $variation2_custom = $variation2_text;
+                $variation3 = 'custom';
+                $variation3_custom = $variation3_text;
+                $variation4 = 'custom';
+                $variation4_custom = $variation4_text;
+                
+
+                for($i = 0; $i < count($special_information); $i++)
+                {
+                    if ($special_information[$i]['cat_id'] == $sub_category)
+                    {
+                        $lv3 = $special_information[$i]['lv3'][0];
+                        for($j = 0; $j < count($lv3); $j++)
+                        {
+                            if($lv3[$j]['category'] == $variation1_text)
+                            {
+                                $variation1 = $variation1_text;
+                                $variation1_custom = "";
+                            }
+
+                            if($lv3[$j]['category'] == $variation2_text)
+                            {
+                                $variation2 = $variation2_text;
+                                $variation2_custom = "";
+                            }
+
+                            if($lv3[$j]['category'] == $variation3_text)
+                            {
+                                $variation3 = $variation3_text;
+                                $variation3_custom = "";
+                            }
+
+                            if($lv3[$j]['category'] == $variation4_text)
+                            {
+                                $variation4 = $variation4_text;
+                                $variation4_custom = "";
+                            }
+                        }
+                    }
+                   
+                }
+
+                if($variation1_text == "1st Variation")
+                {
+                    $variation1 = "";
+                    $variation1_custom = "";
+                }
+
+                if($variation2_text == "2nd Variation")
+                {
+                    $variation2 = "";
+                    $variation2_custom = "";
+                }
+
+                if($variation3_text == "3rd Variation")
+                {
+                    $variation3 = "";
+                    $variation3_custom = "";
+                }
+
+                if($variation4_text == "4th Variation")
+                {
+                    $variation4 = "";
+                    $variation4_custom = "";
+                }
+
+                $attribute_list = [];
+
+                if($special_info_json != null)
+                {
+                    for($i=0; $i<count($special_info_json); $i++)
+                    {
+                        $value = [];
+                        $_category = $special_info_json[$i]->category;
+
+                        if($special_info_json[$i]->value != "")
+                        {
+                            array_push($value, $special_info_json[$i]->value);
+                           
+                        }
+                        
+                        if($variation1_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation1_value;
+                        }
+                        if($variation2_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation2_value;
+                        }
+                        if($variation3_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation3_value;
+                        }
+                        if($variation4_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation4_value;
+                        }
+
+                        if(count($value) > 0)
+                        {
+                            $attribute_list[] = array("category" => $special_info_json[$i]->category,
+                                           "value" => $value,
+                                        );
+                        }
+                    }
+                }
+
+                if($variation1 == "custom" && $variation1_custom != "1st Variation")
+                {
+                    $attribute_list[] = array("category" => $variation1_text,
+                                           "value" => $variation1_value,
+                                        );
+                }
+
+                if($variation2 == "custom" && $variation2_custom != "2nd Variation")
+                {
+                    $attribute_list[] = array("category" => $variation2_text,
+                                           "value" => $variation2_value,
+                                        );
+                }
+
+                if($variation3 == "custom" && $variation3_custom != "3rd Variation")
+                {
+                    $attribute_list[] = array("category" => $variation3_text,
+                                           "value" => $variation3_value,
+                                        );
+                }
+
+                if($variation4 == "custom" && $variation4_custom != "4th Variation")
+                {
+                    $attribute_list[] = array("category" => $variation4_text,
+                                           "value" => $variation4_value,
+                                        );
+                }
+
+
+                $str_price_change = "";
+                if($max_price_change != "" || $min_price_change != "")
+                {
+                    if($min_price_change != "" && $max_price_change != "")
+                    {
+                        if($min_price_change == $max_price_change)
+                        {
+                            $str_price_change = "(" . $min_price_change . ")";
+                        }else
+                        {
+                            $str_price_change = "(" . $min_price_change . " ~ " . $max_price_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_price_change = "(" . $min_price_change . " ~ " . $max_price_change . ")";
+                    }
+                }
+
+                $str_price_ntd_change = "";
+                if($max_price_ntd_change != "" || $min_price_ntd_change != "")
+                {
+                    if($min_price_ntd_change != "" && $max_price_ntd_change != "")
+                    {
+                        if($min_price_ntd_change == $max_price_ntd_change)
+                        {
+                            $str_price_ntd_change = "(" . $min_price_ntd_change . ")";
+                        }else
+                        {
+                            $str_price_ntd_change = "(" . $min_price_ntd_change . " ~ " . $max_price_ntd_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_price_ntd_change = "(" . $min_price_ntd_change . " ~ " . $max_price_ntd_change . ")";
+                    }
+                }
+
+                $str_quoted_price_change = "";
+                if($max_quoted_price_change != "" || $min_quoted_price_change != "")
+                {
+                    if($max_quoted_price_change != "" && $min_quoted_price_change != "")
+                    {
+                        if($max_quoted_price_change == $min_quoted_price_change)
+                        {
+                            $str_quoted_price_change = "(" . $min_quoted_price_change . ")";
+                        }else
+                        {
+                            $str_quoted_price_change = "(" . $min_quoted_price_change . " ~ " . $max_quoted_price_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_quoted_price_change = "(" . $min_quoted_price_change . " ~ " . $max_quoted_price_change . ")";
+                    }
+                }
+
+                $previous_print_option = ['pid' => 'true', 'brand' => 'true', 'srp' => 'true', 'qp' => 'true' ];
+                if($row['print_option'] != "")
+                    $previous_print_option = json_decode($row['print_option']);
+
+              
+                $merged_results[] = array( "id" => $id,
+                                    "category" => $category,
+                                    "sub_category" => $sub_category,
+                                    "sub_category_name" => $sub_category_name,
+                                    "brand" => $brand,
+                                    "pid" => $pid,
+                                    "code" => $code,
+                                    "price_ntd" => $price_ntd,
+                                    "currency" => $currency,
+                                    "price" => $price,
+                                    "price_quoted" => $price_quoted,
+                                    "price_ntd_org" => $price_ntd_org,
+                                    "price_org" => $price_org,
+                                    "description" => $description,
+                                    "photo1" => $photo1,
+                                    "photo2" => $photo2,
+                                    "photo3" => $photo3,
+                                    "accessory_mode" => $accessory_mode,
+                                    "attributes" => $attributes,
+                                    "variation_mode" => $variation_mode,
+                                    "variation" => $variation,
+                                    "status" => $status,
+                                    "created_at" => $created_at,
+                                    "create_id" => $create_id,
+                                    "related_product" => $related_product,
+                                    "replacement_product" => $replacement_product,
+                                    "groupedItems" => $groupedItems,
+                                    "groupedItems_replacement" => $groupedItems_replacement,
+                                    "product" => $product,
+                                    "variation1_text" => $variation1_text,
+                                    "variation2_text" => $variation2_text,
+                                    "variation3_text" => $variation3_text,
+                                    "variation4_text" => $variation4_text,
+                                    "variation1_value" => $variation1_value,
+                                    "variation2_value" => $variation2_value,
+                                    "variation3_value" => $variation3_value,
+                                    "variation4_value" => $variation4_value,
+                                    "variation1" => $variation1,
+                                    "variation2" => $variation2,
+                                    "variation3" => $variation3,
+                                    "variation4" => $variation4,
+                                    "variation1_custom" => $variation1_custom,
+                                    "variation2_custom" => $variation2_custom,
+                                    "variation3_custom" => $variation3_custom,
+                                    "variation4_custom" => $variation4_custom,
+                                    "attribute_list" => $attribute_list,
+                                    "accessory" => $accessory,
+                                    "special_information" => $special_information,
+                                    "accessory_information" => $accessory_information,
+                                    "sub_category_item" => $sub_category_item,
+                                    "notes" => $notes,
+                                    "moq" => $moq,
+                                    "tags" => explode(',', $tags),
+                                    "quoted_price" => $price_quoted,
+                                    "quoted_price_org" => $quoted_price_org,
+                                    "quoted_price_change" => substr($quoted_price_change, 0, 10),
+                                    "price_change" => substr($price_change, 0, 10),
+                                    "price_ntd_change" => substr($price_ntd_change, 0, 10),
+
+                                    "max_price_change" => $max_price_change,
+                                    "min_price_change" => $min_price_change,
+                                    "max_price_ntd_change" => $max_price_ntd_change,
+                                    "min_price_ntd_change" => $min_price_ntd_change,
+                                    "max_quoted_price_change" => $max_quoted_price_change,
+                                    "min_quoted_price_change" => $min_quoted_price_change,
+
+                                    "str_price_change" => $str_price_change,
+                                    "str_price_ntd_change" => $str_price_ntd_change,
+                                    "str_quoted_price_change" => $str_quoted_price_change,
+
+                                    "out" => $out,
+                                    "phased_out_cnt" => $phased_out_cnt,
+
+                                    "phased_out_text" => $phased_out_text,
+                                    "phased_out_text1" => $phased_out_text1,
+                                    
+                                    "special_infomation" => [],
+                                    "accessory_infomation" => $accessory_information,
+                                    "sheet_url" => "product_spec_sheet?sd=" . $id,
+                                    "out_cnt" => $phased_out_cnt,
+                                    "url1" => $photo1 != '' ? "https://storage.googleapis.com/feliiximg/" . $photo1 : '',
+                                    "url2" => $photo2 != '' ? "https://storage.googleapis.com/feliiximg/" . $photo2 : '',
+                                    "url3" => $photo3 != '' ? "https://storage.googleapis.com/feliiximg/" . $photo3 : '',
+
+                                    "url" => $photo1 != '' ? "https://storage.googleapis.com/feliiximg/" . $photo1 : '',
+
+                                    "variation_product" => $product,
+                                    "v1" => '',
+                                    "v2" => '',
+                                    "v3" => '',
+                                    "v4" => '',
+                                    "record" => [],
+                                    "specification" => [],
+                                    "print_option" => $previous_print_option,
+                                    "qty" => $qty,
+                                    "srp" => $srp,
+                                    "srp_quoted" => $srp_quoted,
+
+                                    "last_order" => $last_order,
+                                    "last_order_name" => $last_order_name,
+                                    "is_last_order" => $is_last_order,
+
+                                    "last_order_url" => "",
+                                    "last_have_spec" => true,
+
+                                   "product_ics" => $product_ics,
+                                    "product_skp" => $product_skp,
+                                    "product_manual" => $product_manual,
+            );
+            }
+
+            return $merged_results;
+}
+
+function getOrderInfo($od_id, $db)
+{
+    $sql = "select order_type, serial_name, status from od_main WHERE id = ". $od_id;
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row;
+    }
+
+    return $merged_results;
+}
+
+function formatPrice($price) {
+    if (floor($price) == $price) {
+        return number_format($price, 0); // No decimal places for whole numbers
+    } else {
+        return number_format($price, 2); // Two decimal places for float values
+    }
+}
+
+function GetAttachment($_id, $batch_type, $db)
+{
+    $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = '" . $batch_type . "'
+            order by h.created_at ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
 
 ?>

@@ -1,3 +1,45 @@
+<?php
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ($jwt === NULL || $jwt === '') {
+    setcookie("userurl", $_SERVER['REQUEST_URI']);
+    header('location:index');
+}
+
+include_once 'api/config/core.php';
+include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
+include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once 'api/libs/php-jwt-master/src/JWT.php';
+include_once 'api/project03_is_creator.php';
+
+use \Firebase\JWT\JWT;
+
+try {
+    // decode jwt
+    $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+    if($decoded->exp < time())
+            {
+                header( 'location:index' );
+            }
+
+            
+    $user_id = $decoded->data->id;
+    $username = $decoded->data->username;
+
+    $position = $decoded->data->position;
+    $department = $decoded->data->department;
+
+
+}
+// if decode fails, it means jwt is invalid
+catch (Exception $e) {
+
+    header('location:index');
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,9 +75,9 @@
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+          href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
 
@@ -46,7 +88,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
 
 
@@ -651,16 +693,16 @@
 </div>
 
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
+<script src="js/npm/exif-js.js"></script>
 <script src="js/moment.js"></script>
 <script src="js/vue-select.js"></script>
 <script src="js/axios.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 <script src="js/a076d05399.js"></script> 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 <script defer src="js/tag_mgt.js"></script>
 
 </html>

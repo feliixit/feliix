@@ -6,7 +6,7 @@ Vue.filter("dateString", function(value, format = "YYYY-MM-DD HH:mm:ss") {
 var app = new Vue({
   el: "#app",
   data: {
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     id: 0,
 

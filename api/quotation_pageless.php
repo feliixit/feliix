@@ -64,6 +64,7 @@ if (!isset($jwt)) {
                     prepare_for_third_line,
                     prepare_by_first_line,
                     prepare_by_second_line,
+                    prepare_by_third_line,
                     footer_first_line,
                     footer_second_line,
                     pixa_s,
@@ -72,7 +73,17 @@ if (!isset($jwt)) {
                     show_t,
                     pixa_p,
                     show_p,
-                    1 page_count
+                    1 page_count,
+                    can_view,
+                    can_duplicate,
+                    kind,
+                    COALESCE((SELECT project_name FROM project_main WHERE id = project_id and kind = ''), '') AS project_name,
+                    COALESCE((SELECT title FROM project_other_task_a WHERE id = project_id and kind = 'a'), '') AS project_name_a,
+                    COALESCE((SELECT title FROM project_other_task_d WHERE id = project_id and kind = 'd'), '') AS project_name_d,
+                    COALESCE((SELECT title FROM project_other_task_l WHERE id = project_id and kind = 'l'), '') AS project_name_l,
+                    COALESCE((SELECT title FROM project_other_task_o WHERE id = project_id and kind = 'o'), '') AS project_name_o,
+                    COALESCE((SELECT title FROM project_other_task_sl WHERE id = project_id and kind = 'sl'), '') AS project_name_sl,
+                    COALESCE((SELECT title FROM project_other_task_sv WHERE id = project_id and kind = 'sv'), '') AS project_name_sv
                     FROM quotation
                     WHERE status <> -1 and id=$id";
 
@@ -112,6 +123,7 @@ if (!isset($jwt)) {
         $prepare_for_third_line = $row['prepare_for_third_line'];
         $prepare_by_first_line = $row['prepare_by_first_line'];
         $prepare_by_second_line = $row['prepare_by_second_line'];
+        $prepare_by_third_line = $row['prepare_by_third_line'];
         $footer_first_line = $row['footer_first_line'];
         $footer_second_line = $row['footer_second_line'];
 
@@ -128,6 +140,7 @@ if (!isset($jwt)) {
         $block_names = GetBlockNames($row['id'], $db);
         $total_info = GetTotalInfo($row['id'], $db);
         $term_info = GetTermInfo($row['id'], $db);
+        $slogan_info = GetSloganInfo($row['id'], $db);
         $payment_term_info = GetPaymentTermInfo($row['id'], $db);
         $sig_info = GetSigInfo($row['id'], $db);
 
@@ -147,6 +160,33 @@ if (!isset($jwt)) {
         // print
         $product_array = GetProductItems($pages, $row['id'], $db);
 
+        $led_driver = GetLedDriver($row['id'], $db);
+
+        $can_view = $row['can_view'];
+        $can_duplicate = $row['can_duplicate'];
+
+        $kind = $row['kind'];
+        $project_name = $row['project_name'];
+        $project_name_a = $row['project_name_a'];
+        $project_name_d = $row['project_name_d'];
+        $project_name_l = $row['project_name_l'];
+        $project_name_o = $row['project_name_o'];
+        $project_name_sl = $row['project_name_sl'];
+        $project_name_sv = $row['project_name_sv'];
+
+        if($kind == 'a')
+            $project_name = $project_name_a;
+        if($kind == 'd')
+            $project_name = $project_name_d;
+        if($kind == 'l')
+            $project_name = $project_name_l;
+        if($kind == 'o')
+            $project_name = $project_name_o;
+        if($kind == 'sl')
+            $project_name = $project_name_sl;
+        if($kind == 'sv')
+            $project_name = $project_name_sv;
+
         $merged_results[] = array(
             "id" => $id,
             "first_line" => $first_line,
@@ -159,6 +199,7 @@ if (!isset($jwt)) {
             "prepare_for_third_line" => $prepare_for_third_line,
             "prepare_by_first_line" => $prepare_by_first_line,
             "prepare_by_second_line" => $prepare_by_second_line,
+            "prepare_by_third_line" => $prepare_by_third_line,
             "footer_first_line" => $footer_first_line,
             "footer_second_line" => $footer_second_line,
 
@@ -175,6 +216,7 @@ if (!isset($jwt)) {
             "total_info" => $total_info,
             "term_info" => $term_info,
             "payment_term_info" => $payment_term_info,
+            "slogan_info" => $slogan_info,
             "sig_info" => $sig_info,
             "subtotal_info" => $subtotal_info,
          
@@ -183,7 +225,12 @@ if (!isset($jwt)) {
             "subtotal_info_not_show_a" => $subtotal_info_not_show_a,
             "subtotal_info_not_show_b" => $subtotal_info_not_show_b,
 
+            "can_view" => $can_view,
+            "can_duplicate" => $can_duplicate,
+            "led_driver" => $led_driver,
+            
             "product_array" => $product_array,
+            "project_name" => $project_name,
         );
     }
 
@@ -198,9 +245,9 @@ function GetSubTotalInfo($qid, $db)
 
     $query = "
             select COALESCE(sum(amount), 0) amt from quotation_page_type_block
-            WHERE `status` <> -1 and  type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount = 0)
+            WHERE `status` <> -1 and  type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount = 0 and status <> -1)
             union all
-            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0
+            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and status <> -1
     ";
 
     // prepare the query
@@ -224,9 +271,9 @@ function GetSubTotalInfoNotShowA($qid, $db)
 
     $query = "
             select COALESCE(sum(amount), 0) amt from quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A'  and real_amount = 0)
+            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A'  and real_amount = 0 and status <> -1)
             union all
-            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'A' 
+            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'A'  and status <> -1
     ";
 
     // prepare the query
@@ -251,9 +298,9 @@ function GetSubTotalInfoNotShowB($qid, $db)
 
     $query = "
             select COALESCE(sum(amount), 0) amt from quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B'  and real_amount = 0)
+            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B'  and real_amount = 0 and status <> -1)
             union all
-            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'B' 
+            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'B'  and status <> -1
     ";
 
     // prepare the query
@@ -277,7 +324,7 @@ function GetSubTotalNoVat($qid, $db)
 
     $query = "
             select sum(qty * price * (1 - discount / 100) * ratio) amt from quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' )
+            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = ''  and status <> -1)
     ";
 
     // prepare the query
@@ -302,7 +349,7 @@ function GetSubTotalNoVatA($qid, $db)
 
     $query = "
             select sum(qty * price * (1 - discount / 100) * ratio) amt from quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A')
+            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A' and status <> -1)
     ";
 
     // prepare the query
@@ -327,7 +374,7 @@ function GetSubTotalNoVatB($qid, $db)
 
     $query = "
             select sum(qty * price * (1 - discount / 100) * ratio) amt from quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B')
+            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B' and status <> -1)
     ";
 
     // prepare the query
@@ -351,7 +398,7 @@ function GetSubTotalNoVatNotShow($qid, $db)
 
     $query = "
             select COALESCE(sum(qty * ratio * price * (1 - discount / 100)), 0) amt from quotation_page_type_block
-            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '')
+            WHERE `status` <> -1 and type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and status <> -1)
     ";
 
     // prepare the query
@@ -439,6 +486,9 @@ function GetSubtotal($ary)
 
 function AddPageIfNotExist($qid, $db)
 {
+    // extern user_id
+    global $user_id;
+    
     $query = "
         SELECT id,
             page
@@ -526,6 +576,7 @@ function GetPages($qid, $db){
         $type = GetTypes($id, $db);
         $total = GetTotal($qid, $page, $db);
         $term = GetTerm($qid, $page, $db);
+        $slogan = GetSlogan($qid, $page, $db);
         $payment_term = GetPaymentTerm($qid, $page, $db);
         $sig = GetSig($qid, $page, $db);
   
@@ -535,6 +586,7 @@ function GetPages($qid, $db){
             "types" => $type,
             "total" => $total,
             "term" => $term,
+            "slogan" => $slogan,
             "payment_term" => $payment_term,
             "sig" => $sig,
         );
@@ -629,6 +681,44 @@ function GetTerm($qid, $page, $db){
     }
 
     return $merged_results;
+}
+
+function GetSlogan($qid, $page, $db){
+    $query = "
+        SELECT id,
+        `page`,
+        border
+        FROM   quotation_slogan
+        WHERE  quotation_id = " . $qid . "
+        and page = " . $page . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $slogan = "";
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $page = $row['page'];
+        $border = $row['border'];
+
+        if($page == 1)
+        {
+            if($border == 'Y')
+                $slogan = "Y";
+            else
+                $slogan = "N";
+        }
+
+        if($border != '')
+            $slogan = $border;
+    }
+
+    return $slogan;
 }
 
 
@@ -742,7 +832,7 @@ function GetSigInfo($qid, $db)
                 "id" => $id,
                 "type" => $type,
                 "photo" => $photo,
-                "url" =>  $photo != '' ? 'https://storage.cloud.google.com/feliiximg/' . $photo : '',
+                "url" =>  $photo != '' ? 'https://storage.googleapis.com/feliiximg/' . $photo : '',
                 "name" => $name,
                 "position" => $position,
                 "phone" => $phone,
@@ -829,7 +919,7 @@ function GetSig($qid, $page, $db)
                 "id" => $id,
                 "type" => $type,
                 "photo" => $photo,
-                "url" =>  $photo != '' ? 'https://storage.cloud.google.com/feliiximg/' . $photo : '',
+                "url" =>  $photo != '' ? 'https://storage.googleapis.com/feliiximg/' . $photo : '',
                 "name" => $name,
                 "position" => $position,
                 "phone" => $phone,
@@ -847,6 +937,34 @@ function GetSig($qid, $page, $db)
     );
 
     return $merged_results;
+}
+
+
+function GetLedDriver($qid, $db){
+    $query = "
+        SELECT 
+        `led_driver`
+        FROM   quotation_led_driver
+        WHERE  quotation_id = " . $qid . "
+        AND `status` <> -1 ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $led_driver = $row['led_driver'];   
+
+        $merged_results[] = array(
+            "led_driver" => $led_driver,
+        );
+    }
+
+    return $merged_results;
+
 }
 
 function GetTermInfo($qid, $db)
@@ -905,6 +1023,54 @@ function GetTermInfo($qid, $db)
     return $merged_results;
 }
 
+function GetSloganInfo($qid, $db)
+{
+    $query = "
+        SELECT 
+        id,
+        `page`,
+        border
+        FROM   quotation_slogan
+        WHERE  quotation_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $item = [];
+
+    $merged_results = [];
+    
+    $id = 0;
+    $page = 0;
+    $border = '';
+
+  
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $page = $row['page'];
+        $border = $row['border'];
+       
+        $item[] = array(
+            "id" => $id,
+            "page" => $page,
+            "border" => $border,
+          
+        );
+        
+    }
+
+    $merged_results = array(
+        "page" => $page,
+        "item" => $item,
+    );
+
+    return $merged_results;
+}
+
 
 function GetPaymentTermInfo($qid, $db)
 {
@@ -931,8 +1097,8 @@ function GetPaymentTermInfo($qid, $db)
     
     $id = 0;
     $page = 0;
-    $payment_method = 'Cash; Cheque; Credit Card; Bank Wiring;';
-    $brief = '50% Downpayment & another 50% balance a day before the delivery';
+    $payment_method = 'Cash; Cheque; Credit Card; Bank Wiring; GCash';
+    $brief = '50% Down payment upon order confirmation, 50% Balance upon delivery';
     $list = '[{"id":"0", "bank_name": "BDO", "first_line":"Acct. Name: Feliix Inc. Acct no: 006910116614", "second_line":"Branch: V.A Rufino", "third_line":""}, {"id":"1", "bank_name": "SECURITY BANK", "first_line":"Acct. Name: Feliix Inc. Acct no: 0000018155245", "second_line":"Swift code: SETCPHMM", "third_line":"Address: 512 Edsa near Corner Urbano Plata St., Caloocan City"}]';
 
     $item = json_decode($list, TRUE); 
@@ -1093,6 +1259,8 @@ function GetBlocks($qid, $db){
         v1,
         v2,
         v3,
+        v4,
+        ps_var,
         listing,
         num,
         notes,
@@ -1129,9 +1297,32 @@ function GetBlocks($qid, $db){
         $v1 = $row['v1'];
         $v2 = $row['v2'];
         $v3 = $row['v3'];
+        $v4 = $row['v4'];
+        $ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
         $listing = $row['listing'];
 
-        $srp = GetProductPrice($row['pid'], $row['v1'], $row['v2'], $row['v3'], $db);
+        $srp = GetProductPrice($row['pid'], $row['v1'], $row['v2'], $row['v3'], $row['v4'], $db);
+
+        $last_order_name = "";
+        $last_order_at = "";
+        $last_order_url = "";
+        $moq = "";
+        $status = "";
+        $is_last_order = "";
+        if($pid != 0)
+        {
+            $pd = GetProductMain($pid, $db);
+
+            if(count($pd) > 0)
+            {
+                $last_order_name = $pd[0]['last_order_name'];
+                $last_order_at = $pd[0]['last_order_at'];
+                $last_order_url = $pd[0]['last_order_url'];
+                $is_last_order = $pd[0]['is_last_order'];
+                $moq = $pd[0]['moq'];
+                $status = $pd[0]['status'];
+            }
+        }
     
         $type == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
@@ -1162,8 +1353,16 @@ function GetBlocks($qid, $db){
             "v1" => $v1,
             "v2" => $v2,
             "v3" => $v3,
+            "v4" => $v4,
+            "ps_var" => $ps_var,
             "list" => $listing,
             "srp" => $srp,
+            "last_order_name" => $last_order_name,
+            "last_order_at" => $last_order_at,
+            "last_order_url" => $last_order_url,
+            "is_last_order" => $is_last_order,
+            "moq" => $moq,
+            "status" => $status,
         );
     }
 
@@ -1171,12 +1370,13 @@ function GetBlocks($qid, $db){
 }
 
 
-function GetProducts($pid, $v1, $v2, $v3, $db)  {
+function GetProducts($pid, $v1, $v2, $v3, $v4, $db)  {
 
     $query = "SELECT price,
             1st_variation,
             2rd_variation,
-            3th_variation
+            3th_variation,
+            4th_variation
         FROM   product
         WHERE  product_id = " . $pid . "
         AND `status` <> -1 
@@ -1190,14 +1390,16 @@ function GetProducts($pid, $v1, $v2, $v3, $db)  {
     $val1 = "";
     $val2 = "";
     $val3 = "";
+    $val4 = "";
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $price = $row['price'];
         $val1 = GetValue($row['1st_variation']);
         $val2 = GetValue($row['2rd_variation']);
         $val3 = GetValue($row['3th_variation']);
+        $val4 = GetValue($row['4th_variation']);
 
-        if($val1 == $v1 && $val2 == $v2 && $val3 == $v3)
+        if($val1 == $v1 && $val2 == $v2 && $val3 == $v3 && $val4 == $v4)
             break;
     }
 
@@ -1215,13 +1417,13 @@ function GetValue($str)
     return isset($obj[1]) ? $obj[1] : "";
 }
 
-function GetProductPrice($pid, $v1, $v2, $v3, $db)
+function GetProductPrice($pid, $v1, $v2, $v3, $v4, $db)
 {
     $srp = 0;
     $p_srp = 0;
 
-    if($v1 != '' || $v2 != '' || $v3 != '')
-     $p_srp = GetProducts($pid, $v1, $v2, $v3, $db);
+    if($v1 != '' || $v2 != '' || $v3 != '' || $v4 != '')
+        $p_srp = GetProducts($pid, $v1, $v2, $v3, $v4, $db);
 
     if($p_srp > 0)
     {
@@ -1314,10 +1516,12 @@ function GetProductItems($pages, $q_id, $db)
                 $v1 = $row['v1'];
                 $v2 = $row['v2'];
                 $v3 = $row['v3'];
+                $v4 = $row['v4'];
+                // $ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
                 $listing = $row['list'];
             
                 $type == "" ? "" : "image";
-                $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+                $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
             
                 $merged_results[] = array(
                     "id" => $id,
@@ -1339,6 +1543,7 @@ function GetProductItems($pages, $q_id, $db)
                     "v1" => $v1,
                     "v2" => $v2,
                     "v3" => $v3,
+                    "v4" => $v4,
                     "list" => $listing,
                 );
                 
@@ -1393,4 +1598,248 @@ function GetProductId($code, $db)
     }
 
     return $pid;
+}
+
+function getOrderInfo($od_id, $db)
+{
+    $sql = "select order_type, serial_name, status from od_main WHERE id = ". $od_id;
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row;
+    }
+
+    return $merged_results;
+}
+
+
+function GetProductMain($id, $db){
+
+    $time_start = microtime(true); 
+
+    // product main
+    $sql = "SELECT p.*, cu.username created_name, uu.username updated_name FROM product_category p left join `user` cu on cu.id = p.create_id left join `user` uu on uu.id = p.updated_id WHERE  p.id = ". $id;
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $last_order = $row['last_order'];
+        $last_order_name = $row['last_order_name'];
+        $last_order_at = $row['last_order_at'];
+        $last_order_url = "";
+        $moq = $row['moq'];
+        $status = $row['status'];
+
+        $product = GetProduct($id, $db);
+
+        // for last order
+        $is_last_order_product = "";
+        $order_sn = 1;
+        
+        for($i = 0; $i < count($product); $i++)
+        {
+            
+
+            if($product[$i]['last_order_name'] != '')
+            {
+                $order_info = getOrderInfo($product[$i]['last_order'], $db);
+                $url = "";
+
+                if(isset($order_info["order_type"]))
+                {
+                    if($order_info["order_type"] == "taiwan")
+                        $url = "https://feliix.myvnc.com/order_taiwan_p4?id=" . $product[$i]['last_order'];
+                    
+                    if($order_info["order_type"] == "mockup")
+                        $url = "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" . $product[$i]['last_order'];
+                    
+                    if($order_info["order_type"] == "sample")
+                        $url = "https://feliix.myvnc.com/order_taiwan_sample_p4?id=" . $product[$i]['last_order'];
+                    
+                    if($order_info["order_type"] == "stock")
+                        $url = "https://feliix.myvnc.com/order_taiwan_stock_p4?id=" . $product[$i]['last_order'];
+                }
+
+                $params = str_replace("=>", " = ", $product[$i]['1st_variation']);
+                if($product[$i]['2rd_variation'] != "=>")
+                    $params .= ", " . str_replace("=>", " = ", $product[$i]['2rd_variation']);
+                if($product[$i]['3th_variation'] != "=>")
+                    $params .= ", " . str_replace("=>", " = ", $product[$i]['3th_variation']);
+                if($product[$i]['4th_variation'] != "=>")
+                    $params .= ", " . str_replace("=>", " = ", $product[$i]['4th_variation']);
+
+                $is_last_order_product .= "(" . $order_sn++ . ") " . $params . ": <br>" . substr($product[$i]['last_order_at'], 0, 10) . " at <a href='" . $url . "' target='_blank'>" .  $product[$i]['last_order_name'] . "</a><br><br>";
+            }
+        }
+
+
+        // for last order
+        $is_last_order_main = "";
+        if($last_order_name != '')
+        {
+            $order_info = getOrderInfo($last_order, $db);
+            $url = "";
+
+            if(isset($order_info["order_type"]))
+            {
+                if($order_info["order_type"] == "taiwan")
+                    $url = "https://feliix.myvnc.com/order_taiwan_p4?id=" . $last_order;
+                
+                if($order_info["order_type"] == "mockup")
+                    $url = "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" . $last_order;
+                
+                if($order_info["order_type"] == "sample")
+                    $url = "https://feliix.myvnc.com/order_taiwan_sample_p4?id=" . $last_order;
+                
+                if($order_info["order_type"] == "stock")
+                    $url = "https://feliix.myvnc.com/order_taiwan_stock_p4?id=" . $last_order;
+            }
+
+            $last_order_url = $url;
+
+
+            $is_last_order_main = "Main Product: <br>" . substr($last_order_at, 0, 10) . " at <a href='" . $url . "' target='_blank'>" .  $last_order_name . "</a><br>";
+        }
+
+        $is_last_order = $is_last_order_main . $is_last_order_product;
+
+        
+        $merged_results[] = array( "id" => $id,
+                            
+
+                            "last_order" => $last_order,
+                            "last_order_name" => $last_order_name,
+                            "is_last_order" => $is_last_order,
+                            "last_order_at" => substr($last_order_at,0, 10),
+                            "last_order_url" => $last_order_url,
+                            "last_have_spec" => true,
+                            "moq" => $moq,
+                            "status" => $status,
+
+        );
+    }
+
+        $time_end = microtime(true);
+    
+        $execution_time = ($time_end - $time_start);
+        // echo '<b>GetProduct</b> '.$execution_time.'<br/>';
+        
+        return $merged_results;
+}
+
+
+
+function GetProduct($id, $db){
+
+    $time_start = microtime(true); 
+
+    $sql = "SELECT *, CONCAT('https://storage.googleapis.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+ 
+        $fir = $row['1st_variation'];
+        $sec = $row['2rd_variation'];
+        $thi = $row['3th_variation'];
+        $fth = $row['4th_variation'];
+
+        $checked = '';
+        $code = $row['code'];
+        $price = $row['price'];
+        $price_ntd = $row['price_ntd'];
+        $price_org = $row['price'];
+        $price_ntd_org = $row['price_ntd'];
+        $price_change = $row['price_change'] != '' ? substr($row['price_change'], 0, 10) : '';
+        $price_ntd_change = $row['price_ntd_change'] != '' ? substr($row['price_ntd_change'], 0, 10) : '';
+        $status = $row['enabled'];
+        $photo = trim($row['photo']);
+        $enabled = $row['enabled'];
+        if($photo != '')
+            $url = $row['url'];
+        else
+            $url = '';
+
+        $quoted_price = $row['quoted_price'];
+        $quoted_price_change = $row['quoted_price_change'] != '' ? substr($row['quoted_price_change'], 0, 10) : '';
+
+        $last_order = $row['last_order'];
+        $last_order_name = $row['last_order_name'];
+        $last_order_at = $row['last_order_at'];
+
+        if($last_order != "")
+            {
+                $order_info = getOrderInfo($last_order, $db);
+                $last_order_url = "";
+    
+                if(isset($order_info["order_type"]))
+                {
+                    if($order_info["order_type"] == "taiwan")
+                        $last_order_url = "https://feliix.myvnc.com/order_taiwan_p4?id=" . $last_order;
+                    
+                    if($order_info["order_type"] == "mockup")
+                        $last_order_url = "https://feliix.myvnc.com/order_taiwan_mockup_p4?id=" . $last_order;
+                    
+                    if($order_info["order_type"] == "sample")
+                        $last_order_url = "https://feliix.myvnc.com/order_taiwan_sample_p4?id=" . $last_order;
+                    
+                    if($order_info["order_type"] == "stock")
+                        $last_order_url = "https://feliix.myvnc.com/order_taiwan_stock_p4?id=" . $last_order;
+                }
+            }
+            else
+            {
+                $last_order_url = "";
+            }
+
+        $merged_results[] = array(  "id" => $id, 
+  
+                                    "1st_variation" => $fir,
+                                    "2rd_variation" => $sec,
+                                    "3th_variation" => $thi,
+                                    "4th_variation" => $fth,
+
+                                    "checked" => $checked, 
+                                    "code" => $code, 
+                                    "price" => $price, 
+                                    "price_ntd" => $price_ntd, 
+                                    "price_org" => $price_org, 
+                                    "price_ntd_org" => $price_ntd_org, 
+                                    "price_change" => $price_change, 
+                                    "price_ntd_change" => $price_ntd_change, 
+                                    "status" => $status, 
+                                    "url" => $url, 
+                                    "photo" => $photo, 
+                                    "enabled" => $enabled,
+
+                                    "quoted_price" => $quoted_price, 
+                                    "quoted_price_org" => $quoted_price, 
+                                    "quoted_price_change" => substr($quoted_price_change, 0, 10), 
+                                   
+                                    "file" => array( "value" => ''),
+                                   "last_order" => $last_order,
+                                    "last_order_name" => $last_order_name,
+                                    "last_order_at" => substr($last_order_at,0, 10),
+                                    "last_order_url" => $last_order_url,
+                                    "last_have_spec" => true,
+
+            );
+    }
+
+    $time_end = microtime(true);
+
+    $execution_time = ($time_end - $time_start);
+    // echo '<b>GetProduct</b> '.$execution_time.'<br/>';
+    
+    return $merged_results;
 }

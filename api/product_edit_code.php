@@ -99,6 +99,7 @@ else
             $variation1_text = "1st Variation";
             $variation2_text = "2nd Variation";
             $variation3_text = "3rd Variation";
+            $variation4_text = "4th Variation";
 
             $special_infomation = [];
             $accessory_information = [];
@@ -120,6 +121,7 @@ else
                 $price = $row['price'];
                 $description = $row['description'];
                 $related_product = GetRelatedProduct($id, $db);
+                $replacement_product = GetReplacementProduct($id, $db);
                 $out = $row['out'];
                 $notes = $row['notes'];
                 $photo1 = $row['photo1'];
@@ -141,21 +143,42 @@ else
                 $price_change = $row['price_change'];
                 $price_ntd_change = $row['price_ntd_change'];
 
+                $p1_code = $row['p1_code'];
+                $p1_id = $row['p1_id'];
+                $p1_qty = $row['p1_qty'];
+
+                $p2_code = $row['p2_code'];
+                $p2_id = $row['p2_id'];
+                $p2_qty = $row['p2_qty'];
+
+                $p3_code = $row['p3_code'];
+                $p3_id = $row['p3_id'];
+                $p3_qty = $row['p3_qty'];
+
+                $brand_handler = $row['brand_handler'];
+
                 $product = GetProduct($id, $db);
+
+                $product_ics = GetAttachment($id, 'product_ics', $db);
+                $product_skp = GetAttachment($id, 'product_skp', $db);
+                $product_manual = GetAttachment($id, 'product_manual', $db);
 
                 $variation1_value = [];
                 $variation2_value = [];
                 $variation3_value = [];
+                $variation4_value = [];
 
                 if(count($product) > 0)
                 {
                     $variation1_text = $product[0]['k1'];
                     $variation2_text = $product[0]['k2'];
                     $variation3_text = $product[0]['k3'];
+                    $variation4_text = $product[0]['k4'];
 
                     $variation1_value = [];
                     $variation2_value = [];
                     $variation3_value = [];
+                    $variation4_value = [];
 
                     for($i = 0; $i < count($product); $i++)
                     {
@@ -170,6 +193,10 @@ else
                         if (!in_array($product[$i]['v3'],$variation3_value))
                         {
                             array_push($variation3_value,$product[$i]['v3']);
+                        }
+                        if (!in_array($product[$i]['v4'],$variation4_value))
+                        {
+                            array_push($variation4_value,$product[$i]['v4']);
                         }
                     }
 
@@ -190,6 +217,8 @@ else
                 $variation2_custom = $variation2_text;
                 $variation3 = 'custom';
                 $variation3_custom = $variation3_text;
+                $variation4 = 'custom';
+                $variation4_custom = $variation4_text;
                 
 
                 for($i = 0; $i < count($special_information); $i++)
@@ -216,6 +245,12 @@ else
                                 $variation3 = $variation3_text;
                                 $variation3_custom = "";
                             }
+
+                            if($lv3[$j]['category'] == $variation4_text)
+                            {
+                                $variation4 = $variation4_text;
+                                $variation4_custom = "";
+                            }
                         }
                     }
                    
@@ -237,6 +272,12 @@ else
                 {
                     $variation3 = "";
                     $variation3_custom = "";
+                }
+
+                if($variation4_text == "4th Variation")
+                {
+                    $variation4 = "";
+                    $variation4_custom = "";
                 }
 
                 $merged_results[] = array( "id" => $id,
@@ -264,20 +305,25 @@ else
                                     "variation1_text" => $variation1_text,
                                     "variation2_text" => $variation2_text,
                                     "variation3_text" => $variation3_text,
+                                    "variation4_text" => $variation4_text,
                                     "variation1_value" => $variation1_value,
                                     "variation2_value" => $variation2_value,
                                     "variation3_value" => $variation3_value,
+                                    "variation4_value" => $variation4_value,
                                     "variation1" => $variation1,
                                     "variation2" => $variation2,
                                     "variation3" => $variation3,
+                                    "variation4" => $variation4,
                                     "variation1_custom" => $variation1_custom,
                                     "variation2_custom" => $variation2_custom,
                                     "variation3_custom" => $variation3_custom,
+                                    "variation4_custom" => $variation4_custom,
                                     "accessory" => $accessory,
                                     "special_information" => $special_information,
                                     "accessory_information" => $accessory_information,
                                     "sub_category_item" => $sub_category_item,
                                     "related_product" => $related_product,
+                                    "replacement_product" => $replacement_product,
                                     "out" => $out,
                                     "notes" => $notes,
                                     "moq" => $moq,
@@ -287,6 +333,24 @@ else
                                     "quoted_price_change" => substr($quoted_price_change, 0, 10),
                                     "price_change" => substr($price_change, 0, 10),
                                     "price_ntd_change" => substr($price_ntd_change, 0, 10),
+
+                                    "p1_code" => $p1_code,
+                                    "p1_qty" => $p1_qty,
+                                    "p1_id" => $p1_id,
+
+                                    "p2_code" => $p2_code,
+                                    "p2_qty" => $p2_qty,
+                                    "p2_id" => $p2_id,
+
+                                    "p3_code" => $p3_code,
+                                    "p3_qty" => $p3_qty,
+                                    "p3_id" => $p3_id,
+
+                                    "brand_handler" => $brand_handler,
+
+                                    "product_ics" => $product_ics,
+                                    "product_skp" => $product_skp,
+                                    "product_manual" => $product_manual,
 
             );
             }
@@ -320,7 +384,7 @@ function GetValue($str)
 }
 
 function GetProduct($id, $db){
-    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+    $sql = "SELECT *, CONCAT('https://storage.googleapis.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
 
     $merged_results = array();
 
@@ -332,9 +396,11 @@ function GetProduct($id, $db){
         $k1 = GetKey($row['1st_variation']);
         $k2 = GetKey($row['2rd_variation']);
         $k3 = GetKey($row['3th_variation']);
+        $k4 = GetKey($row['4th_variation']);
         $v1 = GetValue($row['1st_variation']);
         $v2 = GetValue($row['2rd_variation']);
         $v3 = GetValue($row['3th_variation']);
+        $v4 = GetValue($row['4th_variation']);
         $checked = '';
         $code = $row['code'];
         $price = $row['price'];
@@ -347,6 +413,11 @@ function GetProduct($id, $db){
         $quoted_price = $row['quoted_price'];
         $quoted_price_change = $row['quoted_price_change'];
 
+        $last_order = $row['last_order'];
+        $last_order_name = $row['last_order_name'];
+        $last_order_at = $row['last_order_at'];
+        $last_order_type = $row['last_order_type'];
+
         $status = $row['enabled'];
         $photo = trim($row['photo']);
         if($photo != '')
@@ -358,9 +429,11 @@ function GetProduct($id, $db){
                                     "k1" => $k1, 
                                     "k2" => $k2, 
                                     "k3" => $k3, 
+                                    "k4" => $k4,
                                     "v1" => $v1, 
                                     "v2" => $v2, 
                                     "v3" => $v3, 
+                                    "v4" => $v4,
                                     "checked" => $checked, 
                                     "code" => $code, 
                                     "price" => $price, 
@@ -375,6 +448,11 @@ function GetProduct($id, $db){
                                     "status" => $status, 
                                     "url" => $url, 
                                     "photo" => $photo, 
+
+                                    "last_order" => $last_order,
+                                    "last_order_name" => $last_order_name,
+                                    "last_order_at" => $last_order_at,
+                                    "last_order_type" => $last_order_type,
                                    
                                     "file" => array( "value" => ''),
                                    
@@ -625,6 +703,29 @@ function GetRelatedProduct($id, $db){
 
 }
 
+function GetReplacementProduct($id, $db){
+    $sql = "SELECT code FROM product_replacement WHERE product_id = '". $id . "' and STATUS <> -1";
+
+    $sql = $sql . " ORDER BY code ";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results .= $row['code'] . ",";
+    }
+
+    if($merged_results != "")
+    {
+        $merged_results = substr($merged_results, 0, strlen($merged_results) - 1);
+    }
+
+    return $merged_results;
+
+}
+
 function GetDetail($cat_id, $db){
     $sql = "SELECT cat_id, sn, `option` FROM product_category_attribute_detail WHERE cat_id = '". $cat_id . "' and STATUS <> -1";
 
@@ -692,7 +793,7 @@ function GetAccessoryInfomation($cat_id, $db, $product_id){
 
 function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
 
-    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.cloud.google.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
+    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.googleapis.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY id ";
 
@@ -723,6 +824,24 @@ function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
 
     return $merged_results;
 
+}
+
+function GetAttachment($_id, $batch_type, $db)
+{
+    $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = '" . $batch_type . "'
+            order by h.created_at ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }
 
 

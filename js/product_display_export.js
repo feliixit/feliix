@@ -4,7 +4,7 @@ var app = new Vue({
     
     submit: false,
 
-    //baseURL: "https://storage.cloud.google.com/feliiximg/",
+    //baseURL: "https://storage.googleapis.com/feliiximg/",
     baseURL: 'https://storage.googleapis.com/feliiximg/',
 
     category: "",
@@ -67,17 +67,21 @@ var app = new Vue({
     variation1: "",
     variation2: "",
     variation3: "",
+    variation4: "",
     variation1_custom: "",
     variation2_custom: "",
     variation3_custom: "",
+    variation4_custom: "",
 
     variation1_text: "1st Variation",
     variation2_text: "2nd Variation",
     variation3_text: "3rd Variation",
+    variation4_text: "4th Variation",
 
     variation1_value: [],
     variation2_value: [],
     variation3_value: [],
+    variation4_value: [],
 
     variation_product: [],
 
@@ -85,11 +89,15 @@ var app = new Vue({
     nColumns: 4,
     groupedItems: [],
 
+    replacement_product : [],
+    is_replacement_product: [],
+
     show_accessory: false,
 
     v1:"",
     v2:"",
     v3:"",
+    v4:"",
 
     // bulk insert
     code_checked:'',
@@ -114,6 +122,8 @@ var app = new Vue({
     name :"",
     title: "",
     is_manager: "",
+    cost_lighting : false,
+    cost_furniture : false,
   },
 
   created() {
@@ -146,12 +156,13 @@ var app = new Vue({
 
     this.get_records(this.id);
     this.getUserName();
-
+    this.getProductControl();
   },
 
   computed: {
     show_ntd : function() {
-      if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+      //if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan' || this.name.toLowerCase() ==='testmanager')
+      if((this.cost_lighting == true && this.category == 'Lighting') || (this.cost_furniture == true && this.category == 'Systems Furniture'))
        return true;
       else
       return false;
@@ -187,6 +198,36 @@ var app = new Vue({
   },
 
   methods: {
+    getProductControl: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'get',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/product_control',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.cost_lighting = response.data.cost_lighting;
+          _this.cost_furniture = response.data.cost_furniture;
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
     chunk: function(arr, size, item) {
       var newArr = [];
       for (var i=0; i<arr.length; i+=size) {
@@ -239,7 +280,7 @@ var app = new Vue({
 
     change_v(item){
       let item_product = this.shallowCopy(
-        item.product.find((element) => element.v1 == item.v1 && element.v2 == item.v2 && element.v3 == item.v3)
+        item.product.find((element) => element.v1 == item.v1 && element.v2 == item.v2 && element.v3 == item.v3 && element.v4 == item.v4)
       )
 
       if(item_product.id != undefined)
@@ -351,7 +392,10 @@ var app = new Vue({
       {
         $('#variation3_value').tagsinput('add', this.variation3_value[i]);
       }
-
+      for(var i=0; i<this.variation4_value.length; i++)
+      {
+        $('#variation4_value').tagsinput('add', this.variation4_value[i]);
+      }
       
     },
 
@@ -562,6 +606,17 @@ var app = new Vue({
       window.jQuery("#modal_quick_assign2_3").toggle();
     },
 
+    get_special_infomation_detail_variantion4: function() {
+      if(this.variation4 == "" || this.variation4 == "custom") 
+        return;
+      this.special_infomation_detail = this.shallowCopy(
+        this.special_infomation.find((element) => element.category == this.variation4)
+      ).detail[0];
+
+      window.jQuery(".mask").toggle();
+      window.jQuery("#modal_quick_assign2_4").toggle();
+    },
+
     apply_special_infomation_detail: function(cat_id, option) {
       this.$refs[cat_id][0].value = option;
 
@@ -645,6 +700,30 @@ var app = new Vue({
       //$('variation3_value').tagsinput('refresh');
     },
 
+    apply_special_infomation_detail_variantion4: function() {
+      var checkboxes = document.getElementsByName("apply_special_infomation_4");
+      
+      checkboxes.forEach(function(box) {
+        if (box.checked) 
+        {
+          $('#variation4_value').tagsinput('add', box.value);
+          box.checked = false;
+        }
+      })
+
+      // let variation_value = document
+      //   .getElementById("variation3_value")
+      //   .value.split(",");
+
+      // variation_value.push(values);
+
+      // document.getElementById("variation3_value").value = variation_value.join(",");
+
+      window.jQuery(".mask").toggle();
+      window.jQuery("#modal_quick_assign2_4").toggle();
+
+      //$('variation3_value').tagsinput('refresh');
+    },
 
     variation_mode_change: function(e) {
       const chk = e.target.checkbox[0];

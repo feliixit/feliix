@@ -21,6 +21,10 @@ try {
         $GLOBALS['position'] = $decoded->data->position;
         $GLOBALS['department'] = $decoded->data->department;
 
+        
+if($decoded->data->limited_access == true)
+header( 'location:index' );
+
         //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
         //    header( 'location:index.php' );
     }
@@ -66,9 +70,9 @@ try {
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+          href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
@@ -79,7 +83,7 @@ try {
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
@@ -201,7 +205,7 @@ try {
         }
 
         #tb_product_list tbody tr td:nth-of-type(2) {
-            width: 400px;
+            width: 420px;
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) {
@@ -329,6 +333,12 @@ try {
             background: rgba(255, 0, 0, 0.2);
         }
 
+        .tb_order span.status_date {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
         .NTD_price {
 
         }
@@ -406,6 +416,23 @@ try {
             font-size: 20px;
             color: white;
             line-height: 1.45;
+        }
+
+        .list_function.main .popupblock a.export_excel {
+            position: relative;
+        }
+
+        .list_function.main .popupblock a.export_excel::after {
+            content: " ";
+            background: url(images/ui/btn_export_excel.svg);
+            background-size: 22px 22px;
+            background-repeat: no-repeat;
+            width: 45px;
+            height: 45px;
+            position: absolute;
+            top: 0.5px;
+            left: 0.5px;
+            zoom: 130%;
         }
 
         .list_function .pagenation a {
@@ -519,14 +546,22 @@ try {
         }
 
         .block.D .tb_order thead tr th:nth-of-type(10), .block.D .tb_order tbody tr td:nth-of-type(11) {
-            min-width: 180px;
+            min-width: 130px;
         }
 
         .block.D .tb_order thead tr th:nth-of-type(11), .block.D .tb_order tbody tr td:nth-of-type(12) {
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .block.D .tb_order thead tr th:nth-of-type(12), .block.D .tb_order tbody tr td:nth-of-type(13) {
+            min-width: 200px;
+        }
+
+        .block.D .tb_order thead tr th:nth-of-type(13), .block.D .tb_order tbody tr td:nth-of-type(14) {
+            min-width: 280px;
+        }
+
+        .block.D .tb_order thead tr th:nth-of-type(14), .block.D .tb_order tbody tr td:nth-of-type(15) {
             min-width: 450px;
         }
 
@@ -534,23 +569,24 @@ try {
             min-width: 120px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(14) {
+        .block.D .tb_order tbody tr td:nth-of-type(16) {
             min-width: 450px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(15) {
-            min-width: 220px;
-        }
-
-        .block.D .tb_order tbody tr td:nth-of-type(16),
         .block.D .tb_order tbody tr td:nth-of-type(17) {
-            min-width: 180px;
+            min-width: 220px;
         }
 
         .block.D .tb_order tbody tr td:nth-of-type(18),
         .block.D .tb_order tbody tr td:nth-of-type(19),
-        .block.D .tb_order tbody tr td:nth-of-type(20),
-        .block.D .tb_order tbody tr td:nth-of-type(21) {
+        .block.D .tb_order tbody tr td:nth-of-type(20) {
+            min-width: 180px;
+        }
+
+        .block.D .tb_order tbody tr td:nth-of-type(21),
+        .block.D .tb_order tbody tr td:nth-of-type(22),
+        .block.D .tb_order tbody tr td:nth-of-type(23),
+        .block.D .tb_order tbody tr td:nth-of-type(24) {
             min-width: 400px;
         }
 
@@ -817,7 +853,7 @@ try {
             font-size: 23px;
             font-weight: 500;
             background-color: rgba(7, 220, 237, 0.5);
-            z-index: 999;
+            z-index: 1100;
         }
 
         .modal{
@@ -1171,6 +1207,14 @@ try {
             width: 4%;
         }
 
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23e0e0e0' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5L4.25 4l2.5-2.5L5.25 0z'/%3e%3c/svg%3e") !important;
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23e0e0e0' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5L3.75 4l-2.5 2.5L2.75 8l4-4-4-4z'/%3e%3c/svg%3e") !important;
+        }
+
         .extendex-top {
             background: none;
             box-shadow: none;
@@ -1354,7 +1398,13 @@ try {
             outline-color: transparent!important;
         }
 
-
+        #tb_product_list ul li:nth-of-type(1) span.phasedout_replacement {
+            background-color: orange;
+            color: white;
+            padding: 0px 5px 3px;
+            border-radius: 10px;
+            cursor: pointer;	
+        }
 
         @media print {
             * {
@@ -1434,6 +1484,19 @@ try {
 
             <div class="box-content">
 
+                <div class="list_function main">
+
+                    <!-- buttons to export selected items -->
+                    <div class="block">
+
+                        <div class="popupblock">
+                            <a id="" title="Export Selected Items into Excel" class="export_excel" @click="print_petty()"></a>
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <table class="tb_order">
                     <thead>
                     <tr>
@@ -1447,11 +1510,14 @@ try {
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
                         <th>Backup Qty</th>
+                        <th>Unit</th>
                         <th style="display: none;">Amount</th>
-                        <th>Date Needed by Client</th>
+                        <th>Date Needed</th>
+                        <th>Inventory Remarks</th>
                         <th>Notes</th>
                         <th>Notes (Only for Approved Stage)</th>
                         <th>Shipping Way</th>
+                        <th>Date Sent</th>
                         <th>ETA</th>
                         <th>Arrival Date</th>
                         <th>Warehouse In Charge</th>
@@ -1472,13 +1538,14 @@ try {
                         <td>
                             <div class="read_block" v-if="!item.is_edit">
                             {{ item.confirm_text }}<br>
-                            
+                            <span class="status_date">{{ item.status_at }}</span>
                             </div>
 
                             <div class="write_block" v-if="item.is_edit">
                                 <select v-model="item.confirm">
                                     <option value="A">Approved</option>
                                     <option value="O">Ordered</option>
+                                    <option value="J">From Warehouse</option>
                                     <option value="E">Canceled</option>
                                 </select>
                             </div>
@@ -1562,6 +1629,15 @@ try {
                 </div>
             </td>
 
+            <td>
+                <div class="read_block" v-if="!item.is_edit">
+                {{ item.unit }}
+                </div>
+                <div class="write_block" v-if="item.is_edit">
+                    <input type="text" v-model="item.unit">
+                </div>
+            </td>
+
             <td style="display: none;">
                 <div class="read_block" v-if="!item.is_edit">
                     {{ item.srp != '' ? '₱ ' + item.srp : '' }}
@@ -1577,6 +1653,17 @@ try {
                 </div>
                 <div class="write_block" v-if="item.is_edit">
                     <input type="text" v-model="item.date_needed">
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block">
+                    <!-- 收到的這個品項屬於哪種類型的庫存數量 -->
+                    Which Inventory Pool to Go?<br>
+                    {{ item.which_pool }}<br>
+                    <!-- 收到的這個品項是否當成樣品 -->
+                    Used as Sample?<br>
+                    {{ item.as_sample }}
                 </div>
             </td>
 
@@ -1638,6 +1725,15 @@ try {
                     </select>
                 </div>
 
+            </td>
+
+            <td>
+                <div class="read_block" v-if="SentRead(item)">
+                    <input type="text" v-model="item.date_send" readonly>
+                </div>
+                <div class="write_block" v-if="SentWrite(item)">
+                    <input type="text" v-model="item.date_send">
+                </div>
             </td>
 
             <td>
@@ -1749,7 +1845,7 @@ try {
                     <th colspan="2">Description</th>
                     <th>Qty Needed</th>
                     <th style="display: none;">Amount</th>
-                    <th>Date Needed by Client</th>
+                    <th>Date Needed</th>
                     <th>Notes</th>
                     <th>Action</th>
                 </tr>
@@ -1819,7 +1915,7 @@ try {
                                 1 ( show available swatches ) , change the size to 1.5x 1.5 ,kindly include cable
                                 management ( cable outlets) and vertical pole ( same color with the table legs grey
                                 color.
-                                <a href="https://storage.cloud.google.com/feliiximg/1648525715_additional table.jpg"
+                                <a href="https://storage.googleapis.com/feliiximg/1648525715_additional table.jpg"
                                    target="_blank" class="attch">additional table.jpg</a>
                                 <i class="t">(Stan Fernandez at 2022-03-29 11:48:35)</i>
                                 <div class="already_read">Dennis Lin</div>
@@ -1835,7 +1931,7 @@ try {
                                 1 ( show available swatches ) , change the size to 1.5x 1.5 ,kindly include cable
                                 management ( cable outlets) and vertical pole ( same color with the table legs grey
                                 color.
-                                <a href="https://storage.cloud.google.com/feliiximg/1648525715_additional table.jpg"
+                                <a href="https://storage.googleapis.com/feliiximg/1648525715_additional table.jpg"
                                    target="_blank" class="attch">additional table.jpg</a>
                                 <i class="t">(Stan
                                     Fernandez at 2022-03-29 11:48:35)</i>
@@ -1898,7 +1994,7 @@ try {
 <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
      aria-hidden="true" id="modal_product_catalog">
 
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
         <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
 
@@ -1991,10 +2087,13 @@ try {
                                     :src="img_url + item.photo1" v-if="item.photo1 !== ''">
                             </td>
                             <td>
-                                <ul v-if="item.out == 'Y'">
-                                    <li>
-                                        <span class="phasedout">Phased Out</span>
-                                    </li>
+                            <ul v-if="item.out == 'Y' || (item.out == 'Y' && item.replacement_product.length > 0) || (item.status == -1 && item.replacement_product.length > 0)">
+                            <li>
+                                    <!-- 依據這個停產的產品是否有 Replacement Product 的資料，沒有資料則用第一個 <span>，有資料則用二個 <span> -->
+                                    <span class="phasedout" v-if="item.replacement_product.length == 0">Phased Out</span>
+                                    <span class="phasedout_replacement" v-if="item.status != -1 && item.replacement_product.length > 0" @click="replacement_info(item.replacement_text)">Phased Out</span>
+                                    <span class="phasedout_replacement" v-if="item.status == -1 && item.replacement_product.length > 0" @click="replacement_info(item.replacement_text)">Deleted</span>
+                            </li>
                                     <li></li>
                                 </ul>
                                 <ul>
@@ -2079,12 +2178,12 @@ try {
                                 </ul>
                             </td>
                             <td>
-                                <span v-show="show_ntd === true">CP: {{ item.price_ntd }} <br v-if="item.str_price_ntd_change"> {{ item.str_price_ntd_change ?  item.str_price_ntd_change : '' }}<br></span>
+                                <span v-show="((cost_lighting == true && item.category == 'Lighting') || (cost_furniture == true && item.category == 'Systems Furniture'))">CP: {{ item.price_ntd }} <br v-if="item.str_price_ntd_change"> {{ item.str_price_ntd_change ?  item.str_price_ntd_change : '' }}<br></span>
                                 <span>SRP: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
                                 <span>QP: {{ item.quoted_price }} <br v-if="item.str_quoted_price_change"> {{ item.str_quoted_price_change ? item.str_quoted_price_change : '' }}<br></span>
                             </td>
                             <td>
-                                <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true" 
+                                <button id="edit01" @click="btnEditClick(item)" v-if="item.status != -1"><i aria-hidden="true" 
                                                                                    class="fas fa-caret-right"></i>
                                 </button>
                             </td>
@@ -2108,7 +2207,7 @@ try {
 <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
      aria-hidden="true" id="modal_product_display">
 
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
         <div class="modal-content"
              style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
@@ -2264,6 +2363,48 @@ try {
                         </a>
                     </div>
                 </div>
+                <div class="middle_section"
+                         v-if="product.replacement_product !== undefined ? product.replacement_product.length !== 0 : false">
+                        <h5>Replacement Product</h5>
+
+                        <div id="carouselExampleControls_replacement" class="carousel slide">
+
+                            <div class="carousel-inner">
+
+                                <div v-for='(g, groupIndex) in groupedItems_replacement'
+                                     :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                    <div class="row custom">
+                                        <div class="col custom" v-for='(item, index) in g'>
+                                            <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                            <div>
+                                                <a @click="getSingleProduct(item.id)">
+                                                    {{ item.code }}
+                                                </a>
+                                            </div>
+					    <div>
+                                                <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls_replacement" role="button"
+                               data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls_replacement" role="button"
+                               data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
                 <div class="lower_section"
                      v-if="(product.notes != null && product.notes != '') || product.description != ''"><h5>
                     Description</h5>
@@ -2484,7 +2625,48 @@ try {
                         </a>
                     </div>
                 </div>
+                <div class="middle_section"
+                         v-if="product.replacement_product !== undefined ? product.replacement_product.length !== 0 : false">
+                        <h5>Replacement Product</h5>
 
+                        <div id="carouselExampleControls_replacement" class="carousel slide">
+
+                            <div class="carousel-inner">
+
+                                <div v-for='(g, groupIndex) in groupedItems_replacement'
+                                     :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                    <div class="row custom">
+                                        <div class="col custom" v-for='(item, index) in g'>
+                                            <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                            <div>
+                                                <a @click="getSingleProduct(item.id)">
+                                                    {{ item.code }}
+                                                </a>
+                                            </div>
+					    <div>
+                                                <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls_replacement" role="button"
+                               data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls_replacement" role="button"
+                               data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
 
                 <div class="lower_section"
                      v-if="(product.notes != null && product.notes != '') || product.description != ''">
@@ -2517,7 +2699,7 @@ try {
 <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
      aria-hidden="true" id="modal_quotation_list">
 
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
         <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
 
@@ -2742,10 +2924,10 @@ try {
 
 
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/order_taiwan_mockup_p4.js"></script>
-<script src="https://superal.github.io/canvas2image/canvas2image.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="js/canvas2image/canvas2image.js"></script>
+<script defer src="js/html2canvas/html2canvas.min.js"></script>
 </html>

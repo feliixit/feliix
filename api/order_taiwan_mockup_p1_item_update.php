@@ -63,7 +63,7 @@ switch ($method) {
         $od_id = (isset($_POST['od_id']) ?  $_POST['od_id'] : 0);
         $block = (isset($_POST['block']) ?  $_POST['block'] : []);
 
-        $item = (isset($_POST['item']) ?  $_POST['item'] : []);
+        $item = (isset($_POST['item']) ?  $_POST['item'] : "[]");
 
         $page = (isset($_POST['page']) ?  $_POST['page'] : 0);
         $access2 = (isset($_POST['access2']) ? $_POST['access2'] : false);
@@ -103,9 +103,18 @@ switch ($method) {
                 if($pre_confirm != $confirm && $confirm == 'W')
                     PreserveConfirm($od_id, $pre_confirm, $user_id, $db);
 
+                // update product qty
+                if($pre_confirm == 'O' && $confirm != 'O')
+                    RemoveProductQty($od_id, $block_array[$i], $db);
+                if($confirm == 'O')
+                    UpdateProductQty($od_id, $block_array[$i], $db);
+
                 // insert quotation_page_type_block
                 $query = "UPDATE od_item
-                    SET
+                    SET ";
+                if($pre_confirm != $confirm)
+                    $query .= " `status_at` = now(), ";
+                $query .= "
                     `sn` = :sn,
                     `confirm` = :confirm,
                     `brand` = :brand,
@@ -133,14 +142,26 @@ if($block_array[$i]['photo3'] == '')
                     `listing` = :listing,
                     `qty` = :qty,
                     `backup_qty` = :backup_qty,
+                    `unit` = :unit,
                     `srp` = :srp,
                     `date_needed` = :date_needed,
-                    `shipping_way` = :shipping_way,
-                    `shipping_number` = :shipping_number,
+                    ";
+
+                if(isset($block_array[$i]['shipping_way']))
+                    $query .= " `shipping_way` = :shipping_way, ";
+
+                if(isset($block_array[$i]['shipping_number']))
+                    $query .= " `shipping_number` = :shipping_number, ";
+
+                $query .= "
                     `pid` = :pid,
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
+                    `v4` = :v4,
+                    `ps_var` = :ps_var,
+                    `which_pool` = :which_pool,
+                    `as_sample` = :as_sample,
                     updated_id = :updated_id,
                     updated_at = now()
                     where id = :id
@@ -163,6 +184,7 @@ if($block_array[$i]['photo3'] == '')
 
                 $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : '';
                 $backup_qty = isset($block_array[$i]['backup_qty']) ? $block_array[$i]['backup_qty'] : '';
+                $unit = isset($block_array[$i]['unit']) ? $block_array[$i]['unit'] : '';
                 $srp = isset($block_array[$i]['srp']) ? $block_array[$i]['srp'] : '';
                 $date_needed = isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
 
@@ -174,6 +196,12 @@ if($block_array[$i]['photo3'] == '')
                 $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
                 $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
                 $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+                $v4 = isset($block_array[$i]['v4']) ? $block_array[$i]['v4'] : '';
+
+                $ps_var = isset($block_array[$i]['ps_var']) ? $block_array[$i]['ps_var'] : "[]";
+                $json_ps_var = json_encode($ps_var);
+                $which_pool = isset($block_array[$i]['which_pool']) ? $block_array[$i]['which_pool'] : '';
+                $as_sample = isset($block_array[$i]['as_sample']) ? $block_array[$i]['as_sample'] : '';
 
                 // bind the values
                 $stmt->bindParam(':id', $id);
@@ -187,17 +215,26 @@ if($block_array[$i]['photo3'] == '')
                 $stmt->bindParam(':listing', $listing);
                 $stmt->bindParam(':qty', $qty);
                 $stmt->bindParam(':backup_qty', $backup_qty);
+                $stmt->bindParam(':unit', $unit);
                 $stmt->bindParam(':srp', $srp);
                 $stmt->bindParam(':date_needed', $date_needed);
 
-                $stmt->bindParam(':shipping_way', $shipping_way);
-                $stmt->bindParam(':shipping_number', $shipping_number);
+                if(isset($block_array[$i]['shipping_way']))
+                    $stmt->bindParam(':shipping_way', $shipping_way);
+
+                if(isset($block_array[$i]['shipping_number']))
+                    $stmt->bindParam(':shipping_number', $shipping_number);
 
                 $stmt->bindParam(':pid', $pid);
 
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+                $stmt->bindParam(':v4', $v4);
+
+                $stmt->bindParam(':ps_var', $json_ps_var);
+                $stmt->bindParam(':which_pool', $which_pool);
+                $stmt->bindParam(':as_sample', $as_sample);
               
                 $stmt->bindParam(':updated_id', $user_id);
                
@@ -344,7 +381,7 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
         if(isset($_FILES[$type]['name']))
         {
             $image_name = $_FILES[$type]['name'];
-            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
+            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo","dwf","bmp");
             $extension = pathinfo($image_name, PATHINFO_EXTENSION);
             if (in_array(strtolower($extension), $valid_extensions)) 
             {
@@ -528,4 +565,126 @@ function PreserveConfirm($od_id, $pre_confirm, $user_id, $db){
         echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
         die();
     }
+}
+
+
+function UpdateProductQty($od_id, $item, $db)
+{
+    $pid = $item['pid'];
+    $qty = 0;
+    $qty_str = $item['qty'];
+    $backup_qty = 0;
+    $backup_qty_str = $item['backup_qty'];
+    $org_incoming_element = [];
+
+    $new_incoming_qty = 0;
+    $new_incoming_element = [];
+
+    $v1 = $item['v1'];
+    $v2 = $item['v2'];
+    $v3 = $item['v3'];
+    $v4 = $item['v4'];
+    $ps_var = $item['ps_var'];
+
+    // check the original qty
+    $sql = "select incoming_qty, incoming_element from product_category where id = :pid ";
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+    $num = $stmt->rowCount();
+    if($num > 0)
+    {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row['incoming_element'] != '')
+            $org_incoming_element = json_decode($row['incoming_element'], true);
+        else
+            $org_incoming_element = [];
+    }
+
+    if($qty_str != '') $qty = preg_replace('/[^0-9]/', '', $qty_str);
+
+    if($backup_qty_str != '') $backup_qty = preg_replace('/[^0-9]/', '', $backup_qty_str);
+
+    // update new incoming element, if existed, update the qty else add new element
+    $found = false;
+    foreach($org_incoming_element as $element)
+    {
+        if($element['od_id'] == $od_id && $element['v1'] == $v1 && $element['v2'] == $v2 && $element['v3'] == $v3 && $element['v4'] == $v4 && $element['ps_var'] == $ps_var)
+        {
+            $element['qty'] = $qty;
+            $element['backup_qty'] = $backup_qty;
+            $new_incoming_qty += $qty + $backup_qty;
+            $found = true;
+        }
+        else
+        {
+            $new_incoming_qty += $element['qty'] + $element['backup_qty'];
+        }
+        $new_incoming_element[] = $element;
+    }
+
+    if($found == false)
+    {
+        $new_incoming_qty += $qty + $backup_qty;
+        $new_incoming_element[] = array('od_id' => $od_id, 'qty' => $qty, 'backup_qty' => $backup_qty, 'v1' => $v1, 'v2' => $v2, 'v3' => $v3, 'v4' => $v4, 'ps_var' => $ps_var, 'order_date' => date("Y-m-d H:i:s"), 'order_type' => 'mockup');
+    }
+
+    $sql = "update product_category set incoming_qty = :incoming_qty, incoming_element = :incoming_element where id = :pid ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':incoming_qty', $new_incoming_qty);
+    $stmt->bindParam(':incoming_element', json_encode($new_incoming_element));
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+}
+
+function RemoveProductQty($od_id, $item, $db)
+{
+    $pid = $item['pid'];
+    $org_incoming_element = [];
+
+    $new_incoming_qty = 0;
+    $new_incoming_element = [];
+
+    $v1 = $item['v1'];
+    $v2 = $item['v2'];
+    $v3 = $item['v3'];
+    $v4 = $item['v4'];
+    $ps_var = $item['ps_var'];
+
+    // check the original qty
+    $sql = "select incoming_qty, incoming_element from product_category where id = :pid ";
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+    $num = $stmt->rowCount();
+    if($num > 0)
+    {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row['incoming_element'] != '')
+            $org_incoming_element = json_decode($row['incoming_element'], true);
+        else
+            $org_incoming_element = [];
+    }
+
+    foreach($org_incoming_element as $element)
+    {
+        if($element['od_id'] == $od_id && $element['v1'] == $v1 && $element['v2'] == $v2 && $element['v3'] == $v3 && $element['v4'] == $v4 && $element['ps_var'] == $ps_var)
+        {
+            $found = true;
+        }
+        else
+        {
+            $new_incoming_qty += $element['qty'] + $element['backup_qty'];
+            $new_incoming_element[] = $element;
+        }
+    }
+
+    $sql = "update product_category set incoming_qty = :incoming_qty, incoming_element = :incoming_element where id = :pid ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':incoming_qty', $new_incoming_qty);
+    $stmt->bindParam(':incoming_element', json_encode($new_incoming_element));
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
 }

@@ -116,10 +116,10 @@
         </div>
     </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
 <script defer src="js/login.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script src="https://www.google.com/recaptcha/api.js?render=6Le2uvQUAAAAAOhI5CxFxFMMn1oiQCy5YZQFUu5j"></script>
 <script>
     //grecaptcha.ready(function () {

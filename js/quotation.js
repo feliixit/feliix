@@ -7,7 +7,7 @@ var app = new Vue({
       l_id:0,
       id:0,
 
-      img_url: 'https://storage.cloud.google.com/feliiximg/',
+      img_url: 'https://storage.googleapis.com/feliiximg/',
     
       // menu
       show_header: false,

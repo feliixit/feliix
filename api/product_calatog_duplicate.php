@@ -51,11 +51,13 @@ else
     photo1, photo2, photo3, accessory_mode, attributes, variation_mode, variation, notes, price_ntd_change, 
     price_change, quoted_price, quoted_price_change, moq, `tags`, related_product, `OUT`, currency, srp_max, 
     srp_min, qp_max, qp_min, max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, 
+    p1_code, p2_code, p3_code, p1_id, p2_id, p3_id, p1_qty, p2_qty, p3_qty, 
     max_quoted_price_change, min_quoted_price_change, phased_out_cnt, print_option, create_id)
     SELECT category, sub_category, brand, `code`, price_ntd, price, `description`, 
     photo1, photo2, photo3, accessory_mode, attributes, variation_mode, variation, notes, price_ntd_change, 
     price_change, quoted_price, quoted_price_change, moq, `tags`, related_product, `OUT`, currency, srp_max, 
     srp_min, qp_max, qp_min, max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, 
+    p1_code, p2_code, p3_code, p1_id, p2_id, p3_id, p1_qty, p2_qty, p3_qty,
     max_quoted_price_change, min_quoted_price_change, phased_out_cnt, print_option, :updated_id FROM 
     product_category WHERE id = :id";
 
@@ -73,10 +75,10 @@ else
         if ($stmt->execute()) {
             $last_id = $db->lastInsertId();
 
-            $query = "INSERT INTO product (category_id, 1st_variation, 2rd_variation, 3th_variation, 
+            $query = "INSERT INTO product (category_id, 1st_variation, 2rd_variation, 3th_variation, 4th_variation,
             `code`, photo, price_ntd, price, price_ntd_change, price_change, enabled, 
             quoted_price, quoted_price_change, `status`, create_id, product_id)
-            SELECT category_id, 1st_variation, 2rd_variation, 3th_variation, 
+            SELECT category_id, 1st_variation, 2rd_variation, 3th_variation, 4th_variation,
             `code`, photo, price_ntd, price, price_ntd_change, price_change, enabled, 
             quoted_price, quoted_price_change, `status`, create_id, " . $last_id . " FROM product
             where product_id = :id";
@@ -109,6 +111,8 @@ else
                 echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
                 die();
             }
+
+            update_product_category_tags_index($last_id, $db);
        
         } else {
             $arr = $stmt->errorInfo();
@@ -129,4 +133,58 @@ else
     http_response_code(200);
     echo json_encode(array("message" => "Duplicate at " . date("Y-m-d") . " " . date("h:i:sa")));
 
+
+    
+function update_product_category_tags_index($id, $db) {
+
+    $sql = "SELECT id, tags, attributes, variation_mode FROM product_category where `status` <> -1";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $tags = explode(',', $row['tags']);
+        $attributes = json_decode($row['attributes'], true);
+
+        $sql = "insert into product_category_tags_index (pid, `type`, `key`, `value`) values (:product_category_id, 0, :tag, '')";
+        $stmt2 = $db->prepare( $sql );
+
+        foreach ($tags as $tag) {
+            $stmt2->bindParam(':product_category_id', $id);
+            $stmt2->bindParam(':tag', $tag);
+            $stmt2->execute();
+
+            if($stmt2->errorInfo()[0] != "00000") {
+                echo $stmt2->errorInfo()[2];
+            }
+        }
+
+        foreach ($attributes as $att) {
+            $key = $att['category'];
+            $value = $att['value'];
+            $watt = 0;
+            if($value != "") {
+                if($key == 'Wattage')
+                {
+                    if (preg_match_all('/\b(\d+(\.\d+)?)\b/i', $value, $matches)) {
+                        $watt = max($matches[1]); // 取最大數值，確保獲取主要的功率數值
+                    }
+                }
+
+                $sql = "insert into product_category_tags_index (pid, `type`, `key`, `value`, `watt`) values (:product_category_id, 1, :key, :value, :watt)";
+                $stmt2 = $db->prepare( $sql );
+                $stmt2->bindParam(':product_category_id', $id);
+                $stmt2->bindParam(':key', $key);
+                $stmt2->bindParam(':value', $value);
+                $stmt2->bindParam(':watt', $watt);
+                $stmt2->execute();
+
+                if($stmt2->errorInfo()[0] != "00000") {
+                    echo $stmt2->errorInfo()[2];
+                }
+            }
+        }
+    }
+}
 ?>

@@ -96,6 +96,7 @@ try{
         {
             $query = "update od_item
             SET
+            `status_at` = now(),
                 `confirm` = 'O'
             where id = :id  ";
 
@@ -116,6 +117,13 @@ try{
             $arr = $stmt->errorInfo();
             error_log($arr[2]);
         }
+
+        // update product_category
+        $pid = $items_array[$i]['pid'];
+        if($pid != 0)
+            UpdateProduct($od_id, $items_array[$i], $serial_name, $db);
+        if($pid != 0)
+            UpdateProductQty($od_id, $items_array[$i], $db);
 
     }
 
@@ -169,4 +177,186 @@ try{
 catch (Exception $e)
 {
     error_log($e->getMessage());
+}
+
+
+function UpdateProduct($od_id, $item, $od_name,  $db)
+{
+    $pid = $item['pid'];
+    $v1 = $item['v1'];
+    $v2 = $item['v2'];
+    $v3 = $item['v3'];
+    $v4 = $item['v4'];
+    $ps_var = $item['ps_var'];
+
+    if($v1 != '' || $v2 != '' || $v3 != '' || $v4 != '')
+    {
+        if($v4 != '')
+            $query = "update product set last_order = :od_id, last_order_name = :od_name, last_order_type = 'stocks', last_order_at = now() where product_id = :pid and 1st_variation like '%" . $v1 . "' and 2rd_variation like '%" . $v2 . "' and 3th_variation like '%" . $v3 . "' and 4th_variation like '%" . $v4 . "' ";
+        else
+            $query = "update product set last_order = :od_id, last_order_name = :od_name, last_order_type = 'stocks', last_order_at = now() where product_id = :pid and 1st_variation like '%" . $v1 . "' and 2rd_variation like '%" . $v2 . "' and 3th_variation like '%" . $v3 . "' ";
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':od_id', $od_id);
+        $stmt->bindParam(':od_name', $od_name);
+
+        $stmt->bindParam(':pid', $pid);
+
+        $stmt->execute();
+    }
+
+    
+    foreach($ps_var as $ps_lines)
+    {
+        $jsonstr = "";
+
+        $lines = explode("\n", $ps_lines);
+        foreach($lines as $line)
+        {
+            if(trim($line) != "")
+            {
+                // split key and value by :
+                $line = explode(":", $line);
+                $key = $line[0];
+                $value = $line[1];
+                $jsonstr .= '"' . trim($key) . '":"' . trim($value) . '",';
+            }
+        }
+
+        $jsonstr = rtrim($jsonstr, ",");
+        $jsonstr = "{" . $jsonstr . "}";
+
+        $var_json = json_decode($jsonstr, true);
+        
+        $v1 = "";
+        $v2 = "";
+        $v3 = "";
+        $v4 = "";
+        // iterate through json
+        foreach ($var_json as $key => $value) {
+            if($key != 'id')
+            {
+                if($v1 == "")
+                    $v1 = $value;
+                else if($v2 == "")
+                    $v2 = $value;
+                else if($v3 == "")
+                    $v3 = $value;
+                else if($v4 == "")
+                    $v4 = $value;
+            }
+            else if($key == 'id')
+            {
+                $pid = $value;
+            }
+        }
+
+        if($v4 != '')
+            $query = "update product set last_order = :od_id, last_order_name = :od_name, last_order_type = 'stocks', last_order_at = now() where product_id = :pid and 1st_variation like '%" . $v1 . "' and 2rd_variation like '%" . $v2 . "' and 3th_variation like '%" . $v3 . "' and 4th_variation like '%" . $v4 . "' ";
+        else
+            $query = "update product set last_order = :od_id, last_order_name = :od_name, last_order_type = 'stocks', last_order_at = now() where product_id = :pid and 1st_variation like '%" . $v1 . "' and 2rd_variation like '%" . $v2 . "' and 3th_variation like '%" . $v3 . "' ";
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':od_id', $od_id);
+        $stmt->bindParam(':od_name', $od_name);
+
+        $stmt->bindParam(':pid', $pid);
+
+
+        $stmt->execute();
+        
+
+    }
+
+    if($v1 == '' && $v2 == '' && $v3 == '' && $v4 == '' && count($ps_var) == 0)
+    {
+        // update product_category
+        $pid = $item['pid'];
+        $query = "update product_category set last_order = :od_id, last_order_name = :od_name, last_order_type = 'stocks', last_order_at = now() where id = :pid ";
+        // prepare the query
+        $stmt = $db->prepare($query);
+    
+        // bind the values
+        $stmt->bindParam(':od_id', $od_id);
+        $stmt->bindParam(':od_name', $od_name);
+        
+        $stmt->bindParam(':pid', $pid);
+    
+        $stmt->execute();
+    }
+
+}
+
+function UpdateProductQty($od_id, $item, $db)
+{
+    $pid = $item['pid'];
+    $qty = 0;
+    $qty_str = $item['qty'];
+    $backup_qty = 0;
+    $backup_qty_str = $item['backup_qty'];
+    $org_incoming_element = [];
+
+    $new_incoming_qty = 0;
+    $new_incoming_element = [];
+
+    $v1 = $item['v1'];
+    $v2 = $item['v2'];
+    $v3 = $item['v3'];
+    $v4 = $item['v4'];
+    $ps_var = $item['ps_var'];
+
+    // check the original qty
+    $sql = "select incoming_qty, incoming_element from product_category where id = :pid ";
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+    $num = $stmt->rowCount();
+    if($num > 0)
+    {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row['incoming_element'] != '')
+            $org_incoming_element = json_decode($row['incoming_element'], true);
+        else
+            $org_incoming_element = [];
+    }
+
+    if($qty_str != '') $qty = preg_replace('/[^0-9]/', '', $qty_str);
+
+    if($backup_qty_str != '') $backup_qty = preg_replace('/[^0-9]/', '', $backup_qty_str);
+
+    // update new incoming element, if existed, update the qty else add new element
+    $found = false;
+    foreach($org_incoming_element as $element)
+    {
+        if($element['od_id'] == $od_id && $element['v1'] == $v1 && $element['v2'] == $v2 && $element['v3'] == $v3 && $element['v4'] == $v4 && $element['ps_var'] == $ps_var)
+        {
+            $element['qty'] = $qty;
+            $element['backup_qty'] = $backup_qty;
+            $new_incoming_qty += $qty + $backup_qty;
+            $found = true;
+        }
+        else
+        {
+            $new_incoming_qty += $element['qty'] + $element['backup_qty'];
+        }
+        $new_incoming_element[] = $element;
+    }
+
+    if($found == false)
+    {
+        $new_incoming_qty += $qty + $backup_qty;
+        $new_incoming_element[] = array('od_id' => $od_id, 'qty' => $qty, 'backup_qty' => $backup_qty, 'v1' => $v1, 'v2' => $v2, 'v3' => $v3, 'v4' => $v4, 'ps_var' => $ps_var, 'order_date' => date("Y-m-d H:i:s"), 'order_type' => 'stock');
+    }
+
+    $sql = "update product_category set incoming_qty = :incoming_qty, incoming_element = :incoming_element where id = :pid ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':incoming_qty', $new_incoming_qty);
+    $stmt->bindParam(':incoming_element', json_encode($new_incoming_element));
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
 }

@@ -14,6 +14,7 @@ let mainState = {
     pic_url: '',
     tel: '',
     date_start_company: '',
+    date_end_company: '',
     seniority: '',
 
 
@@ -196,6 +197,7 @@ var app = new Vue({
             this.pic_url = this.record.pic_url !== '' ? '../images/man/' + this.record.pic_url : '';
             this.tel = this.record.tel;
             this.date_start_company = this.record.date_start_company;
+            this.date_end_company = this.record.date_end_company;
 
             $('.block.record').toggleClass('show');
 
@@ -225,7 +227,8 @@ var app = new Vue({
 
             formData.append('tel', this.tel)
             formData.append('date_start_company', this.date_start_company)
-           
+            formData.append('date_end_company', this.date_end_company)
+
             let file = document.getElementById('photo').files[0];
             if(typeof file !== 'undefined') 
             {
@@ -343,7 +346,7 @@ var app = new Vue({
             this.pic_url = '';
             this.tel = '';
             this.date_start_company = '';
-        
+            this.date_end_company = '';        
 
             this.isEditing = false;
             this.record = {};

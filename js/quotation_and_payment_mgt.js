@@ -66,6 +66,10 @@ var app = new Vue({
     prof_canSub: true,
     prof_remark: "",
     payment_type: "",
+
+    payment_method_1: "",
+    payment_method_other: "",
+
     prof_fileArray: [],
 
     quote_canSub: true,
@@ -84,6 +88,8 @@ var app = new Vue({
     fil_ar_lower: "",
     fil_keyowrd: "",
     fil_keyowrd_p: "",
+
+    fil_proof : "",
 
     od_factor1: "",
     od_factor1_order: "",
@@ -119,6 +125,9 @@ var app = new Vue({
               break;
             case "fs":
               _this.fil_status = tmp[1];
+              break;
+            case "fp":
+              _this.fil_proof = tmp[1];
               break;
             case "ft":
               _this.fil_creator = decodeURI(tmp[1]);
@@ -423,6 +432,8 @@ var app = new Vue({
         _this.fil_category +
         "&fs=" +
         _this.fil_status +
+        "&fp=" +
+        _this.fil_proof +
         "&ft=" +
         _this.fil_creator +
         "&fal=" +
@@ -469,6 +480,8 @@ var app = new Vue({
         _this.fil_category +
         "&fs=" +
         _this.fil_status +
+        "&fp=" +
+        _this.fil_proof +
         "&ft=" +
         _this.fil_creator +
         "&fal=" +
@@ -510,6 +523,7 @@ var app = new Vue({
         id: _this.id,
         fc: _this.fil_category,
         fs: _this.fil_status,
+        fp: _this.fil_proof,
         ft: _this.fil_creator,
         fal: _this.fil_amount_lower,
         fau: _this.fil_amount_upper,
@@ -853,6 +867,7 @@ var app = new Vue({
     filter_remove: function() {
       this.fil_category = '';
       this.fil_status = '';
+      this.fil_proof = '';
       this.fil_creator = '';
       this.fil_amount_upper = '';
       this.fil_amount_lower = '';
@@ -1092,28 +1107,28 @@ var app = new Vue({
 
       if(this.department.trim().toUpperCase() == 'SALES')
       { 
-        if(this.title.trim().toUpperCase() == 'ASSISTANT SALES MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT CUSTOMER VALUE DIRECTOR')
           can_save = true;
 
-        if(this.title.trim().toUpperCase() == 'SALES MANAGER')
+        if(this.title.trim().toUpperCase() == 'CUSTOMER VALUE DIRECTOR')
           can_save = true;
       }
 
       if(this.department.trim().toUpperCase() == 'LIGHTING')
       { 
-        if(this.title.trim().toUpperCase() == 'ASSISTANT LIGHTING MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT LIGHTING VALUE CREATION DIRECTOR')
           can_save = true;
 
-        if(this.title.trim().toUpperCase() == 'LIGHTING MANAGER')
+        if(this.title.trim().toUpperCase() == 'LIGHTING VALUE CREATION DIRECTOR')
           can_save = true;
       }
 
       if(this.department.trim().toUpperCase() == 'OFFICE')
       { 
-        if(this.title.trim().toUpperCase() == 'ASSISTANT OFFICE SYSTEMS MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR')
           can_save = true;
 
-        if(this.title.trim().toUpperCase() == 'OFFICE SYSTEMS MANAGER')
+        if(this.title.trim().toUpperCase() == 'OFFICE SPACE VALUE CREATION DIRECTOR')
           can_save = true;
       }
 
@@ -1461,6 +1476,8 @@ var app = new Vue({
     prof_clear() {
       this.prof_remark = "";
       this.payment_type = "";
+      this.payment_method_1 = "";
+      this.payment_method_other = "";
       this.prof_fileArray = [];
       this.$refs.prof_file.value = "";
 
@@ -1497,15 +1514,30 @@ var app = new Vue({
         return;
       }
 
+      if(this.payment_method_1 == 'Other' && this.payment_method_other.trim() == "")
+      {
+        Swal.fire({
+          text: "Please Specify Method of Payment!!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
       _this.submit = true;
 
       var form_Data = new FormData();
       var token = localStorage.getItem("token");
 
+      if(this.payment_method_1 != 'Other')
+        this.payment_method_other = "";
+
       form_Data.append("jwt", token);
       form_Data.append("pid", this.proof_id);
       form_Data.append("remark", this.prof_remark.trim());
       form_Data.append("kind", this.payment_type.trim());
+      form_Data.append("payment_method_1", this.payment_method_1.trim());
+      form_Data.append("payment_method_other", this.payment_method_other.trim());
 
       for (var i = 0; i < this.prof_fileArray.length; i++) {
         let file = this.prof_fileArray[i];
@@ -1541,8 +1573,10 @@ var app = new Vue({
         });
     },
 
-    order_export: function() {
+    order_export: async function() {
       var token = localStorage.getItem("token");
+
+      $('.mask').toggle();
 
       let _this = this;
     
@@ -1550,6 +1584,7 @@ var app = new Vue({
         id: _this.id,
         fc: _this.fil_category,
         fs: _this.fil_status,
+        fp: _this.fil_proof,
         ft: _this.fil_creator,
         fal: _this.fil_amount_lower,
         fau: _this.fil_amount_upper,
@@ -1567,7 +1602,7 @@ var app = new Vue({
         size: _this.perPage,
       };
 
-      axios({
+      await axios({
         method: "post",
         url: "api/quotation_payment_mgt_export",
         params,
@@ -1585,6 +1620,8 @@ var app = new Vue({
         })
         .catch(function(response) {
           console.log(response);
+        }).finally(() => {
+          $('.mask').toggle();
         });
     },
 

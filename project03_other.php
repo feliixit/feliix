@@ -26,6 +26,9 @@ try {
     $test_manager = $decoded->data->test_manager;
     $user_id = $decoded->data->id;
 
+    if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
     $position = trim($GLOBALS['position']);
 
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
@@ -48,7 +51,7 @@ try {
             || $position == 'Sr. Project Engineer'
             || $position == 'Project Engineer'
             || $position == 'Jr. Project Engineer'
-            || $position == 'Sales Manager'
+            || $position == 'Customer Value Director'
             || trim($GLOBALS['username']) == 'Kelvin Garcia')
         $test_manager[2] = "1";
 
@@ -56,14 +59,14 @@ try {
         || $position == 'Managing Director' 
         || $position == 'Chief Advisor'
         || $position == 'Supply Chain Manager'
-        || $position == 'Lighting Manager'
-        || $position == 'Assistant Lighting Manager'
-        || $position == 'Office Systems Manager'
-        || $position == 'Assistant Office Systems Manager'
+        || $position == 'Lighting Value Creation Director'
+        || $position == 'Assistant Lighting Value Creation Director'
+        || $position == 'Office Space Value Creation Director'
+        || $position == 'Assistant Office Space Value Creation Director'
         || $position == 'Engineering Manager'
-        || $position == 'Sales Manager'
+        || $position == 'Customer Value Director'
         || $position == 'Cost Planning Engineer'
-        || trim($GLOBALS['username']) == 'Cristina Matining')
+        || trim($GLOBALS['username']) == 'Gwendolyn Sarmiento')
         $order_menu = "1";
 }
 // if decode fails, it means jwt is invalid
@@ -111,10 +114,10 @@ catch (Exception $e) {
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css" />
     <link rel="stylesheet" href="css/vue-select.css" type="text/css">
 
-    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css'>
-    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.0/main.min.css'>
-    <script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
-    <script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+    <link rel='stylesheet' href='css/@fullcalendar/core@4.3.1/main.min.css'>
+    <link rel='stylesheet' href='css/@fullcalendar/core@4.3.0/main.min.css'>
+    <script src='js/@fullcalendar/core@4.3.1/main.min.js'></script>
+    <script src='js/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
 
     <script src="js/moment.js"></script>
 
@@ -2291,6 +2294,11 @@ catch (Exception $e) {
             bottom: 0;
         }
 
+        div.text_count {
+	        font-size: 10px;
+	        float: right;
+        }
+
     </style>
 
 </head>
@@ -2396,7 +2404,7 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
-                                        <dt>Task Detail:</dt>
+                                        <dt>Task Detail: ({{ detail.replace(/[^\x00-\xff]/g,"xx").length }}/1000)</dt>
                                         <dd><textarea placeholder="" v-model="detail"></textarea></dd>
                                     </dl>
                                     <dl>
@@ -2596,7 +2604,7 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
-                                        <dt>Description:</dt>
+                                        <dt>Description: ({{ record.detail == undefined ? '0' : record.detail.replace(/[^\x00-\xff]/g,"xx").length }}/1000)</dt>
                                         <dd><textarea placeholder="" v-model="record.detail"></textarea></dd>
                                     </dl>
 
@@ -2741,7 +2749,7 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
-                                        <dt>Task Detail:</dt>
+                                        <dt>Task Detail: ({{ detail.replace(/[^\x00-\xff]/g,"xx").length }}/1000)</dt>
                                         <dd><textarea placeholder="" v-model="detail"></textarea></dd>
                                     </dl>
                                     <dl>
@@ -2928,7 +2936,7 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
-                                        <dt>Description:</dt>
+                                        <dt>Description: ({{ record.detail == undefined ? '0' : record.detail.replace(/[^\x00-\xff]/g,"xx").length }}/1000)</dt>
                                         <dd><textarea placeholder="" v-model="record.detail"></textarea></dd>
                                     </dl>
 
@@ -3084,7 +3092,7 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
-                                        <dt>Task Detail:</dt>
+                                        <dt>Task Detail: ({{ detail.replace(/[^\x00-\xff]/g,"xx").length }}/1000)</dt>
                                         <dd><textarea placeholder="" v-model="detail"></textarea></dd>
                                     </dl>
                                     <dl>
@@ -3281,7 +3289,7 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
-                                        <dt>Description:</dt>
+                                        <dt>Description: ({{ record.detail == undefined ? '0' : record.detail.replace(/[^\x00-\xff]/g,"xx").length }}/1000)</dt>
                                         <dd><textarea placeholder="" v-model="record.detail"></textarea></dd>
                                     </dl>
 
@@ -3375,7 +3383,7 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
-                                        <dt>Description:</dt>
+                                        <dt>Description: ({{ detail_r.replace(/[^\x00-\xff]/g,"xx").length }}/1000)</dt>
                                         <dd><textarea placeholder="" v-model="detail_r"></textarea></dd>
                                     </dl>
                                     <dl>
@@ -3493,7 +3501,7 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
-                                        <dt>Description:</dt>
+                                        <dt>Description: ({{ record_r.detail == undefined ? '0' : record_r.detail.replace(/[^\x00-\xff]/g,"xx").length }}/1000)</dt>
                                         <dd><textarea placeholder="" v-model="record_r.detail"></textarea></dd>
                                     </dl>
                                     <dl>
@@ -3638,13 +3646,15 @@ catch (Exception $e) {
                             <!-- 如果是訂單類的任務，需要多出 Order Type欄位 -->
                             <ul v-if="receive_record.order.length > 0">
                                 <li><b>Order Type</b></li>
-                                <li>Order – {{ receive_record.order[0].order_type == 'taiwan' ? 'Close Deal' : receive_record.order[0].order_type == 'mockup' ? 'Mock up' : '' }}</li>
+                                <li>Order – {{ receive_record.order[0].order_type == 'taiwan' ? 'Close Deal' : receive_record.order[0].order_type == 'mockup' ? 'Mock up' : receive_record.order_type == 'sample' ? 'Order – Sample' : receive_record.order_type == 'stock' ? 'Order – Stock' : '' }}</li>
                             </ul>
                             <!-- 如果是訂單類的任務，需要多出 Order Name欄位，內容值的範例: LOTW-0001 LIGHTING FIXTURE -->
                             <ul v-if="receive_record.order.length > 0">
                                 <li><b>Order Name</b></li>
                                 <li v-if="receive_record.order[0].order_type == 'taiwan'"><a style="color: #25a2b8" :href="'order_taiwan_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a></li>
                                 <li v-if="receive_record.order[0].order_type == 'mockup'"><a style="color: #25a2b8" :href="'order_taiwan_mockup_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a></li>
+                                <li v-if="receive_record.order[0].order_type == 'sample'"><a style="color: #25a2b8" :href="'order_taiwan_sample_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a></li>
+                                <li v-if="receive_record.order[0].order_type == 'stock'"><a style="color: #25a2b8" :href="'order_taiwan_stock_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a></li>
                             </ul>
 
                             <!-- 如果是詢問單類的任務，需要多出 Inquiry Name欄位，內容值的範例: LI-0001 Decorative Lights -->
@@ -3741,7 +3751,10 @@ catch (Exception $e) {
                                                 <div class="dialog reply r1" :id="'task_reply_dlg_' + item.message_id + '_' + item.ref_id" :style= "item.i_got_it == false ? 'top: 17px;' : ''">
                                                     <div class="formbox">
                                                         <dl>
-                                                            <dd><textarea name="" :ref="'task_reply_msg_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_' + item.message_id + '_' + item.ref_id"></textarea></dd>
+                                                            <dd>
+                                                                <textarea name="" :ref="'task_reply_msg_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_' + item.message_id + '_' + item.ref_id" @keyup="count_reply(item.message_id, item.ref_id)"></textarea>
+                                                                <div class="text_count">(<span class="small" :ref="'task_reply_msg_cnt_' + item.message_id + '_' + item.ref_id">0</span>/1000)</div>
+                                                            </dd>
 
                                                             <dd>
                                                                 <div class="pub-con" ref="bg">
@@ -3757,11 +3770,13 @@ catch (Exception $e) {
                                                                 </div>
                                                             </dd>
                                                             <dd>
+                                                                
                                                                 <div class="btnbox">
                                                                     <a class="btn small orange" @click="msg_clear(item.message_id + '_' + item.ref_id)">Cancel</a>
                                                                     <a class="btn small green" @click="msg_create(item.message_id + '_' + item.ref_id, item.message_id)">Save</a>
                                                                 </div>
                                                             </dd>
+                                                            
                                                         </dl>
                                                     </div>
                                                 </div>
@@ -3799,7 +3814,8 @@ catch (Exception $e) {
                         <div class="tablebox lv3c m03 dialogclear">
                             <ul>
                                 <li>
-                                    <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
+                                    <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id" @keyup="count_message(receive_record.task_id)"></textarea>
+                                    <div class="text_count">(<span class="small" :ref="'comment_task_cnt' + receive_record.task_id">0</span>/1000)</div>
                                     <div class="filebox">
                                         <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index" @click="deleteTaskFile(receive_record.task_id, index)">{{item.name}}</a>
 
@@ -3902,7 +3918,10 @@ catch (Exception $e) {
                                                         <div class="dialog reply r3" :id="'task_reply_dlg_r_' + item.message_id + '_' + item.ref_id"  :style= "item.i_got_it == false ? 'top: 17px;' : ''">
                                                             <div class="formbox">
                                                                 <dl>
-                                                                    <dd><textarea name="" :ref="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id"></textarea></dd>
+                                                                    <dd>
+                                                                        <textarea name="" :ref="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id" @keyup="count_reply_r(item.message_id, item.ref_id)"></textarea>
+                                                                        <div class="text_count">(<span class="small" :ref="'task_reply_msg_r_cnt_' + item.message_id + '_' + item.ref_id">0</span>/1000)</div>
+                                                                    </dd>
 
                                                                     <dd>
                                                                         <div class="pub-con" ref="bg">
@@ -3962,7 +3981,8 @@ catch (Exception $e) {
                                 <div class="tablebox lv3c m03 dialogclear">
                                     <ul>
                                         <li>
-                                            <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_r_' + receive_record.task_id"></textarea>
+                                            <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_r_' + receive_record.task_id" @keyup="count_message_r(receive_record.task_id)"></textarea>
+                                            <div class="text_count">(<span class="small" :ref="'comment_task_r_cnt' + receive_record.task_id">0</span>/1000)</div>
                                             <div class="filebox">
                                                 <a class="attch" v-for="(item,index) in taskItems_r(receive_record.task_id)" :key="index" @click="deleteTaskFile_r(receive_record.task_id, index)">{{item.name}}</a>
 
@@ -4165,25 +4185,25 @@ catch (Exception $e) {
             }
                 
 
-            if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
+            if(level === "LIGHTING VALUE CREATION DIRECTOR" || level === "OPERATIONS MANAGER" )
             {
-                if(creator_level === "ASSISTANT LIGHTING MANAGER" || creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "ASSISTANT LIGHTING VALUE CREATION DIRECTOR" || creator_level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "ASSISTANT LIGHTING MANAGER" )
+            if(level === "ASSISTANT LIGHTING VALUE CREATION DIRECTOR" )
             {
-                if(creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. LIGHTING DESIGNER" )
+            if(level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR" )
             {
-                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
@@ -4202,25 +4222,25 @@ catch (Exception $e) {
                     can_close = true;
             }
 
-            if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
+            if(level === "OFFICE SPACE VALUE CREATION DIRECTOR" || level === "OPERATIONS MANAGER" )
             {
-                if(creator_level === "ASSISTANT OFFICE SYSTEMS MANAGER" || creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR" || creator_level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "ASSISTANT OFFICE SYSTEMS MANAGER" )
+            if(level === "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR" )
             {
-                if(creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. OFFICE SYSTEMS DESIGNER" )
+            if(level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR" )
             {
-                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
@@ -4283,25 +4303,25 @@ catch (Exception $e) {
             }
                 
 
-            if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
+            if(level === "LIGHTING VALUE CREATION DIRECTOR" || level === "OPERATIONS MANAGER" )
             {
-                if(creator_level === "ASSISTANT LIGHTING MANAGER" || creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "ASSISTANT LIGHTING VALUE CREATION DIRECTOR" || creator_level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "ASSISTANT LIGHTING MANAGER" )
+            if(level === "ASSISTANT LIGHTING VALUE CREATION DIRECTOR" )
             {
-                if(creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. LIGHTING DESIGNER" )
+            if(level === "SENIOR LIGHTING VALUE CREATION SUPERVISOR" )
             {
-                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
@@ -4320,25 +4340,25 @@ catch (Exception $e) {
                     can_close = true;
             }
 
-            if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
+            if(level === "OFFICE SPACE VALUE CREATION DIRECTOR" || level === "OPERATIONS MANAGER" )
             {
-                if(creator_level === "ASSISTANT OFFICE SYSTEMS MANAGER" || creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR" || creator_level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "ASSISTANT OFFICE SYSTEMS MANAGER" )
+            if(level === "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR" )
             {
-                if(creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. OFFICE SYSTEMS DESIGNER" )
+            if(level === "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR" )
             {
-                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "CUSTOMER VALUE SUPERVISOR" || creator_level === "SENIOR CUSTOMER VALUE SUPERVISOR")
                 {
                     can_close = true;
                 }
@@ -4357,7 +4377,7 @@ catch (Exception $e) {
                     can_close = true;
             }
 
-            if(level === "SALES MANAGER" || level === "STORE MANAGER")
+            if(level === "CUSTOMER VALUE DIRECTOR" || level === "STORE MANAGER")
             {
                 if(creator_level !== "MANAGING DIRECTOR" && creator_level != "CHIEF ADVISOR")
                 {
@@ -4365,27 +4385,27 @@ catch (Exception $e) {
                 }
             }
 
-            if(level === "ASSISTANT SALES MANAGER" || level === "ASSISTANT STORE MANAGER")
+            if(level === "ASSISTANT CUSTOMER VALUE DIRECTOR" || level === "ASSISTANT STORE MANAGER")
             {
                 if(creator_level !== "MANAGING DIRECTOR" && 
                    creator_level != "CHIEF ADVISOR" && 
-                   creator_level != "SALES MANAGER" && 
+                   creator_level != "CUSTOMER VALUE DIRECTOR" && 
                    creator_level != "STORE MANAGER")
                 {
                     can_close = true;
                 }
             }
 
-            if(level === "SR. ACCOUNT EXECUTIVE" || level === "ACCOUNT EXECUTIVE" || level === "JR. ACCOUNT EXECUTIVE" || level === "SR. STORE SALES EXECUTIVE" || level === "STORE SALES EXECUTIVE")
+            if(level === "SENIOR CUSTOMER VALUE SUPERVISOR" || level === "CUSTOMER VALUE SUPERVISOR" || level === "JR. ACCOUNT EXECUTIVE" || level === "SR. STORE SALES EXECUTIVE" || level === "STORE SALES EXECUTIVE")
             {
                 if(creator_level !== "MANAGING DIRECTOR" && 
                    creator_level != "CHIEF ADVISOR" && 
-                   creator_level != "SALES MANAGER" && 
+                   creator_level != "CUSTOMER VALUE DIRECTOR" && 
                    creator_level != "STORE MANAGER" && 
-                   creator_level != "ASSISTANT SALES MANAGER" && 
+                   creator_level != "ASSISTANT CUSTOMER VALUE DIRECTOR" && 
                    creator_level != "ASSISTANT STORE MANAGER" && 
-                   creator_level != "SR. ACCOUNT EXECUTIVE" && 
-                   creator_level != "ACCOUNT EXECUTIVE" && 
+                   creator_level != "SENIOR CUSTOMER VALUE SUPERVISOR" && 
+                   creator_level != "CUSTOMER VALUE SUPERVISOR" && 
                    creator_level != "JR. ACCOUNT EXECUTIVE" && 
                    creator_level != "SR. STORE SALES EXECUTIVE" && 
                    creator_level != "STORE SALES EXECUTIVE")
@@ -5689,7 +5709,7 @@ catch (Exception $e) {
                                 var elm = '<div class="file-element">' +
                                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
                                     '<label for="' + element + '">' +
-                                    '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
+                                    '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
                                     '</label>' +
                                     '</div>';
 
@@ -6224,7 +6244,7 @@ catch (Exception $e) {
                 var elm = '<div class="file-element">' +
                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
                     '<label for="' + element + '">' +
-                    '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
+                    '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
                     '</label>' +
                     '</div>';
 
@@ -6261,11 +6281,11 @@ catch (Exception $e) {
     }
 </script>
 
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/exif-js.js"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script type="text/javascript" src="js/project03_other.js" defer></script>
 <script defer src="js/a076d05399.js"></script>
 

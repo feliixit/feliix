@@ -23,7 +23,9 @@ try {
     $decoded = JWT::decode($jwt, $key, array('HS256'));
 
     $user_name = $decoded->data->username;
-
+    
+    if($decoded->data->limited_access == true)
+    header( 'location:index' );
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 }
@@ -390,7 +392,7 @@ function addMultiLineAttach($cell, $strArr)
 {
     // add text line together
     foreach ($strArr as $v) {
-        $cell->addLink("https://storage.cloud.google.com/feliiximg/" . $v['gcp_name'], $v['filename'], 'Link', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+        $cell->addLink("https://storage.googleapis.com/feliiximg/" . $v['gcp_name'], $v['filename'], 'Link', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
     }
 }
 

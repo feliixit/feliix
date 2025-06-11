@@ -4,7 +4,7 @@ var app = new Vue({
     
     submit: false,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
 
     //
@@ -53,6 +53,13 @@ var app = new Vue({
 
     toggle: true,
     tag_group : [],
+
+    cost_lighting : false,
+    cost_furniture : false,
+
+    product_edit : false,
+    product_delete : false,
+    product_duplicate : false,
   },
 
   created() {
@@ -124,6 +131,9 @@ var app = new Vue({
     this.getUserName();
     this.get_brands();
     this.getTagGroup();
+    this.getProductControl();
+
+    this.getAccess();
   },
 
   computed: {
@@ -137,7 +147,8 @@ var app = new Vue({
     },
 
     show_ntd : function() {
-      if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+      // if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan' || this.name.toLowerCase() ==='testmanager')
+      if(this.cost_lighting == true  || this.cost_furniture == true)
        return true;
       else
       return false;
@@ -155,6 +166,72 @@ var app = new Vue({
 
 
   methods: {
+
+    getAccess: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'get',
+
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/product_access_control',
+
+      })
+      .then(function(response) {
+          //handle success
+          _this.product_edit = response.data.product_edit;
+          _this.product_delete = response.data.product_delete;
+          _this.product_duplicate = response.data.product_duplicate;
+        
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
+    
+    getProductControl: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'get',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/product_control',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.cost_lighting = response.data.cost_lighting;
+          _this.cost_furniture = response.data.cost_furniture;
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
+
     getTagGroup: function() {
       let _this = this;
         
@@ -501,11 +578,46 @@ var app = new Vue({
         window.open("edit_product_code?id=" + id);
     },
 
+    incoming_qty_info: function(info) {
+      if(info == '')
+        return;
+      
+      Swal.fire({
+        title: "<i>Incoming Qty</i>", 
+        html: info,  
+        confirmButtonText: "Close", 
+      });
+    },
+
     phased_out_info: function(info) {
       Swal.fire({
         title: "<i>Phased-out Variants:</i>", 
         html: info,  
         confirmButtonText: "Close", 
+      });
+    },
+
+    replacement_info: function(info) {
+      Swal.fire({
+        title: "<i>Replacement Product:</i>", 
+        html: info,  
+        confirmButtonText: "Close", 
+      });
+    },
+
+    replacement_info: function(info) {
+      Swal.fire({
+        title: "<i>Replacement Product:</i>", 
+        html: info,  
+        confirmButtonText: "Close", 
+      });
+    },
+
+    last_order_info: function(info) {
+      Swal.fire({
+        title: "<h2><i>Last Order History</i></h2><br>",
+        html: info,
+        confirmButtonText: "Close",
       });
     },
 

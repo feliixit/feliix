@@ -132,7 +132,7 @@ else
 
         array_push($leaves, $end->format("Ymd") . " A");
 
-        if($leave_level == "B" || $leave_level == "C" || $leave_type == "H")
+        if($leave_level == "B" || $leave_level == "C" || $leave_type == "H" || $leave_type == "U")
         {
             if($amStart == "P")
                 unset($leaves[0]);
@@ -405,8 +405,9 @@ else
                 }
             }
 
-            // Apply without approval
-            if($leave_type == 'D' || $head_of_department == 1)
+            // 20250109 halfday planning only bose approval
+             // Apply without approval
+            if(($leave_type == 'D' || $head_of_department == 1) && $leave_type != "H")
             {
                 $ret = false;
                 $ret = $afl->approval($id, $user_id);
@@ -442,6 +443,39 @@ else
                 $first_approver = 1;
             }
 
+            // // 20250109 halfday planning only bose approval
+            // if($leave_type == 'H')
+            // {
+            //     $first_approver = 0;
+            // }
+            // 20250506 halfday planning only bose approval (auto approved)
+            if($leave_type == 'H')
+            {
+                $first_approver = 3;
+                $ret = false;
+                $ret = $afl->approval($id, $first_approver);
+                if(!$ret)
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+
+                $ret = $afl->re_approval($id, $first_approver);
+                if(!$ret)
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+
+                http_response_code(200);
+                echo json_encode(array("message" => "Apply Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+                die();
+            }
+
+
+
+
+
             if($first_approver == 1)
             {
                 $ret = false;
@@ -454,6 +488,68 @@ else
 
                 $who_get_mail = 2;
             }
+
+
+
+
+
+            // 20250506 bose approval (auto approved)
+            $query = "select * from leave_flow where apartment_id = " . $apartment_id . " and uid = 3 order by flow";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+            $is_boss_flow_1 = 0;
+            $is_boss_flow_2 = 0;
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if($row['flow'] == 1)
+                {
+                    $is_boss_flow_1 = 1;
+                }
+                if($row['flow'] == 2)
+                {
+                    $is_boss_flow_2 = 1;
+                }
+            }
+
+            if($is_boss_flow_1 == 1)
+            {
+                $ret = false;
+                $ret = $afl->approval($id, 3);
+                if(!$ret)
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+
+                $ret = $afl->re_approval($id, 3);
+                if(!$ret)
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+
+                http_response_code(200);
+                echo json_encode(array("message" => "Apply Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+                die();
+            }
+
+            if($first_approver == 1 && $is_boss_flow_2 == 1)
+            {
+                $ret = false;
+                $ret = $afl->re_approval($id, $user_id);
+                if(!$ret)
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+
+                http_response_code(200);
+                echo json_encode(array("message" => "Apply Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+                die();
+            }
+
+
+
 
             // send mail to approver
             $mail_name = '';
@@ -559,6 +655,14 @@ else
             $appove_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_approve));
             $reject_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_reject));
 
+            // 20250109 halfday planning only bose approval
+            if($leave_type == 'Manager Halfday Planning')
+            {
+                $mail_name = "Kuan";
+                $mail_email = "kuan@feliix.com";
+                $mail_id = "3";
+            }
+
             sendMail($mail_name, $mail_email, $appove_hash, $reject_hash, $leav_msg, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl);
 
 
@@ -583,14 +687,16 @@ function getLeaveType($type){
 
     if($type =="A")
         $leave_type = "Service Incentive Leave";
-    if($type =="B")
+    if($type =="N")
+        $leave_type = "Vaction Leave";
+    if($type =="B" || $type =="S")
         $leave_type = "Sick Leave";
-    if($type =="C")
+    if($type =="C" || $type =="U")
         $leave_type = "Unpaid Leave";
     if($type =="D")
         $leave_type = "Absence";
     if($type =="H")
-        $leave_type = "Service Incentive Leave";
+        $leave_type = "Manager Halfday Planning";
     
     return $leave_type;
 }

@@ -162,6 +162,8 @@ switch ($method) {
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
+                    `v4` = :v4,
+                    `ps_var` = :ps_var,
                     `listing` = :listing,
                     `num` = :num,
                     `pid` = :pid,
@@ -210,6 +212,10 @@ switch ($method) {
                 $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
                 $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
                 $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+                $v4 = isset($block_array[$i]['v4']) ? $block_array[$i]['v4'] : '';
+
+                $ps_var = isset($block_array[$i]['ps_var']) ? $block_array[$i]['ps_var'] : [];
+                $json_ps_var = json_encode($ps_var);
 
                 $listing = isset($block_array[$i]['list']) ? $block_array[$i]['list'] : '';
                 $num = isset($block_array[$i]['num']) ? $block_array[$i]['num'] : '';
@@ -236,6 +242,9 @@ switch ($method) {
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+                $stmt->bindParam(':v4', $v4);
+                $stmt->bindParam(':ps_var', $json_ps_var);
+
                 $stmt->bindParam(':listing', $listing);
                 $stmt->bindParam(':num', $num);
                 $stmt->bindParam(':pid', $pid);
@@ -352,6 +361,32 @@ switch ($method) {
                 echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
                 die();
             }
+
+            // insert quotation_update_log
+            $previous_data = '{"type_id" : ' . $type_id . '}';
+            $query = "INSERT INTO quotation_update_log(quotation_id, user_id, `action`, previous_data, current_data, attachment, create_id, created_at) values(:quotation_id, :user_id, 'subtotal_save_changes', :previous_data, :current_data, '', :create_id, now())";
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':quotation_id', $last_id);
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':previous_data', $previous_data);
+            $stmt->bindParam(':current_data', $block);
+            $stmt->bindParam(':create_id', $user_id);
+            try {
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
             
             $db->commit();
 
@@ -380,7 +415,7 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
         if(isset($_FILES[$type]['name']))
         {
             $image_name = $_FILES[$type]['name'];
-            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
+            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo","dwf","bmp");
             $extension = pathinfo($image_name, PATHINFO_EXTENSION);
             if (in_array(strtolower($extension), $valid_extensions)) 
             {

@@ -62,7 +62,7 @@ $conf = new Conf();
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
     http_response_code(401);
-
+    
     echo json_encode(array("message" => "Access denied1."));
     die();
 }
@@ -72,10 +72,10 @@ else
         //select all
         try{
             $query = "SELECT * from price_record  where 1 = 1";
-
+            
             $stmt = $db->prepare( $query );
             $stmt->execute();
-
+            
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
@@ -83,7 +83,7 @@ else
         }
         catch(Exception $e){
             http_response_code(401);
-
+            
             echo json_encode(array("message" => ".$e."));
         }
     }
@@ -93,7 +93,7 @@ else
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
-
+            
             $priceRecord->tdate = $tdate;
             $priceRecord->account = $account;
             $priceRecord->category = $category;
@@ -112,18 +112,18 @@ else
             $priceRecord->is_marked = $is_marked;
             $priceRecord->created_by = $created_by;
             $arr = $priceRecord->create();
-
+            
             http_response_code(200);
             echo json_encode(array($arr));
             //echo json_encode(array("message" => " Add success at " . date("Y-m-d") . " " . date("h:i:sa")));
-
+            
         } // if decode fails, it means jwt is invalid
         catch (Exception $e) {
-
+            
             http_response_code(401);
-
+            
             echo json_encode(array("message" => "Access denied."));
-
+            
         }
     }else if($action == 3){
         //update
@@ -148,29 +148,29 @@ else
             $priceRecord->is_marked = $is_marked;
             $priceRecord->updated_by = $updated_by;
             $arr = $priceRecord->update();
-
+            
             $storage = new StorageClient([
                 'projectId' => 'predictive-fx-284008',
                 'keyFilePath' => $conf::$gcp_key
             ]);
-    
+            
             $bucket = $storage->bucket('feliiximg');
-
+            
             for($i=0 ; $i < count($del_url_array) ; $i++)
             {
                 $object = $bucket->object($del_url_array[$i]);
                 $object->delete();
             }
-
+            
             http_response_code(200);
             echo json_encode(array($arr));
             echo json_encode(array("message" => " Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
-
+            
         } // if decode fails, it means jwt is invalid
         catch (Exception $e) {
-
+            
             http_response_code(401);
-
+            
             echo json_encode(array("message" => "Access denied."));
         }
     }else if($action == 4) {
@@ -180,7 +180,7 @@ else
             if($start_date!='') {
                 $query = $query . " and paid_date >= '$start_date' ";
             }
-
+            
             if($end_date!='') {
                 $query = $query . " and paid_date <= '$end_date' ";
             }
@@ -198,9 +198,9 @@ else
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
-
+            
             $_result = array();
-
+            
             foreach ($merged_results as &$value) {
                 $value['pic_array'] = GetPicArray($value['pic_url']);
                 $_result[] = $value;
@@ -210,7 +210,7 @@ else
         }
         catch(Exception $e){
             http_response_code(401);
-
+            
             echo json_encode(array("message" => ".$e."));
         }
     }else if($action == 5) {
@@ -219,7 +219,7 @@ else
             $query = "SELECT * from user where status <> -1 order by username";
             $stmt = $db->prepare( $query );
             $stmt->execute();
-
+            
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
@@ -227,7 +227,7 @@ else
         }
         catch(Exception $e){
             http_response_code(401);
-
+            
             echo json_encode(array("message" => ".$e."));
         }
     }else if($action == 6){
@@ -239,19 +239,19 @@ else
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
-
+            
             $_result = array();
-
+            
             foreach ($merged_results as &$value) {
                 $value['pic_array'] = GetPicArray($value['pic_url']);
                 $_result[] = $value;
             }
-
+            
             echo json_encode($_result, JSON_UNESCAPED_SLASHES);
         }
         catch(Exception $e){
             http_response_code(401);
-
+            
             echo json_encode(array("message" => ".$e."));
         }
     }else if($action == 7){
@@ -263,16 +263,16 @@ else
             $priceRecord->id = $id;
             $priceRecord->deleted_by = $deleted_by;
             $arr = $priceRecord->delete();
-
+            
             http_response_code(200);
             echo json_encode(array($arr));
             echo json_encode(array("message" => " Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
-
+            
         } // if decode fails, it means jwt is invalid
         catch (Exception $e) {
-
+            
             http_response_code(401);
-
+            
             echo json_encode(array("message" => "Access denied."));
         }
     }
@@ -286,16 +286,16 @@ else
             $priceRecord->updated_by = $updated_by;
             $priceRecord->is_locked = $is_locked;
             $arr = $priceRecord->lock();
-
+            
             http_response_code(200);
             echo json_encode(array($arr));
             echo json_encode(array("message" => " Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
-
+            
         } // if decode fails, it means jwt is invalid
         catch (Exception $e) {
-
+            
             http_response_code(401);
-
+            
             echo json_encode(array("message" => "Access denied."));
         }
     }
@@ -303,10 +303,10 @@ else
         //
         try{
             $query = "SELECT cash_out, cash_in from price_record  where project_name = '$project_name' and is_enabled = 1 order by created_at ";
-
+            
             $stmt = $db->prepare( $query );
             $stmt->execute();
-
+            
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
@@ -314,22 +314,22 @@ else
         }
         catch(Exception $e){
             http_response_code(401);
-
+            
             echo json_encode(array("message" => ".$e."));
         }
     }
 }
 
 function GetPicArray($pic_url){
-
+    
     if(trim($pic_url) == '') {
         return array();
     }
     
-   $merged_results = explode(",", $pic_url);
-   $_result = array();
-   $id = 1;
-   foreach ($merged_results as &$value) {
+    $merged_results = explode(",", $pic_url);
+    $_result = array();
+    $id = 1;
+    foreach ($merged_results as &$value) {
         $_result[] = array(
             "is_checked" => true,
             "id" => $id++,

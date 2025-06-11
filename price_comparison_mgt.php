@@ -27,6 +27,10 @@ try {
 $GLOBALS['position'] = $decoded->data->position;
 $GLOBALS['department'] = $decoded->data->department;
 
+
+if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
 if($GLOBALS['department'] == 'Lighting' || $GLOBALS['department'] == 'Office' || $GLOBALS['department'] == 'Sales'){
 $test_manager = "1";
 }
@@ -85,17 +89,17 @@ header( 'location:index' );
     <link rel="stylesheet" type="text/css" href="css/ui.css"/>
     <link rel="stylesheet" type="text/css" href="css/case.css"/>
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
+    <link rel="stylesheet" href="css/chosen/chosen.min.css">
 
     <!-- jQuery和js載入 -->
     <!-- <script defer src="//code.jquery.com/jquery-1.11.3.min.js"></script> -->
 
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js" defer></script>
-    <script defer src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
+    <script defer src="js/chosen/chosen.jquery.min.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -691,9 +695,9 @@ header( 'location:index' );
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/price_comparison_mgt.js"></script>
 
 </html>

@@ -24,6 +24,9 @@ try {
         $user_id = $decoded->data->id;
         $username = $decoded->data->username;
 
+        if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
         $database = new Database();
         $db = $database->getConnection();
 
@@ -133,9 +136,9 @@ catch (Exception $e){
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+          href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
     
@@ -147,7 +150,7 @@ catch (Exception $e){
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -530,8 +533,8 @@ catch (Exception $e){
 </div>
 
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/knowledge_add.js"></script>
 </html>

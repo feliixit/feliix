@@ -28,6 +28,9 @@ try {
             $position = $decoded->data->position;
             $department = $decoded->data->department;
 
+            if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $test_manager = $decoded->data->test_manager;
 
@@ -42,11 +45,12 @@ try {
         // QOUTE AND PAYMENT Management
         if(trim(strtoupper($department)) == 'SALES')
         {
-            if(trim(strtoupper($position)) == 'JR. ACCOUNT EXECUTIVE'
-            || trim(strtoupper($position)) == 'ACCOUNT EXECUTIVE'
-            || trim(strtoupper($position)) == 'SR. ACCOUNT EXECUTIVE'
-            || trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
-            || trim(strtoupper($position)) == 'SALES MANAGER')
+            if(trim(strtoupper($position)) == 'CUSTOMER VALUE COORDINATOR'
+            || trim(strtoupper($position)) == 'JR. ACCOUNT EXECUTIVE'
+            || trim(strtoupper($position)) == 'CUSTOMER VALUE SUPERVISOR'
+            || trim(strtoupper($position)) == 'SENIOR CUSTOMER VALUE SUPERVISOR'
+            || trim(strtoupper($position)) == 'ASSISTANT CUSTOMER VALUE DIRECTOR'
+            || trim(strtoupper($position)) == 'CUSTOMER VALUE DIRECTOR')
             {
                 $access6 = true;
             }
@@ -54,7 +58,7 @@ try {
 
         if(trim(strtoupper($department)) == 'LIGHTING')
         {
-            if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER' || trim(strtoupper($position)) == 'LIGHTING MANAGER')
+            if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING VALUE CREATION DIRECTOR' || trim(strtoupper($position)) == 'LIGHTING VALUE CREATION DIRECTOR')
             {
                 $access6 = true;
             }
@@ -62,7 +66,7 @@ try {
 
         if(trim(strtoupper($department)) == 'OFFICE')
         {
-            if(trim(strtoupper($position)) == 'ASSISTANT OFFICE SYSTEMS MANAGER' || trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+            if(trim(strtoupper($position)) == 'ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR' || trim(strtoupper($position)) == 'OFFICE SPACE VALUE CREATION DIRECTOR')
             {
                 $access6 = true;
             }
@@ -109,7 +113,7 @@ try {
             }
         }
 
-        if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 || $user_id == 139)
+        if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 || $user_id == 190 || $user_id == 198 || $user_id = 153)
             $access6 = true;
 
         if($access6 == false)
@@ -206,7 +210,7 @@ $(function(){
                     min-width: 130px;
                 }
 
-        .tableframe .tablebox.lv1 li:nth-of-type(3), .tableframe .tablebox.lv1 li:nth-of-type(4), .tableframe .tablebox.lv1 li:nth-of-type(16), .tableframe .tablebox.lv1 li:nth-of-type(18), .tableframe .tablebox.lv1 li:nth-of-type(19){
+        .tableframe .tablebox.lv1 li:nth-of-type(3), .tableframe .tablebox.lv1 li:nth-of-type(4), .tableframe .tablebox.lv1 li:nth-of-type(16), .tablebox.lv1 li:nth-of-type(17), .tableframe .tablebox.lv1 li:nth-of-type(19), .tableframe .tablebox.lv1 li:nth-of-type(20){
                     min-width: 280px;
                 }
 
@@ -222,13 +226,13 @@ $(function(){
                     min-width: 200px;
                 }
 
-        .tableframe .tablebox.lv1 li:nth-of-type(19) {
+        .tableframe .tablebox.lv1 li:nth-of-type(20) {
                     padding-left: 10px;
                     padding-right: 10px;
                     text-align: left;
                 }
 
-        .tableframe .tablebox.lv1 li:nth-of-type(11) span, .tableframe .tablebox.lv1 li:nth-of-type(12) span, .tableframe .tablebox.lv1 li:nth-of-type(13) span, .tableframe .tablebox.lv1 li:nth-of-type(14) span, .tableframe .tablebox.lv1 li:nth-of-type(17) span {
+        .tableframe .tablebox.lv1 li:nth-of-type(11) span, .tableframe .tablebox.lv1 li:nth-of-type(12) span, .tableframe .tablebox.lv1 li:nth-of-type(13) span, .tableframe .tablebox.lv1 li:nth-of-type(14) span, .tableframe .tablebox.lv1 li:nth-of-type(18) span {
                     display: block;
                 }
 
@@ -236,7 +240,7 @@ $(function(){
                     min-width: auto;
                 }
 
-        .tableframe .tablebox.lv1 ul.head li:nth-of-type(19) {
+        .tableframe .tablebox.lv1 ul.head li:nth-of-type(20) {
             text-align: center;
         }
 
@@ -332,6 +336,23 @@ $(function(){
             padding: 1px 3px;
             font-size: 14px;
             height: 30px;
+        }
+
+        .modal-content .block .formbox dd input[type="text"] {
+            border: 1px solid #707070;
+            padding: 1px 3px;
+            font-size: 14px;
+            height: 30px;
+        }
+
+
+        .modal-content .block .formbox dd input[type="date"] {
+            border: 1px solid #707070;
+            padding: 1px 3px;
+            font-size: 14px;
+            height: 30px;
+            margin-bottom: 10px;
+            width: 200px;
         }
 
         .modal-content .block .formbox dd textarea {
@@ -615,6 +636,38 @@ $(function(){
         .block .tablebox > ul > li.display_file span{
             display: block;
         }
+
+        .block .tablebox.lv1 ul.x_deal li {
+            background: #E5F7EB !important;
+        }
+
+        .block .tablebox.lv1 ul.no_dp li {
+            background: #EF88BE4D !important;
+        }
+
+        div.formbox dd.range {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        div.formbox dd.range input {
+            display: inline-block;
+            width: 110px;
+        }
+
+        div.formbox dd.range select {
+            display: inline-block;
+            width: 60px;
+            padding-left: 15px;
+        }
+
+        div.formbox dd.range span {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--fth04);
+        }
+
     </style>
 
 
@@ -733,7 +786,94 @@ $(function(){
                                     </select>
                                 </dd>
 
-                                <dt style="margin-bottom:-18px;">Amount</dt>
+                                <dt>Has Verified Payment Proof?</dt>
+                                <dd>
+                                    <select v-model="fil_proof">
+                                        <option value=""></option>
+                                        <option value="A">Has Verified Downpayment Proof and Has Verified Fullpayment Proof</option>
+                                        <option value="D">Has Verified Downpayment Proof but Not Have Verified Fullpayment Proof</option>
+                                        <option value="F">Not Have Verified Downpayment Proof but Has Verified Fullpayment Proof</option>
+                                        <option value="N">Not Have Verified Downpayment Proof and Not Have Verified Fullpayment Proof</option>
+                                    </select>
+                                </dd>
+
+                                <dt>Range of Amount</dt>
+                                <dd class="range">
+                                    <input type="number" v-model="fil_amount_lower">
+
+                                    <select v-model="fil_amount_lower_eq">
+                                        <option value=""></option>
+                                        <option value="s"><</option>
+                                        <option value="se">≤</option>
+                                    </select>
+
+                                    <span>Amount</span>
+
+                                    <select v-model="fil_amount_upper_eq">
+                                        <option value=""></option>
+                                        <option value="s"><</option>
+                                        <option value="se">≤</option>
+                                    </select>
+
+                                    <input type="number" style="margin-right: 0;"  v-model="fil_amount_upper">
+                                </dd>
+
+                                <dt>Range of Down Payment</dt>
+                                <dd class="range">
+                                    <input type="number" v-model="fil_payment_lower">
+
+                                    <select v-model="fil_payment_lower_eq">
+                                        <option value=""></option>
+                                        <option value="s"><</option>
+                                        <option value="se">≤</option>
+                                    </select>
+
+                                    <span>Down Payment</span>
+
+                                    <select v-model="fil_payment_upper_eq">
+                                        <option value=""></option>
+                                        <option value="s"><</option>
+                                        <option value="se">≤</option>
+                                    </select>
+
+                                    <input type="number" style="margin-right: 0;" v-model="fil_payment_upper">
+                                </dd>
+
+                                <dt>Range of A/R</dt>
+                                <dd class="range">
+                                    <input type="number" v-model="fil_ar_lower">
+
+                                    <select v-model="fil_ar_lower_eq">
+                                        <option value=""></option>
+                                        <option value="s"><</option>
+                                        <option value="se">≤</option>
+                                    </select>
+
+                                    <span>A/R</span>
+
+                                    <select v-model="fil_ar_upper_eq">
+                                        <option value=""></option>
+                                        <option value="s"><</option>
+                                        <option value="se">≤</option>
+                                    </select>
+
+                                    <input type="number" style="margin-right: 0;" v-model="fil_ar_upper">
+                                </dd>
+
+                                <dt>Aging</dt>
+                                <dd>
+                                    <select v-model="fil_aging">
+                                        <option value=""></option>
+                                        <option value="0">Aging < 30 days</option>
+                                        <option value="30">30 days ≤ Aging < 60 days</option>
+                                        <option value="60">60 days ≤ Aging < 90 days</option>
+                                        <option value="90">90 days ≤ Aging < 120 days</option>
+                                        <option value="120">120 days ≤ Aging</option>
+                                    </select>
+                                </dd>
+
+
+                   <!--         <dt style="margin-bottom:-18px;">Amount</dt>
                                 <div class="half">
                                     <dt>lower bound</dt>
                                     <dd><input type="number" v-model="fil_amount_lower"></dd>
@@ -768,6 +908,7 @@ $(function(){
                                     <dd><input type="number" v-model="fil_ar_upper"></dd>
 
                                 </div>
+                      -->
 
                                 <dt>Keyword (only for project name)</dt>
                                 <dd><input type="text" v-model="fil_keyowrd_p"></dd>
@@ -909,12 +1050,15 @@ $(function(){
                      <li>Full Payment</li>
                      <li>FP Date</li>
                      <li>A/R</li>
+                     <li>Date of Data Submission<br>Aging</li>
+                     <li>Expense (Commission)</li>
+                     <li>Expense (Others)</li>
                      <li>PO from Client</li>
                      <li>Inv. Numbers</li>
                      <li>Other Files</li>
                      <li>Remarks/Status</li>
                  </ul>
-                  <ul v-for='(receive_record, index) in displayedPosts'>
+                  <ul v-for='(receive_record, index) in displayedPosts' :class="[(receive_record.special == 's' ? 'x_deal' : ( receive_record.special == 'sn' ? 'no_dp' : ''))]">
                       <li><input type="radio" name="project_id" class="alone black"
                             @click="show_detail(receive_record.id)"></li>
                       <li>{{ receive_record.category }}</li>
@@ -931,6 +1075,10 @@ $(function(){
                       <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>
                       <li><span v-for="(item,index) in receive_record.full_pay_date">{{ item }}</span></li>
                       <li>{{ isNaN(parseInt(receive_record.ar)) ? "" : Number(receive_record.ar).toLocaleString() }}</li>
+                      <li v-if="receive_record.date_data_submission != ''">{{ receive_record.date_data_submission }}<br>{{ receive_record.aging }} days</li>
+                      <li v-if="receive_record.date_data_submission == ''"></li>
+                      <li>{{ parseInt(receive_record.apply_for_petty_commission) == 0 ? "" : Number(receive_record.apply_for_petty_commission).toLocaleString() }}</li>
+                      <li>{{ parseInt(receive_record.apply_for_petty - receive_record.apply_for_petty_commission) == 0 ? "" : Number(receive_record.apply_for_petty - receive_record.apply_for_petty_commission).toLocaleString()  }}</li>
                       <li class="display_file">
                         <span v-for="(item,index) in receive_record.client_po_file">
                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
@@ -1112,6 +1260,22 @@ $(function(){
                                         <option value="2">2307</option>
                                     </select>
                                 </dd>
+
+                                <dt class="head">Method:</dt>
+                                <dd>
+                                    <select v-model="payment_method_1" @change="payment_method_other = ''">
+                                        <option value=""></option>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Check">Check</option>
+                                        <option value="Credit Card">Credit Card</option>
+                                        <option value="GCash">GCash</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+
+                                    <input type="text" id="" placeholder="Please Specify ..." style="width: 100%; margin-top: 5px;" v-model="payment_method_other" v-show="payment_method_1 == 'Other'">
+                                </dd>
+
                                 <dt class="head">Remarks:</dt>
                                 <dd><textarea name="" id="" v-model="prof_remark"></textarea></dd>
                                 <dd style="display: flex; justify-content: flex_start;">
@@ -1190,7 +1354,7 @@ $(function(){
                                 <ul class="head">
                                     <li><i class="micons">view_list</i></li>
                                     <li>Type</li>
-                                    <li>Remarks</li>
+                                    <li>Method / Remarks</li>
                                     <li>Proof</li>
                                     <li>Uploader</li>
                                     <li>Status</li>
@@ -1200,14 +1364,14 @@ $(function(){
                                 <ul v-for='(receive_record, index) in displayedPayment'>
                                     <li><input type="checkbox" name="payment_id" class="alone black" :value="receive_record.id"></li>
                                     <li>{{ (receive_record.kind == 0) ? "Down Payment" : ((receive_record.kind == 1) ? "Full Payment" : "2307") }}</li>
-                                    <li>{{ receive_record.remark }}</li>
+                                    <li>{{ receive_record.payment_method_other != '' ? 'Other: ' +  receive_record.payment_method_other : receive_record.payment_method_1 }}<br>{{ receive_record.remark }}</li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display: block;" v-if="view_proof || (item.username.toLowerCase() == username.toLowerCase())">
                                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
                                         </span>
                                     </li>
                                     <li>{{ receive_record.username }} at {{ receive_record.created_at }}</li>
-                                    <li>{{ (receive_record.checked == 0) ? "Under Checking" : ((receive_record.checked == 1) ? "Checked: True" : ((receive_record.checked == -1) ? "Checked: False" : 'Under Checking')) }}</li>
+                                    <li>{{ (receive_record.checked == 0) ? "Under Checking" : ((receive_record.checked == 1) ? "Checked: True" : ((receive_record.checked == -1) ? "Checked: False" : "Under Checking")) }}</li>
                                     <li>{{ isNaN(parseInt(receive_record.amount)) ? "" : Number(receive_record.amount).toLocaleString() }}</li>
                                 </ul>
                             
@@ -1336,11 +1500,15 @@ $(function(){
                                     <select v-model="other_type">
                                         <option value="2">Other Files</option>
                                         <option value="3">Remarks/Status</option>
+                                        <option value="4">Date of Data Submission</option>
                                     </select>
                                 </dd>
                                 <dt class="head">Description:</dt>
-                                <dd><textarea name="" id="" v-model="other_remark"></textarea></dd>
-                                <dd style="display: flex; justify-content: flex_start;" v-if="other_type == '2'">
+                                <dd>
+                                    <input type="date" v-if="other_type == 4" v-model="date_data_submission">
+                                    <textarea name="" id="" v-model="other_remark"></textarea>
+                                </dd>
+                                <dd style="display: flex; justify-content: flex_start;" v-if="other_type == '2' || other_type == '4' ">
                                     <span style="color: #000000; font-size: 16px; font-weight: 700; padding-bottom: 5px; margin-right: 10px;">Files: </span>
                                     <div class="pub-con" ref="bg">
                                         <div class="input-zone">
@@ -1359,7 +1527,7 @@ $(function(){
                                         </div>
                                 </dd>
 
-                                <div class="file-list"  v-if="other_type == '2'">
+                                <div class="file-list"  v-if="other_type == '2' || other_type == '4' ">
                                     <div class="file-item" v-for="(item,index) in other_fileArray" :key="index">
                                         <p>
                                             {{item.name}}
@@ -1420,7 +1588,7 @@ $(function(){
                                 </ul>
                                 <ul v-for='(receive_record, index) in displayedOther'>
                                     <li><input type="checkbox" name="other_id" class="alone black" :value="receive_record.id"></li>
-                                    <li>{{ (receive_record.kind == 2) ? "Other Files" : "Remarks/Status" }}</li>
+                                    <li>{{ (receive_record.kind == 2) ? "Other Files" : (receive_record.kind == 3) ? "Remarks/Status" : "Date of Data Submission" }}</li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display:block;">
                                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
@@ -1454,9 +1622,9 @@ $(function(){
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/quotation_and_payment_mgt_v2.js"></script>
 <script src="js/a076d05399.js"></script>
 

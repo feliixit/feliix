@@ -12,10 +12,11 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     proof_remark: "",
     reject_reason: "",
+    method_of_return: "",
 
     actual_amount: "",
 
@@ -219,6 +220,7 @@ var app = new Vue({
       form_Data.append("crud", "Verifier Verified");
       form_Data.append("id", id);
       form_Data.append("amount", this.actual_amount.replaceAll(',', ''));
+      form_Data.append("method_of_return", this.method_of_return);
    
       for( var i = 0; i < this.$refs.file.files.length; i++ ){
         let file = this.$refs.file.files[i];
@@ -393,7 +395,19 @@ var app = new Vue({
         });
     },
 
-    detail: function() {
+    get_lastest_record_status : async function(id) {
+      // get api/expense_status
+      let status = await axios.get("api/expense_status", {
+        params: {
+          id: id
+        }
+      });
+
+      return status.data;
+    },
+
+
+    detail: async function() {
       let _this = this;
 
       //let favorite = [];
@@ -419,13 +433,43 @@ var app = new Vue({
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != '8')
+      {
+        await Swal.fire({
+          text: 'The status of the chosen expense application has changed and was not "For Verify". System will refresh the content of the table.',
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        this.getLeaveCredit();
+        return;
+      }
       
-      this.reject_reason = "";
-      this.view_detail = true;
+        this.method_of_return = this.record.method_of_return;
+        this.reject_reason = "";
+        this.view_detail = true;
+      
     },
 
-    approve_op: function() {
+    approve_op: async function() {
       let _this = this;
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != '8')
+      {
+        await Swal.fire({
+          text: 'The status of the chosen expense application has changed and was not "For Verify". System will refresh the content of the table.',
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        this.getLeaveCredit();
+        return;
+      }
 
       if (this.proof_id < 1) {
         Swal.fire({
@@ -442,6 +486,19 @@ var app = new Vue({
       {
         Swal.fire({
           text: 'Amount format invalid',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+        //this.err_msg = 'Location Photo required';
+        //$(window).scrollTop(0);
+        return false;
+      }
+
+      var total = Math.max(this.parsenumber(this.record.total), this.parsenumber(this.record.amount_liquidated));
+      if(this.actual_amount > total)
+      {
+        Swal.fire({
+          text: 'Verifier is not allowed to encode the amount more than the maximal of “Total Amount Requested” and “Amount Liquidated”.',
           icon: 'warning',
           confirmButtonText: 'OK'
         })
@@ -635,6 +692,16 @@ var app = new Vue({
         result[i] = obj[i];
       }
       return result;
+    },
+
+    parsenumber: function(nu) {
+      if(nu === null || nu === undefined || nu === '')
+        return 0;
+
+      if(typeof nu === 'string')
+        return parseFloat(nu.replace(/,/g, ""));
+      else
+        return parseFloat(nu);
     },
   },
 });

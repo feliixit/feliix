@@ -104,6 +104,7 @@ if (!isset($jwt)) {
     if($edate != '')
     {
         $query .= " and case 
+                            when period = 3 then DATE_FORMAT(STR_TO_DATE(CONCAT(review_month, '-01'), '%Y-%m-%d') + INTERVAL 2 MONTH,'%Y-%m')
                             when period = 0 then DATE_FORMAT(STR_TO_DATE(CONCAT(review_month, '-01'), '%Y-%m-%d') + INTERVAL 1 MONTH,'%Y-%m')
                             when period = 1 then review_month
                         end  <= '" . $edate . "' ";
@@ -141,7 +142,10 @@ if (!isset($jwt)) {
         $id = $row['id'];
         $review_month = $row['review_month'];
         $period = $row['period'];
-        $review_next_month = GetNextMonth($review_month);
+        if($period == 3)
+            $review_next_month = GetNextMonth3($review_month);
+        else
+            $review_next_month = GetNextMonth($review_month);
 
         $department = $row['department'];
         $title = $row['title'];
@@ -221,6 +225,12 @@ if (!isset($jwt)) {
 function GetNextMonth($d)
 {
     $date = date('Y-m', strtotime('+1 month', strtotime($d . '-01')));
+    return $date;
+}
+
+function GetNextMonth3($d)
+{
+    $date = date('Y-m', strtotime('+2 month', strtotime($d . '-01')));
     return $date;
 }
 

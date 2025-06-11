@@ -51,7 +51,7 @@ var app = new Vue({
 
     perPage: 10,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     // I&AM
     my_department: "",
@@ -1115,6 +1115,9 @@ var app = new Vue({
         .getElementById("task_reply_dlg_" + item_id)
         .classList.remove("show");
 
+        var cnt = this.$refs['task_reply_msg_cnt_' + item_id][0];
+        cnt.innerHTML = "0";
+
       this.reload_task(this.proof_id);
     },
 
@@ -1180,11 +1183,20 @@ var app = new Vue({
         });
     },
 
+    count_reply(message_id, ref_id) {
+      var comment = this.$refs['task_reply_msg_' + message_id + '_' + ref_id][0];
+
+      var cnt = this.$refs['task_reply_msg_cnt_' + message_id + '_' + ref_id][0];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+    },
+
     comment_clear(task_id) {
       this.current_task_id = task_id;
       this.arrTask[task_id] = [];
       Vue.set(this.arrTask, 0, "");
       this.$refs["comment_task_" + task_id].value = "";
+
+      this.clear_message(task_id);
 
       this.reload_task(task_id);
     },
@@ -1580,6 +1592,18 @@ var app = new Vue({
       this.canSub = true;
     },
 
+    count_message(task_id) {
+      var comment = this.$refs['comment_task_' + task_id];
+
+      var cnt = this.$refs['comment_task_cnt' + task_id];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+    },
+
+    clear_message(task_id) {
+      var cnt = this.$refs['comment_task_cnt' + task_id];
+      cnt.innerHTML = "0";
+    },
+
     comment_create(task_id) {
       this.current_task_id = task_id;
 
@@ -1835,7 +1859,7 @@ var app1 = new Vue({
     ],
     perPage: 5,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     // calendar
     attendee: [],

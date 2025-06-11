@@ -1,8 +1,9 @@
 <?php
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
-if ( !isset( $jwt ) ) {
-  header( 'location:index' );
+if ($jwt === NULL || $jwt === '') {
+    setcookie("userurl", $_SERVER['REQUEST_URI']);
+    header( 'location:../index' );
 }
 
 include_once '../api/config/core.php';
@@ -10,45 +11,43 @@ include_once '../api/libs/php-jwt-master/src/BeforeValidException.php';
 include_once '../api/libs/php-jwt-master/src/ExpiredException.php';
 include_once '../api/libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once '../api/libs/php-jwt-master/src/JWT.php';
-
+include_once '../api/config/database.php';
 
 use \Firebase\JWT\JWT;
 
-$access6 = false;
-
 try {
-        // decode jwt
-        try {
-            // decode jwt
-            $decoded = JWT::decode($jwt, $key, array('HS256'));
-            $user_id = $decoded->data->id;
-            $username = $decoded->data->username;
+    // decode jwt
+    $decoded = JWT::decode($jwt, $key, array('HS256'));
 
+    $user_id = $decoded->data->id;
+    $username = $decoded->data->username;
 
-            // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
-            if($username == "Dennis Lin" ||  $username == "Kristel Tan" ||  $username == "dereck" || $username == "Kuan" || $username == "Stefanie Mika C. Santos")
-            {
-                $access6 = true;
-            }
+    $position = $decoded->data->position;
+    $department = $decoded->data->department;
 
-            if($access6 == false)
-                header('location:../default');
+    if($decoded->data->limited_access == true)
+    header( 'location:../index' );
 
-        }
-        catch (Exception $e){
+    $database = new Database();
+    $db = $database->getConnection();
 
-            header('location:../index');
-        }
+    $for_profile = false;
 
-
-        //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
-        //    header( 'location:index.php' );
+    $query = "SELECT * FROM access_control WHERE `for_profile` LIKE '%" . $username . "%' ";
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $for_profile = true;
     }
-    // if decode fails, it means jwt is invalid
-    catch (Exception $e){
 
+    if ($for_profile == false)
         header( 'location:../index' );
-    }
+}
+// if decode fails, it means jwt is invalid
+catch (Exception $e) {
+
+    header( 'location:../index' );
+}
 
 ?>
 
@@ -141,6 +140,10 @@ try {
         cursor: default;
     }
 
+    .tablebox > ul > li:nth-of-type(n+2) {
+        font-size: 12px!important;
+    }
+
     @media screen and (min-width: 0px) and (max-width: 767px) {
         #my-content {
             display: none;
@@ -167,12 +170,7 @@ try {
     <div class="mainContent" id="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A" href="user">User</a>
             <a class="tag F focus">User Profile</a>
-            <a class="tag B" href="department">Department</a>
-            <a class="tag C" href="position">Position</a>
-            <a class="tag D" href="leave_flow">Leave Flow</a>
-            <a class="tag E" href="expense_flow">Expense Flow</a>
         </div>
         <!-- Blocks -->
         <div class="block F focus">
@@ -209,6 +207,12 @@ try {
                         <li>
                             <input type="date" v-model="date_start_company"  style="resize: none;"></input>
                         </li>
+                        <li>
+                            <b>Last Day of Work</b>
+                        </li>
+                        <li>
+                            <input type="date" v-model="date_end_company"  style="resize: none;"></input>
+                        </li>
                     </ul>
 
                     <div>
@@ -228,16 +232,19 @@ try {
                         <li>Contact Number</li>
                         <li>Date Started in Company</li>
                         <li>Seniority</li>
+                        <li>Last Day of Work</li>
                     </ul>
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1"
                                    v-model:checked="record.is_checked"></li>
-                        <li>{{record.username}}</li>
+                        <!-- 如果是 status 不是 1 的使用者，在下面這個顯示姓名的 li 中請加上 style="color: oragnered;"  -->
+                        <li v-bind:style="record.status != '1' ? {  'color':'#ff4500' } : { }">{{record.username}}</li>
                         <li v-if="record.pic_url !== ''"><a class="man" :style="'background-image: url(../images/man/' + record.pic_url + ');'"></a></li>
                         <li v-if="record.pic_url == ''"><a class="man"></a></li>
                         <li>{{record.tel}}</li>
                         <li>{{record.date_start_company}}</li>
                         <li>{{record.seniority}}</li>
+                        <li>{{record.date_end_company}}</li>
                     </ul>
                 
 
@@ -252,8 +259,8 @@ try {
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="../js/npm/vue/dist/vue.js"></script>
 <script defer src="../js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="../js/npm/sweetalert2@9.js"></script>
 <script defer src="../js/admin/user_profile.js"></script>
 </html>

@@ -265,10 +265,10 @@ else
 
         }
 
-        if($add_term == 'y'){
+        if($add_term == 'y' && $project_id != 0 && $kind == ''){
             $project_category = GetProjectInfo($project_id, $db);
 
-            if($project_category == LIGHTING)
+            if($project_category == 2)
             {
                 $title = "Warranty";
                 $brief = "Terms and Condition";

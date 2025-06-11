@@ -179,6 +179,13 @@ function SendNotifyMail($id, $action)
                 send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $action);
             }
             break;
+        case "Send To OP ONLY":
+            $notifior = GetNotifyer(2, $db);
+            foreach($notifior as &$list)
+            {
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $action);
+            }
+            break;
         case "Send To MD":
             $notifior = GetNotifyer(3, $db);
             foreach($notifior as &$list)
@@ -394,6 +401,9 @@ function &GetAction($loc)
         case "Send To OP":
             $location = 3;
             break;
+        case "Send To OP ONLY":
+            $location = -3;
+            break;
         case "OP Send To MD":
             $location = 4;
             break;
@@ -449,6 +459,9 @@ function &GetDesc($loc)
             $location = "Checker Rejected";
             break;
         case "Send To OP":
+            $location = "Checker Checked";
+            break;
+        case "Send To OP ONLY":
             $location = "Checker Checked";
             break;
         case "Send To MD":

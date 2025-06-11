@@ -6,7 +6,7 @@ var app = new Vue({
     
     submit: false,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
 
     //
@@ -607,6 +607,14 @@ var app = new Vue({
     phased_out_info: function(info) {
       Swal.fire({
         title: "<i>Phased-out Variants:</i>", 
+        html: info,  
+        confirmButtonText: "Close", 
+      });
+    },
+
+    replacement_info: function(info) {
+      Swal.fire({
+        title: "<i>Replacement Product:</i>", 
         html: info,  
         confirmButtonText: "Close", 
       });

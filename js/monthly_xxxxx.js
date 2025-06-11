@@ -14,7 +14,7 @@ var app = new Vue({
 
     total: 0,
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     proof_remark: "",
 

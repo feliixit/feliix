@@ -2,11 +2,11 @@
 
  date_default_timezone_set('Asia/Taipei');
  $date = date('d');
- $show0 = false;
+ //$show0 = false;
 
-if($date % 2 == 0)
-    $show0 = true;
-?>
+// if($date % 2 == 0)
+//     $show0 = true;
+// ?>
 
 <?php include 'check.php';?>
 <!DOCTYPE html>
@@ -42,17 +42,17 @@ if($date % 2 == 0)
     <link rel="stylesheet" type="text/css" href="css/ui.css"/>
     <link rel="stylesheet" type="text/css" href="css/case.css"/>
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+    <link rel="stylesheet" href="css/bootstrap/4.5.0/bootstrap.min.css">
+    <link href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css"
           rel="stylesheet">
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
-    <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script defer src="js/bootstrap/4.5.0/bootstrap.min.js"></script>
     <script defer
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
             
     <style>
 
@@ -160,7 +160,7 @@ $(function(){
             <div class="mainContent" style="text-align: center;">
                 <!-- mainContent為動態內容包覆的內容區塊 -->
 
-                <div class="banner1" <?php if($show0 == false) echo('style="display:none;"'); ?>>
+                <div class="banner1" <?php if($date % 4 != 0) echo('style="display:none;"'); ?>>
                     <img src="images/action_and_word.png" height="auto" width="90%"/>
                     <!--
                         <div style="font-size:5vw; font-weight: bold;">Wear Mask</div>
@@ -175,8 +175,16 @@ $(function(){
                     -->
                 </div>
 
-                <div class="banner2" <?php if($show0 == true) echo('style="display:none;"'); ?>>
+                <div class="banner2" <?php if($date % 4 != 1) echo('style="display:none;"'); ?>>
                     <img src="images/communication.jpg" height="auto" width="96%"/>
+                </div>
+
+                <div class="banner3" <?php if($date % 4 != 2) echo('style="display:none;"'); ?>>
+                    <img src="images/S__7733280.jpg" height="auto" width="85%"/>
+                </div>
+
+                <div class="banner4" <?php if($date % 4 != 3) echo('style="display:none;"'); ?>>
+                    <img src="images/S__3907658.jpg" height="auto" width="85%"/>
                 </div>
             </div>
         </div>
@@ -219,7 +227,7 @@ $(function(){
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/npm/vue/dist/vue.js"></script>
     <script src="js/axios.min.js"></script> 
     <script src="js/default.js"></script>
 </body>

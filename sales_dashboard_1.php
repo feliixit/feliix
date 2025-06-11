@@ -28,7 +28,7 @@ try {
     $access7 = false;
 
     // 針對 sales_dashboard.php 這個頁面，需要新加入兩位使用者有權限可以看到和存取 sales_dashboard 這個分頁，但新加入的這兩個人不能看到 "Sales Dashboard 1 這個分頁
-    if($username == "Ronnie Fernando Dela Cruz" || $username == "Gina Donato")
+    if($username == "Marie Kayla Patricia Dequina" || $username == "Gina Donato" || $username == "Aiza Eisma" || $username == "Stephanie De dios")
     {
         $access7 = true;
     }
@@ -54,7 +54,6 @@ try {
     if($access7 == true)
         header( 'location:index' );
 
-    
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -97,7 +96,7 @@ catch (Exception $e) {
     <link rel="stylesheet" type="text/css" href="css/ui.css"/>
     <link rel="stylesheet" type="text/css" href="css/case.css"/>
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"/>
 
     <!-- jQuery和js載入 -->
@@ -106,7 +105,7 @@ catch (Exception $e) {
     <script type="text/javascript" src="js/main.js" defer></script>
 
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="css/element-ui/theme-chalk/index.css">
 
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -565,13 +564,13 @@ catch (Exception $e) {
     </div>
 </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 <script defer src="js/a076d05399.js"></script>
 
 <script>
@@ -579,7 +578,7 @@ catch (Exception $e) {
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/sales_dashboard_1.js"></script>
 
 </html>

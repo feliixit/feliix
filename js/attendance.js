@@ -17,6 +17,35 @@ var app = new Vue({
     displayedRecord () {
       return this.receive_records;
     },
+
+    displayedRecordSales () {
+      return this.receive_records.filter(record => record.dept == 'Sales');
+    },
+
+    displayedRecordLighting () {
+      return this.receive_records.filter(record => record.dept == 'Lighting');
+    },
+
+    displayedRecordOffice () {
+      return this.receive_records.filter(record => record.dept == 'Office');
+    },
+
+    displayedRecordEngineering () {
+      return this.receive_records.filter(record => record.dept == 'Engineering');
+    },
+
+    displayedRecordDesign () {
+      return this.receive_records.filter(record => record.dept == 'Design');
+    },
+
+    displayedRecordAdmin () {
+      return this.receive_records.filter(record => record.dept == 'Admin');
+    },
+
+    displayedRecordOthers () {
+      // nort belong to any dept
+      return this.receive_records.filter(record => record.dept != 'Sales' && record.dept != 'Lighting' && record.dept != 'Office' && record.dept != 'Engineering' && record.dept != 'Design' && record.dept != 'Admin');
+    }
   },
 
   mounted(){

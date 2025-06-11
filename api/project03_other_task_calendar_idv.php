@@ -400,10 +400,10 @@ function GetTitleLevel($title)
     //     case "CHIEF ADVISOR":
     //         $level = 5;
     //         break;
-    //     case "LIGHTING MANAGER":
+    //     case "LIGHTING VALUE CREATION DIRECTOR":
     //         $level = 4;
     //         break;
-    //     case "OFFICE SYSTEMS MANAGER":
+    //     case "OFFICE SPACE VALUE CREATION DIRECTOR":
     //         $level = 4;
     //         break;
     //     case "OPERATIONS MANAGER":
@@ -412,10 +412,10 @@ function GetTitleLevel($title)
     //     case "BRAND MANAGER":
     //         $level = 4;
     //         break;
-    //     case "ASSISTANT LIGHTING MANAGER":
+    //     case "ASSISTANT LIGHTING VALUE CREATION DIRECTOR":
     //         $level = 3;
     //         break;
-    //     case "ASSISTANT OFFICE SYSTEMS MANAGER":
+    //     case "ASSISTANT OFFICE SPACE VALUE CREATION DIRECTOR":
     //         $level = 3;
     //         break;
     //     case "ASSISTANT OPERATIONS MANAGER":
@@ -424,19 +424,19 @@ function GetTitleLevel($title)
     //     case "ASSISTANT BRAND MANAGER":
     //         $level = 3;
     //         break;
-    //     case "SR. LIGHTING DESIGNER":
+    //     case "SENIOR LIGHTING VALUE CREATION SUPERVISOR":
     //         $level = 2;
     //         break;
-    //     case "SR. OFFICE SYSTEMS DESIGNER":
+    //     case "SENIOR OFFICE SPACE VALUE CREATION SUPERVISOR":
     //         $level = 2;
     //         break;
     //     case "JR. ACCOUNT EXECUTIVE":
     //         $level = 1;
     //         break;
-    //     case "ACCOUNT EXECUTIVE":
+    //     case "CUSTOMER VALUE SUPERVISOR":
     //         $level = 1;
     //         break;
-    //     case "SR. ACCOUNT EXECUTIVE":
+    //     case "SENIOR CUSTOMER VALUE SUPERVISOR":
     //         $level = 1;
     //         break;
     // }

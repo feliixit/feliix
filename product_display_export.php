@@ -1,3 +1,4 @@
+<?php include 'check.php';?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,9 +34,9 @@
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+          href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="css/bootstrap-select.min.css">
 
@@ -47,7 +48,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script src="js/bootstrap-select.js"></script>
 
@@ -509,6 +510,19 @@
                                 </option>
                             </select>
                         </li>
+                        <li v-if="it.variation4_value[0] !== '' && it.variation4_value[0] !== undefined">
+                            {{ it.variation4 !== 'custom' ? it.variation4 + ': ' : it.variation4_custom + ': ' }}
+                            <template v-for="(item, index) in it.variation4_value">{{ (index + 1 !== it.variation4_value.length) ?
+                                item + ', ' : item}}
+                            </template>
+                        </li>
+                        <li v-show="it.variation4_value[0] !== '' && it.variation4_value[0] !== undefined">
+                            <select class="form-control" v-model="it.v4" @change="change_v(it)">
+                                <option value=""></option>
+                                <option v-for="(item, index) in it.variation4_value" :value="item" :key="item">{{item}}
+                                </option>
+                            </select>
+                        </li>
 
                         <template v-for="(item, index) in it.accessory_infomation" v-if="it.show_accessory">
                             <li>{{ item.category }}</li>
@@ -617,13 +631,13 @@
 </body>
 
 
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 
 <!-- Awesome Font for current webpage -->
 <script src="js/a076d05399.js"></script>
@@ -633,7 +647,7 @@
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 
 <script src="js/product_display_export.js"></script>
 

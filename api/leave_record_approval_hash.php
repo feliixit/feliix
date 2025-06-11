@@ -291,11 +291,11 @@ if($action == 'reject')
 <html>
  <head>
   <title>PHP Test</title>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="js/jquery/1.11.1/jquery-1.11.1.min.js"></script>
  
-<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script src="js/jquery/1.11.1/jquery-ui.min.js"></script>
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="css/jquery-ui/jquery-ui.css" />
 
  </head>
  <body>

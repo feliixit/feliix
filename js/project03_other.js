@@ -36,7 +36,7 @@ var app = new Vue({
     ],
     perPage: 5,
 
-    baseURL: 'https://storage.cloud.google.com/feliiximg/',
+    baseURL: 'https://storage.googleapis.com/feliiximg/',
 
 
     // TASKS
@@ -145,6 +145,7 @@ var app = new Vue({
 
     related_orders: [],
     related_inquirys: [],
+
   },
 
   created() {
@@ -1628,6 +1629,9 @@ var app = new Vue({
 
       this.$refs['task_reply_msg_' + item_id][0].value = "";
 
+      var cnt = this.$refs['task_reply_msg_cnt_' + item_id][0];
+      cnt.innerHTML = "0";
+
       document.getElementById('task_reply_btn_' + item_id).classList.remove("focus");
       document.getElementById('task_reply_dlg_' + item_id).classList.remove("show");
     },
@@ -1635,6 +1639,9 @@ var app = new Vue({
     msg_clear_r(item_id) {
 
       this.$refs['task_reply_msg_r_' + item_id][0].value = "";
+
+      var cnt = this.$refs['task_reply_msg_r_cnt_' + item_id][0];
+      cnt.innerHTML = "0";
 
       document.getElementById('task_reply_btn_r_' + item_id).classList.remove("focus");
       document.getElementById('task_reply_dlg_r_' + item_id).classList.remove("show");
@@ -1782,6 +1789,7 @@ var app = new Vue({
       this.arrTask[task_id] = [];
       Vue.set(this.arrTask, 0, '');
       this.$refs['comment_task_' + task_id][0].value = "";
+      this.clear_message(task_id);
     },
 
     comment_clear_r(task_id) {
@@ -1789,6 +1797,7 @@ var app = new Vue({
       this.arrTask_r[task_id] = [];
       Vue.set(this.arrTask_r, 0, '');
       this.$refs['comment_task_r_' + task_id][0].value = "";
+      this.clear_message_r(task_id);
     },
 
     task_create_o() {
@@ -2163,6 +2172,46 @@ var app = new Vue({
           //handle error
           console.log(response)
         }).finally(function () { _this.task_edit_clear_o() });
+    },
+
+    count_message(task_id) {
+      var comment = this.$refs['comment_task_' + task_id][0];
+
+      var cnt = this.$refs['comment_task_cnt' + task_id][0];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+    },
+
+    clear_message(task_id) {
+      var cnt = this.$refs['comment_task_cnt' + task_id][0];
+      cnt.innerHTML = "0";
+    },
+
+    count_message_r(task_id) {
+      var comment = this.$refs['comment_task_r_' + task_id][0];
+
+      var cnt = this.$refs['comment_task_r_cnt' + task_id][0];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+    },
+
+    clear_message_r(task_id) {
+      var comment = this.$refs['comment_task_r_' + task_id][0];
+
+      var cnt = this.$refs['comment_task_r_cnt' + task_id][0];
+      cnt.innerHTML = "0";
+    },
+
+    count_reply(message_id, ref_id) {
+      var comment = this.$refs['task_reply_msg_' + message_id + '_' + ref_id][0];
+
+      var cnt = this.$refs['task_reply_msg_cnt_' + message_id + '_' + ref_id][0];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
+    },
+
+    count_reply_r(message_id, ref_id) {
+      var comment = this.$refs['task_reply_msg_r_' + message_id + '_' + ref_id][0];
+
+      var cnt = this.$refs['task_reply_msg_r_cnt_' + message_id + '_' + ref_id][0];
+      cnt.innerHTML = comment.value.replace(/[^\x00-\xff]/g,"xx").length;
     },
 
     task_edit_create_i() {
@@ -2893,15 +2942,15 @@ var app = new Vue({
 
           }
 
-          if (_this.arrTask[task_id].length == 0) {
-            _this.getProjectOtherTask(_this.stage_id);
-            _this.comment_clear(task_id);
-          }
+          // if (_this.arrTask[task_id].length == 0) {
+          //   _this.getProjectOtherTask(_this.stage_id);
+          //   _this.comment_clear(task_id);
+          // }
         })
         .catch(function (response) {
           //handle error
           console.log(response)
-        }).finally(function () { _this.comment_clear(task_id) });
+        }).finally(function () { _this.getProjectOtherTask(_this.stage_id); _this.comment_clear(task_id) });
     },
 
     comment_upload(task_id, batch_id) {
@@ -2912,6 +2961,8 @@ var app = new Vue({
       var myArr = this.arrTask[task_id];
       var _this = this;
 
+      if(myArr != undefined)
+        {
       //循环文件数组挨个上传
       myArr.forEach((element, index) => {
         var config = {
@@ -2957,6 +3008,7 @@ var app = new Vue({
             console.log(err);
           });
       });
+      }
 
       this.taskCanSub[task_id] = true;
 
@@ -3009,15 +3061,15 @@ var app = new Vue({
 
           }
 
-          if (_this.arrTask_r[task_id].length == 0) {
-            _this.getProjectOtherTask_r(_this.stage_id);
-            _this.comment_clear_r(task_id);
-          }
+          // if (_this.arrTask_r[task_id].length == 0) {
+          //   _this.getProjectOtherTask_r(_this.stage_id);
+          //   _this.comment_clear_r(task_id);
+          // }
         })
         .catch(function (response) {
           //handle error
           console.log(response)
-        }).finally(function () { _this.comment_clear_r(task_id) });
+        }).finally(function () { _this.getProjectOtherTask_r(_this.stage_id); _this.comment_clear_r(task_id) });
     },
 
     comment_upload_r(task_id, batch_id) {
@@ -3348,7 +3400,7 @@ var app1 = new Vue({
     ],
     perPage: 5,
 
-    baseURL: 'https://storage.cloud.google.com/feliiximg/',
+    baseURL: 'https://storage.googleapis.com/feliiximg/',
 
 
     // calendar

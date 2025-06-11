@@ -12,7 +12,7 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     proof_remark: "",
     reject_reason: "",
@@ -339,7 +339,19 @@ var app = new Vue({
         });
     },
 
-    detail: function() {
+    get_lastest_record_status : async function(id) {
+      // get api/expense_status
+      let status = await axios.get("api/expense_status", {
+        params: {
+          id: id
+        }
+      });
+
+      return status.data;
+    },
+
+
+    detail: async function() {
       let _this = this;
 
       //let favorite = [];
@@ -365,13 +377,41 @@ var app = new Vue({
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 3 && status != 4 && status != -3)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Review". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
       
       this.reject_reason = "";
       this.view_detail = true;
     },
 
-    approve_op: function() {
+    approve_op: async function() {
       let _this = this;
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 3 && status != 4 && status != -3)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Review". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
 
       if (this.proof_id < 1) {
         Swal.fire({
@@ -403,7 +443,7 @@ var app = new Vue({
       });
     },
 
-    approve_md: function() {
+    approve_md: async function() {
       let _this = this;
 
       if (this.proof_id < 1) {
@@ -416,6 +456,20 @@ var app = new Vue({
         //$(window).scrollTop(0);
         return;
       }
+
+      var status = await this.get_lastest_record_status(this.proof_id);
+
+      if(status != 3 && status != 4 && status != -3)
+        {
+          await Swal.fire({
+            text: 'The status of the chosen expense application has changed and was not "For Review". System will refresh the content of the table.',
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          this.getLeaveCredit();
+          return;
+        }
 
       Swal.fire({
         title: "Are you sure to proceed this action?",

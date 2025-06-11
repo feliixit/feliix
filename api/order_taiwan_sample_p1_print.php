@@ -65,11 +65,13 @@ if($jwt){
             listing,
             qty,
             backup_qty,
+            unit,
             srp,
             date_needed,
             shipping_way,
             shipping_number,
             eta,
+            date_send,
             arrive,
             remark,
             remark_t,
@@ -80,6 +82,8 @@ if($jwt){
             test,
             delivery,
             final,
+            which_pool,
+            as_sample,
             `status`,
             pid
             FROM od_item
@@ -113,11 +117,13 @@ if($jwt){
         $listing = $row['listing'];
         $qty = $row['qty'];
         $backup_qty = $row['backup_qty'];
+        $unit = $row['unit'];
         $srp = $row['srp'];
         $date_needed = $row['date_needed'];
         $shipping_way = $row['shipping_way'];
         $shipping_number = $row['shipping_number'];
         $eta = $row['eta'];
+        $date_send = $row['date_send'];
         $arrive = $row['arrive'];
         $remark = $row['remark'];
         $remark_t = $row['remark_t'];
@@ -128,6 +134,9 @@ if($jwt){
         $test = $row['test'];
         $delivery = $row['delivery'];
         $final = $row['final'];
+
+        $which_pool = $row['which_pool'];
+        $as_sample = $row['as_sample'];
 
         $status = $row['status'];
 
@@ -151,11 +160,13 @@ if($jwt){
         "listing" => $listing,
         "qty" => $qty,
         "backup_qty" => $backup_qty,
+        "unit" => $unit,
         "srp" => $srp,
         "date_needed" => $date_needed,
         "shipping_way" => $shipping_way,
         "shipping_number" => $shipping_number,
         "eta" => $eta,
+        "date_send" => $date_send,
         "arrive" => $arrive,
         "remark" => $remark,
         "remark_t" => $remark_t,
@@ -166,6 +177,8 @@ if($jwt){
         "test" => $test,
         "delivery" => $delivery,
         "final" => $final,
+        "which_pool" => $which_pool,
+        "as_sample" => $as_sample,
         "status" => $status,
         "confirm_text" => $confirm_text,
         "pid" => $pid
@@ -230,12 +243,14 @@ if($jwt){
             $sheet->setCellValue('K1', 'Backup Qty');
            // $sheet->setCellValue('L1', 'Amount');
             $sheet->setCellValue('L1', 'Date Needed');
-            $sheet->setCellValue('M1', 'Shipping Way');
-            $sheet->setCellValue('N1', 'ETA');
-            $sheet->setCellValue('O1', 'Arrival Date');
-            $sheet->setCellValue('P1', 'Warehouse In Charge');
-            $sheet->setCellValue('Q1', 'Testing');
-            $sheet->setCellValue('R1', 'Delivery');
+            $sheet->setCellValue('N1', 'Inventory Remarks');
+            $sheet->setCellValue('N1', 'Shipping Way');
+            $sheet->setCellValue('O1', 'Date Send');
+            $sheet->setCellValue('P1', 'ETA');
+            $sheet->setCellValue('Q1', 'Arrival Date');
+            $sheet->setCellValue('R1', 'Warehouse In Charge');
+            $sheet->setCellValue('S1', 'Testing');
+            $sheet->setCellValue('T1', 'Delivery');
 
 
             $sheet->getColumnDimension('A')->setWidth(4.82);
@@ -252,12 +267,14 @@ if($jwt){
             $sheet->getColumnDimension('K')->setWidth(15.82);
           //  $sheet->getColumnDimension('L')->setWidth(15.82);
             $sheet->getColumnDimension('L')->setWidth(20.82);
-            $sheet->getColumnDimension('M')->setWidth(22.82);
-            $sheet->getColumnDimension('N')->setWidth(13.82);
+            $sheet->getColumnDimension('M')->setWidth(20.82);
+            $sheet->getColumnDimension('N')->setWidth(22.82);
             $sheet->getColumnDimension('O')->setWidth(13.82);
-            $sheet->getColumnDimension('P')->setWidth(30.82);
-            $sheet->getColumnDimension('Q')->setWidth(30.82);
+            $sheet->getColumnDimension('P')->setWidth(13.82);
+            $sheet->getColumnDimension('Q')->setWidth(13.82);
             $sheet->getColumnDimension('R')->setWidth(30.82);
+            $sheet->getColumnDimension('S')->setWidth(30.82);
+            $sheet->getColumnDimension('T')->setWidth(30.82);
 
 
             $i = 2;
@@ -345,10 +362,10 @@ if($jwt){
                 $sheet->setCellValue('I'. $i, "ID: ". ($row['pid'] == 0 ? "" : $row['pid']) . "\n" . $row['code'] . "\n" . $row['brief'] . "\n" . $row['listing']);
                 $sheet->getStyle('I'. $i)->getAlignment()->setWrapText(true);
 
-                $sheet->setCellValue('J' . $i, $row['qty']);
+                $sheet->setCellValue('J' . $i, $row['qty'] . " " . $row['unit']);
                 $sheet->getStyle('J'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('K' . $i, $row['backup_qty']);
+                $sheet->setCellValue('K' . $i, $row['backup_qty'] . " " . $row['unit']);
                 $sheet->getStyle('K'. $i)->applyFromArray($center_style);
 
                 // $sheet->setCellValue('L' . $i, ($row['srp'] != '' ? "₱ " . $row['srp'] : ''));
@@ -357,28 +374,35 @@ if($jwt){
                 $sheet->setCellValue('L' . $i,  $row['date_needed']);
                 $sheet->getStyle('L'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('M' . $i,  $row['shipping_way'] . "\n" . $row['shipping_number']);
+                $sheet->setCellValue('M' . $i,  "Which Pool: " . $row['which_pool'] . "\n" . "As Sample: " . $row['as_sample']);
                 $sheet->getStyle('M'. $i)->applyFromArray($center_style);
+                $sheet->getStyle('M'. $i)->getAlignment()->setWrapText(true);
 
-                $sheet->setCellValue('N' . $i,  $row['eta']);
+                $sheet->setCellValue('N' . $i,  $row['shipping_way'] . "\n" . $row['shipping_number']);
                 $sheet->getStyle('N'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('O' . $i,  $row['arrive']);
+                $sheet->setCellValue('O' . $i,  $row['date_send']);
                 $sheet->getStyle('O'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('P'. $i, "Confirm Arrival: " . ($row['charge'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark'] );
-                $sheet->getStyle('P'. $i)->getAlignment()->setWrapText(true);
+                $sheet->setCellValue('P' . $i,  $row['eta']);
                 $sheet->getStyle('P'. $i)->applyFromArray($center_style);
 
-                //$sheet->setCellValue('R'. $i, "Assignee: " . $row['test'] . "\n" . "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
-                $sheet->setCellValue('Q'. $i, "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
-                $sheet->getStyle('Q'. $i)->getAlignment()->setWrapText(true);
+                $sheet->setCellValue('Q' . $i,  $row['arrive']);
                 $sheet->getStyle('Q'. $i)->applyFromArray($center_style);
 
-                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                $sheet->setCellValue('R'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->setCellValue('R'. $i, "Confirm Arrival: " . ($row['charge'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark'] );
                 $sheet->getStyle('R'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('R'. $i)->applyFromArray($center_style);
+
+                //$sheet->setCellValue('R'. $i, "Assignee: " . $row['test'] . "\n" . "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
+                $sheet->setCellValue('S'. $i, "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
+                $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
+                $sheet->getStyle('S'. $i)->applyFromArray($center_style);
+
+                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->setCellValue('T'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->getStyle('T'. $i)->getAlignment()->setWrapText(true);
+                $sheet->getStyle('T'. $i)->applyFromArray($center_style);
 
 
 
@@ -441,6 +465,9 @@ function GetConfirmText($loc)
             break;
         case "N":
             $location = "Not Yet Confirmed";
+            break;
+        case "J":
+            $location = "From Warehouse";
             break;
         case "D":
             $location = "Deleted";

@@ -1,7 +1,7 @@
 <?php
 ob_start();
-error_reporting(E_ALL);
-
+//error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include_once 'api/config/database.php';
 include_once 'api/config/conf.php';
 
@@ -20,6 +20,10 @@ try {
     $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
     // decode jwt
     $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+    
+if($decoded->data->limited_access == true)
+header( 'location:index' );
 
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
@@ -202,22 +206,22 @@ if($content_type == '2' && $status == '2')
 
     $table2->addRow();
     $table2->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
-    $table2->addCell(8500, ['borderSize' => 6])->addText($check_dateString);
+    $table2->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($check_dateString));
 
     $table2->addRow();
     $table2->addCell(2000, ['borderSize' => 6])->addText("Time:", array('bold' => true));
     $TextRun = $table2->addCell(8500, ['borderSize' => 6])->addTextRun();
-    $TextRun->addText($check_tout);
+    $TextRun->addText(htmlspecialchars($check_tout));
     $TextRun->addText(" to ");
-    $TextRun->addText($check_tin);
+    $TextRun->addText(htmlspecialchars($check_tin));
 
     $table2->addRow();
     $table2->addCell(2000, ['borderSize' => 6])->addText("Assigned Car:", array('bold' => true));
-    $table2->addCell(8500, ['borderSize' => 6])->addText($check_car_use);
+    $table2->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($check_car_use));
     
     $table2->addRow();
     $table2->addCell(2000, ['borderSize' => 6])->addText("Assigned Driver:", array('bold' => true));
-    $table2->addCell(8500, ['borderSize' => 6])->addText($check_driver);
+    $table2->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($check_driver));
 
     $section->addText("");
     $section->addText("");
@@ -253,27 +257,27 @@ if($content_type == '2' && $status == '2')
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Project:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($title);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($title));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($start_time);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($start_time));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Related Project:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($related_project);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($related_project));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Sales Executive:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($sales_executive);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($sales_executive));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Project_in_charge:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($project_in_charge);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($project_in_charge));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Relevant Persons:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($project_relevant));
 
 // CONCAT installer_needed and installer_needed_other and remove duplicate
 //$installer_needed_other = str_replace(" ", "", $installer_needed_other);
@@ -288,20 +292,20 @@ $merged_installer = trim(implode(", ", $installer_needed_array), ", ");
 $merged_installer = str_replace("  ", " ", $merged_installer);
 
 $table->addRow();
-$table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($merged_installer);
+$table->addCell(2000, ['borderSize' => 6])->addText("Technician needed:", array('bold' => true));
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($merged_installer));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Things to Bring:", array('bold' => true));
 if($things_to_bring_location != "")
 {
     $cell = $table->addCell(8500, ['borderSize' => 6]);
-    addMultiLineText($cell, "From " . $things_to_bring_location . "\n" . $things_to_bring);
+    addMultiLineText($cell, "From " . htmlspecialchars($things_to_bring_location . "\n" . $things_to_bring));
 }
 else
 {
     $cell = $table->addCell(8500, ['borderSize' => 6]);
-    addMultiLineText($cell, $things_to_bring);
+    addMultiLineText($cell, htmlspecialchars($things_to_bring));
 }
 
 $table->addRow();
@@ -309,29 +313,29 @@ $table->addCell(2000, ['borderSize' => 6])->addText("Products to Bring:", array(
 if($installer_needed_location != "")
 {
     $cell = $table->addCell(8500, ['borderSize' => 6]);
-    addMultiLineText($cell, "From " . $installer_needed_location . "\n" . $products_to_bring);
+    addMultiLineText($cell, htmlspecialchars("From " . $installer_needed_location . "\n" . $products_to_bring));
 }
 else
 {
     $cell = $table->addCell(8500, ['borderSize' => 6]);
-    addMultiLineText($cell, $products_to_bring);
+    addMultiLineText($cell, htmlspecialchars($products_to_bring));
 }
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Service:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($service);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars($service));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Driver:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText(getDriver($driver) . ' ' . $driver_other);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars(getDriver($driver) . ' ' . $driver_other));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Back-up Driver:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText(getDriver($back_up_driver) . ' ' . $back_up_driver_other);
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars(getDriver($back_up_driver) . ' ' . $back_up_driver_other));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Photoshoot Request:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText(getRequest($photoshoot_request));
+$table->addCell(8500, ['borderSize' => 6])->addText(htmlspecialchars(getRequest($photoshoot_request)));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Note/s:", array('bold' => true));
@@ -370,10 +374,10 @@ foreach ($details as &$value)
     $end_time = $value['end_time'];
 
     $table1->addRow();
-    $table1->addCell(2600, ['borderSize' => 6])->addText($location, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText(htmlspecialchars($location), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText(htmlspecialchars($agenda), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText(htmlspecialchars($appoint_time), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText(htmlspecialchars($end_time), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 }
 
@@ -385,7 +389,7 @@ $fontStyle->setSize(13);
 // $myTextElement = $section->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
 //$myTextElement->setFontStyle($fontStyle);
 
-ob_end_clean();
+// ob_end_clean();
 // Saving the document as OOXML file...
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007', $download = true);
 
@@ -438,18 +442,22 @@ if(trim($products_to_bring_files) != "")
 
     $zip->close();
 
+    ob_clean();
+
     header('Content-Type: application/zip');
     header("Content-Disposition: attachment; filename='schedule.zip'");
     header('Content-Length: ' . filesize($zipname));
     header("Content-Transfer-Encoding: Binary");
-    while (ob_get_level()) {
-        ob_end_clean();
-      }
+    //while (ob_get_level()) {
+    //    ob_end_clean();
+    //  }
     readfile($zipname);
     exit;
 }
 else
 {
+    ob_clean();
+    
     header("Content-Disposition: attachment; filename=schedule.docx");
 
     header('Cache-Control: max-age=0');
@@ -520,7 +528,7 @@ else
 
         // add text line together
         foreach ($strArr as $v) {
-            $cell->addText($v);
+            $cell->addText(htmlspecialchars($v));
         }
        
     }

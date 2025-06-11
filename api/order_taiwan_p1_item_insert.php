@@ -97,14 +97,20 @@ switch ($method) {
                     `listing` = :listing,
                     `qty` = :qty,
                     `backup_qty` = :backup_qty,
+                    `unit` = :unit,
                     `srp` = :srp,
                     `date_needed` = :date_needed,
                     `pid` = :pid,
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
+                    `v4` = :v4,
+                    `ps_var` = :ps_var,
                     `btn2` = :btn2,
+                    `which_pool` = :which_pool,
+                    `as_sample` = :as_sample,
                     `status` = :status,
+                    `status_at` = now(),
                     `create_id` = :create_id,
                     `created_at` = now()";
 
@@ -127,6 +133,7 @@ switch ($method) {
 
                 $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : '';
                 $backup_qty = isset($block_array[$i]['backup_qty']) ? $block_array[$i]['backup_qty'] : '';
+                $unit = isset($block_array[$i]['unit']) ? $block_array[$i]['unit'] : '';
                 $srp = isset($block_array[$i]['srp']) ? $block_array[$i]['srp'] : '';
                 $date_needed = isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
                 $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : '';
@@ -134,8 +141,14 @@ switch ($method) {
                 $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
                 $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
                 $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+                $v4 = isset($block_array[$i]['v4']) ? $block_array[$i]['v4'] : ''; 
+
+                $ps_var = isset($block_array[$i]['ps_var']) ? $block_array[$i]['ps_var'] : [];
+                $json_ps_var = json_encode($ps_var);
 
                 $btn2 = isset($block_array[$i]['btn2']) ? $block_array[$i]['btn2'] : '';
+                $which_pool = isset($block_array[$i]['which_pool']) ? $block_array[$i]['which_pool'] : '';
+                $as_sample = isset($block_array[$i]['as_sample']) ? $block_array[$i]['as_sample'] : '';
 
                 $status = isset($block_array[$i]['status']) ? $block_array[$i]['status'] : 0;
                 $status = $status == '' ? 0 : $status;
@@ -155,6 +168,7 @@ switch ($method) {
                 $stmt->bindParam(':listing', $listing);
                 $stmt->bindParam(':qty', $qty);
                 $stmt->bindParam(':backup_qty', $backup_qty);
+                $stmt->bindParam(':unit', $unit);
                 $stmt->bindParam(':srp', $srp);
                 $stmt->bindParam(':date_needed', $date_needed);
                 $stmt->bindParam(':pid', $pid);
@@ -162,8 +176,13 @@ switch ($method) {
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+                $stmt->bindParam(':v4', $v4);
+
+                $stmt->bindParam(':ps_var', $json_ps_var);
 
                 $stmt->bindParam(':btn2', $btn2);
+                $stmt->bindParam(':which_pool', $which_pool);
+                $stmt->bindParam(':as_sample', $as_sample);
 
                 $stmt->bindParam(':status', $status);
               

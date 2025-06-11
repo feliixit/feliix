@@ -1,4 +1,55 @@
-<?php include 'check.php';?>
+<?php
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ($jwt === NULL || $jwt === '') {
+    setcookie("userurl", $_SERVER['REQUEST_URI']);
+    header( 'location:../index' );
+}
+
+include_once '../api/config/core.php';
+include_once '../api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once '../api/libs/php-jwt-master/src/ExpiredException.php';
+include_once '../api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once '../api/libs/php-jwt-master/src/JWT.php';
+include_once '../api/config/database.php';
+
+use \Firebase\JWT\JWT;
+
+try {
+    // decode jwt
+    $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+    $user_id = $decoded->data->id;
+    $username = $decoded->data->username;
+
+    $position = $decoded->data->position;
+    $department = $decoded->data->department;
+
+    if($decoded->data->limited_access == true)
+    header( 'location:../index' );
+
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $for_user = false;
+
+    $query = "SELECT * FROM access_control WHERE `for_user` LIKE '%" . $username . "%' ";
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $for_user = true;
+    }
+
+    if ($for_user == false)
+        header( 'location:../index' );
+}
+// if decode fails, it means jwt is invalid
+catch (Exception $e) {
+
+    header( 'location:../index' );
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,7 +118,6 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A focus">User</a>
-            <a class="tag F" href="user_profile">User Profile</a>
             <a class="tag B" href="department">Department</a>
             <a class="tag C" href="position">Position</a>
             <a class="tag D" href="leave_flow">Leave Flow</a>
@@ -346,8 +396,8 @@ $(function(){
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="../js/npm/vue/dist/vue.js"></script> 
 <script defer src="../js/axios.min.js"></script> 
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="../js/npm/sweetalert2@9.js"></script>
 <script defer src="../js/admin/user.js"></script>
 </html>

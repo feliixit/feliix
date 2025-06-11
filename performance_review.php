@@ -28,6 +28,9 @@ try {
             $position = $decoded->data->position;
             $department = $decoded->data->department;
             
+if($decoded->data->limited_access == true)
+header( 'location:index' );
+            
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $test_manager = $decoded->data->test_manager;
             
@@ -36,8 +39,8 @@ try {
             // QOUTE AND PAYMENT Management
             if(trim(strtoupper($department)) == 'SALES')
             {
-                if(trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
-                || trim(strtoupper($position)) == 'SALES MANAGER')
+                if(trim(strtoupper($position)) == 'ASSISTANT CUSTOMER VALUE DIRECTOR'
+                || trim(strtoupper($position)) == 'CUSTOMER VALUE DIRECTOR')
                 {
                     $access6 = true;
                 }
@@ -45,12 +48,12 @@ try {
 
             if(trim(strtoupper($department)) == 'LIGHTING')
             {
-                if(trim(strtoupper($position)) == 'LIGHTING MANAGER')
+                if(trim(strtoupper($position)) == 'LIGHTING VALUE CREATION DIRECTOR')
                 {
                     $access6 = true;
                 }
 
-                if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER')
+                if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING VALUE CREATION DIRECTOR')
                 {
                     $access6 = true;
                 }
@@ -58,7 +61,7 @@ try {
 
             if(trim(strtoupper($department)) == 'OFFICE')
             {
-                if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+                if(trim(strtoupper($position)) == 'OFFICE SPACE VALUE CREATION DIRECTOR')
                 {
                     $access6 = true;
                 }
@@ -162,7 +165,7 @@ try {
     <script src="js/moment.js"></script>
 
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="css/element-ui/theme-chalk/index.css">
 
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -634,7 +637,7 @@ try {
                         <li>{{ record.status }}</li>
                         <li>{{ record.employee }}</li>
                         <li>{{ record.title }} ({{ record.department }})</li>
-                        <li v-if="record.period == 0">{{ record.review_month }} ~ {{ record.review_next_month }}</li>
+                        <li v-if="record.period == 0 || record.period == 3">{{ record.review_month }} ~ {{ record.review_next_month }}</li>
                         <li v-if="record.period == 1">{{ record.review_month }} </li>
                     </ul>
 
@@ -674,13 +677,17 @@ try {
                                     <select style="margin-bottom: 10px;" v-model="month_type">
                                         <option value="0"></option>
                                         <option value="1">1 Month</option>
-                                        <option value="2">2 Months</option>
+                                        <!-- <option value="2">2 Months</option> -->
+                                        <option value="3">3 Months</option>
                                     </select>
 
                                     <input type="month" min="2021-04" step="1" v-if="month_type == 1" v-model="review_month_1" style="width: 49%; margin-right: 1.5%;">
                             
                                     <input type="month" min="2021-04" step="2" v-if="month_type == 2" v-model="review_month" style="width: 49%; margin-right: 1.5%;">
                                     <input type="month" readonly="readonly" v-if="month_type == 2" v-model="review_next_month" style="width: 49%;">
+
+                                    <input type="month" min="2024-06" step="3" v-if="month_type == 3" v-model="review_month" style="width: 49%; margin-right: 1.5%;">
+                                    <input type="month" readonly="readonly" v-if="month_type == 3" v-model="review_next_month3" style="width: 49%;">
                                 </li>
 
                                 <li><b>Version of Template</b></li>
@@ -733,8 +740,8 @@ try {
                                 <li class="content">{{ evals.manager }}</li>
 
                                 <li><b>Review Period:</b></li>
-                                <li class="content" v-if="evals.period == '0'">{{ evals.review_month }} ~ {{ evals.review_next_month }}</li>
-                                <li class="content" v-if="evals.period == '1'">{{ evals.review_month }}</li>
+                                <li class="content" v-if="evals.period == 0 || evals.period == 3 ">{{ evals.review_month }} ~ {{ evals.review_next_month }}</li>
+                                <li class="content" v-if="evals.period == 1">{{ evals.review_month }}</li>
 
                                 <li><b>Version of Template:</b></li>
                                 <li class="content">{{ evals.version }}</li>
@@ -1014,7 +1021,7 @@ try {
                                 <li class="content">{{ views.manager }}</li>
 
                                 <li><b>Review Period:</b></li>
-                                <li class="content" v-if="views.period == 0">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
+                                <li class="content" v-if="views.period == 0 || views.period == 3">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
                                 <li class="content" v-if="views.period == 1">{{ views.review_month }}</li>
 
                                 <li><b>Version of Template:</b></li>
@@ -1351,7 +1358,7 @@ try {
                                 <li class="content">{{ views.manager }}</li>
 
                                 <li><b>Review Period:</b></li>
-                                <li class="content" v-if="views.period == 0">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
+                                <li class="content" v-if="views.period == 0 || views.period == 3">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
                                 <li class="content" v-if="views.period == 1">{{ views.review_month }}</li>
 
                                 <li><b>Version of Template:</b></li>
@@ -1662,13 +1669,13 @@ try {
         </div>
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 
 <!-- Awesome Font for current webpage -->
 <script src="js/a076d05399.js"></script>
@@ -1678,6 +1685,6 @@ try {
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/performance_review.js"></script>
 </html>

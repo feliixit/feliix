@@ -25,6 +25,18 @@ try {
             $database = new Database();
             $db = $database->getConnection();
 
+            $product_edit = false;
+
+            $query = "SELECT * FROM access_control WHERE `product_edit` LIKE '%" . $username . "%' ";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $product_edit = true;
+            }
+
+            if ($product_edit == false)
+                header( 'location:index' );
+
             $tag_group = array();
 
             $query = "SELECT id,
@@ -127,9 +139,9 @@ try {
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+          href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
@@ -141,7 +153,7 @@ try {
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
@@ -303,6 +315,13 @@ try {
             display: inline-block;
         }
 
+        .one_fifth{
+            width: 20%;
+            display: inline-block;
+            margin-left: 40px;
+            min-width: 100px;
+        }
+
         .one_whole {
             width: 96%;
             display: inline-block;
@@ -409,6 +428,29 @@ try {
             font-size: 18px;
             font-weight: 400;
             cursor: pointer;
+        }
+
+        li.additional_file > input[type="file"] {
+            border-radius: 0.25rem;
+            color: #495057;
+        }
+
+        li.additional_file > .list_attch {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        li.additional_file > .list_attch > input[type=checkbox]+Label::before {
+            color: var(--green01);
+            margin-bottom: 4px;
+        }
+
+        li.additional_file > .list_attch a.attch {
+            color: #25a2b8;
+            transition: .3s;
+            margin: 0 0 0 5px;
+            font-weight: 500;
         }
 
         .additem {
@@ -678,6 +720,53 @@ try {
         .swal2-content .text-left > div > a, .swal2-content .text-left > div > a:visited {
             color: #000!important;
         }
+
+        .autocomplete {
+            /*the container must be positioned relative:*/
+            position: relative;
+            display: inline-block;
+        }
+        .autocomplete input {
+            border: 1px solid transparent;
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .autocomplete input[type=text] {
+            background-color: #f1f1f1;
+            width: 48%;
+        }
+        .autocomplete input[type=submit] {
+            background-color: DodgerBlue;
+            color: #fff;
+        }
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            width: 48%;
+            left: 0;
+            right: 0;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+        .autocomplete-items div:hover {
+            /*when hovering an item:*/
+            background-color: #e9e9e9;
+        }
+        .autocomplete-active {
+            /*when navigating through the items using the arrow keys:*/
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
     </style>
 
 </head>
@@ -721,10 +810,11 @@ try {
                         </option>
                     </select>
 
-                    <select v-if="category == '10000000'" class="form-control">
-                       
-                    </select>
-                </li>
+                        <select v-if="category == '10000000'" class="form-control" v-model="sub_category">
+                            <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
+                                {{ item.category }}</option>
+                        </select>
+                    </li>
 
                 <li v-if="edit_mode == false">
                     <button class="btn btn-primary" :disabled="sub_category == '' || category == ''"
@@ -738,7 +828,7 @@ try {
         </div>
 
 
-        <div class="region" v-if="edit_mode == true">
+        <div class="region" v-if="edit_mode == true && sub_category != '10020000'">
             <span class="heading">Basic Information</span>
 
             <ul>
@@ -761,8 +851,11 @@ try {
                         <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
                     </select>
 
-                    <select v-if="category == '10000000'" class="form-control one_third" :disabled="edit_mode == true">
-                    </select>
+                    <select v-if="category == '10000000'" class="form-control one_third" v-model="sub_category"
+                            :disabled="edit_mode == true">
+                            <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
+                                {{ item.category }}</option>
+                        </select>
                 </li>
             </ul>
 
@@ -806,6 +899,10 @@ try {
                 </li>
                 <li>
                     <input type="text" class="form-control one_half" v-model="brand">
+                    <select class="form-control one_third" style="margin-left: 10px;" v-model="brand_handler">
+                        <option value="">Handled by Taiwan Office</option>
+                        <option value="PH">Handled by Philippines Office</option>
+                    </select>
                 </li>
             </ul>
 
@@ -818,7 +915,7 @@ try {
                 </li>
             </ul>
 
-            <ul class="NTD_price" v-show="show_ntd === true">
+            <ul class="NTD_price" v-if="show_ntd === true">
                 <li>
                     Currency of Cost Price
                 </li>
@@ -826,11 +923,13 @@ try {
                     <select class="form-control one_half" v-model="currency">
                         <option value="NTD">NTD</option>
                         <option value="USD">USD</option>
+                        <option value="RMB">RMB</option>
+                        <option value="PHP">PHP</option>
                     </select>
                 </li>
             </ul>
 
-            <ul class="NTD_price" v-show="show_ntd === true">
+            <ul class="NTD_price" v-if="show_ntd === true">
                 <li>
                     Cost Price
                 </li>
@@ -944,10 +1043,176 @@ try {
                 </li>
             </ul>
 
+            <ul>
+                <li>
+                Replacement Product<br>(for phased-out or deleted product)
+                </li>
+                    <li><input type="text" class="selectpicker" data-role="tagsinput" id="replacement_product"></li>
+            </ul>
+
+            <ul v-if="category == '10000000'">
+                <li>
+                    IES File
+                </li>
+                <li class="additional_file">
+                    <input class="one_third" type="file" ref="file_ics" name="file_ics[]" multiple @change="check_ics($event)">
+
+                    <div class="list_attch" v-for="(item,index) in product_ics" :key="index">
+                        <input type="checkbox" :id="'file' + item.id" v-model="item.is_checked">
+                        <label :for="'file' + item.id"><a class="attch" :href="baseURL + item.gcp_name"
+                                            target="_blank">{{item.filename}}</a></label>
+                    </div>
+                </li>
+            </ul>
+
+            <ul v-if="category == '20000000'">
+                <li>
+                SketchUp File
+                </li>
+                <li class="additional_file">
+                    <input class="one_third" type="file" ref="file_skp" name="file_skp[]" multiple @change="check_skp($event)">
+
+                    <div class="list_attch" v-for="(item,index) in product_skp" :key="index">
+                        <input type="checkbox" :id="'file' + item.id" v-model="item.is_checked">
+                        <label :for="'file' + item.id"><a class="attch" :href="baseURL + item.gcp_name"
+                                            target="_blank">{{item.filename}}</a></label>
+                    </div>
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    Manual / Supporting File
+                </li>
+                <li class="additional_file">
+                    <input class="one_third" type="file" ref="file_manual" name="file_manual[]" multiple @change="check_manual($event)">
+
+                    <div class="list_attch" v-for="(item,index) in product_manual" :key="index">
+                        <input type="checkbox" :id="'file' + item.id" v-model="item.is_checked">
+                        <label :for="'file' + item.id"><a class="attch" :href="baseURL + item.gcp_name"
+                                            target="_blank">{{item.filename}}</a></label>
+                    </div>
+                </li>
+            </ul>
+
         </div>
 
 
-        <div class="region" v-if="edit_mode == true">
+        <!-- 因應 Lighitng 類別的 Product Set 子類別，所建立的 表單區塊 -->
+        <div class="region" v-show="edit_mode == true && sub_category == '10020000'">
+            <span class="heading">Basic Information</span>
+
+            <ul>
+                <li>ID</li>
+                <li><input type="text" v-model="id" class="form-control one_half" disabled></li>
+            </ul>
+
+            <ul>
+                <li>
+                    Category
+                </li>
+                <li>
+                    <select class="form-control one_third" v-model="category" :disabled="edit_mode == true">
+                        <option value="" selected>Select one value</option>
+                        <option value="10000000">Lighting</option>
+                        <option value="20000000">Systems Furniture</option>
+                    </select>
+
+                    <select v-if="category == '20000000'" class="form-control one_third" v-model="sub_category" :disabled="edit_mode == true">
+                        <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
+                    </select>
+
+                    <select v-if="category == '10000000'" class="form-control one_third" v-model="sub_category"
+                            :disabled="edit_mode == true">
+                            <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
+                                {{ item.category }}</option>
+                        </select>
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    Tag
+                </li>
+                <li>
+                <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected"
+        id="tag0102">
+
+        <?php
+            for ($x = 0; $x < count($tag_group); $x++) {
+                echo "<optgroup label='" . $tag_group[$x]["group"] . "'>";
+
+                for($j=0; $j < count($tag_group[$x]['items']); $j++) {
+                    echo "<option value='" . $tag_group[$x]['items'][$j]['item_name'] . "'>" . $tag_group[$x]['items'][$j]['item_name'] . "</option>";
+                }
+                echo "</optgroup>";
+            }
+        ?>
+<!--
+        <optgroup v-for="(group, index) in tag_group" :label="group.group">
+
+            <option v-for="(it, index2) in group.items" :value="it.item_name">{{ it.item_name }}</option>
+
+        </optgroup>
+        -->
+</select>
+                </li>
+                <!-- <li v-show="category == '20000000'">
+                    <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected">
+
+                    </select>
+                </li> -->
+            </ul>
+
+            <ul>
+                <li>
+                    Code
+                </li>
+                <li>
+                    <input type="text" class="form-control one_half" v-model="code">
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    Description
+                </li>
+                <li>
+                    <textarea class="form-control one_whole" rows="10" v-model="description">
+
+                    </textarea>
+                </li>
+            </ul>
+
+            <ul>
+                <li>Product 1</li>
+                <li class="autocomplete">
+                    <input type="text" class="form-control one_half" placeholder="Product Code" v-model="p1_code" id="product_1">
+                    <input type="number" class="form-control one_fifth" min="1" placeholder="Qty" v-model="p1_qty">
+                </li>
+            </ul>
+
+            <ul>
+                <li>Product 2</li>
+                <li class="autocomplete">
+                    <input type="text" class="form-control one_half" placeholder="Product Code" v-model="p2_code" id="product_2">
+                    <input type="number" class="form-control one_fifth" min="1" placeholder="Qty" v-model="p2_qty">
+                </li>
+            </ul>
+
+            <ul>
+                <li>Product 3</li>
+                <li class="autocomplete">
+                    <input type="text" class="form-control one_half" placeholder="Product Code" v-model="p3_code" id="product_3">
+                    <input type="number" class="form-control one_fifth" min="1" placeholder="Qty" v-model="p3_qty">
+                </li>
+            </ul>
+
+        </div>
+
+
+
+        <div class="region" v-if="edit_mode == true && sub_category != '10020000'">
             <span class="heading">Specification Information</span>
 
             <ul v-for="(item, index) in special_infomation">
@@ -990,7 +1255,7 @@ try {
                         <input type="text" class="form-control" placeholder="Code" v-model="detail.code">
                         <input type="text" class="form-control" placeholder="Name" v-model="detail.name">
                         <input class="NTD_price form-control" type="text" class="form-control"
-                               placeholder="Additional Price (NTD)" v-model="detail.price_ntd" v-show="show_ntd === true">
+                               placeholder="Additional Price (NTD)" v-model="detail.price_ntd" v-if="show_ntd === true">
                         <input type="text" class="form-control" placeholder="Additional Price" v-model="detail.price">
                         <div>
                             <span @click="clear_accessory_item(detail.cat_id, detail.id)">x</span>
@@ -1007,7 +1272,7 @@ try {
         </div>
 
 
-        <div class="toggle-switch" v-show="edit_mode == true">
+        <div class="toggle-switch" v-show="edit_mode == true && sub_category != '10020000'">
             <label for="variation_mode" class="description">Variation Mode</label>
             <input type="checkbox" data-toggle="toggle" data-width="100px" data-onstyle="primary"
                    data-offstyle="secondary" data-on="Yes" data-off="No" id="variation_mode" v-model="variation_mode"
@@ -1090,6 +1355,31 @@ try {
                 </li>
             </ul>
 
+            
+            <ul class="variation_list">
+                <li>
+                    <h6>4th Variation</h6>
+                    <select class="form-control" v-model="variation4" :disabled="variation1 == '' || variation2 == '' || variation3 == '' ">
+                        <option value="">Select a value</option>
+                        <option v-for="(item, index) in special_infomation" :value="item.category" :key="item.category">
+                            {{ item.category }}
+                        </option>
+
+                        <option value="custom">Custom</option>
+                    </select>
+
+                    <input type="text" class="form-control" :disabled="variation4 !== 'custom'"
+                           v-model="variation4_custom">
+                </li>
+
+                <li>
+                    <h6 style="text-align: center;">Options</h6>
+                    <input type="text" data-role="tagsinput" id="variation4_value"
+                           :disabled="variation1 == '' || variation2 == '' || variation3 == ''">
+                    <i class="fas fa-hand-pointer" @click="get_special_infomation_detail_variantion4()"></i>
+                </li>
+            </ul>
+
             <button class="btn btn-success" @click="generate_product_variants">Generate Product Variants</button>
         </div>
 
@@ -1115,8 +1405,9 @@ try {
                         <th>{{ variation1_text }}</th>
                         <th>{{ variation2_text }}</th>
                         <th>{{ variation3_text }}</th>
+                        <th>{{ variation4_text }}</th>
                      <!--   <th>Code</th> -->
-                        <th class="NTD_price" v-show="show_ntd === true">Cost Price</th>
+                        <th class="NTD_price" v-if="show_ntd === true">Cost Price</th>
                         <th>Suggested Retail Price</th>
                         <th>Quoted Price</th>
                         <th>Image</th>
@@ -1130,8 +1421,9 @@ try {
                         <td>{{ item.v1 }}</td>
                         <td>{{ item.v2 }}</td>
                         <td>{{ item.v3 }}</td>
+                        <td>{{ item.v4 }}</td>
                      <!--   <td><input type="text" class="form-control" v-model="item.code"></td> -->
-                        <td class="NTD_price" v-show="show_ntd === true">
+                        <td class="NTD_price" v-if="show_ntd === true">
                             <input type="number" class="form-control" v-model="item.price_ntd"  @change="product_price_ntd_changed(item.id)">
                             <input type="text" class="form-control updated_date" v-model="item.price_ntd_change">
                         </td>
@@ -1340,6 +1632,48 @@ try {
             </div>
         </div>
 
+        <div id="modal_quick_assign2_4" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+
+                <div class="custom-modal-header">
+                    <h5>Quickly Assign Attribute's Value</h5>
+                    <i class="fa fa-times fa-lg" aria-hidden="true"
+                       onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_4').toggle(); return false;})();return false;"></i>
+                </div>
+
+                <div>
+                    <table id="tb_quick_assign2" class="table_template">
+                        <thead>
+                        <tr>
+                            <th>Frequently Used Options</th>
+                            <th>Check</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr v-for="(item, index) in special_infomation_detail">
+                            <td>{{ item.option }}</td>
+                            <td><input class="alone" type="checkbox" name="apply_special_infomation_4"
+                                       :value="item.option"></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="btnbox">
+                        <button class="btn btn-secondary"
+                                onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_4').toggle(); return false;})();return false;">
+                            Cancel
+                        </button>
+                        <button class="btn btn-primary" @click="apply_special_infomation_detail_variantion4">Apply
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
 
         <div id="modal_bulk_apply" class="modal" style="display: none;">
             <!-- Modal content -->
@@ -1373,7 +1707,7 @@ try {
                             </td>
                         </tr>
 
-                        <tr class="NTD_price" v-show="show_ntd === true">
+                        <tr class="NTD_price" v-if="show_ntd === true">
                             <td><input class="alone" type="checkbox" value="1" v-model="price_ntd_checked"></td>
                             <td>Cost Price</td>
                             <td><input type="text" class="form-control" v-model='bulk_price_ntd'></td>
@@ -1386,7 +1720,7 @@ try {
                             </td>
                         </tr>
 
-                        <tr class="NTD_price" v-show="show_ntd === true">
+                        <tr class="NTD_price" v-if="show_ntd === true">
                             <td><input class="alone" type="checkbox" value="1" v-model="price_ntd_last_change_checked"></td>
                             <td>Last Updated</td>
                             <td><input type="date" class="form-control" v-model='bulk_price_ntd_last_change'></td>
@@ -1723,13 +2057,13 @@ try {
 
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 
 <!-- Awesome Font for current webpage -->
 <script src="js/a076d05399.js"></script>
@@ -1739,11 +2073,132 @@ try {
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 
 <script src="js/edit_product_code.js"></script>
 
 <script>
+var codes = [];
+
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", async function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+
+
+    let _arr = await axios.get('api/product_code_auto_complete', {
+            params: {
+                code: val
+            }
+        });
+
+
+    arr = _arr.data;
+      
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              if(inp.id == 'product_1') {
+                app.p1_code = inp.value;
+              } else if(inp.id == 'product_2') {
+                app.p2_code = inp.value;
+              } else if(inp.id == 'product_3') {
+                app.p3_code = inp.value;
+              }
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    
+    
+});
 
     $(function () {
         $('#accessory_mode').change(function () {

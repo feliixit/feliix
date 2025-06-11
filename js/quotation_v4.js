@@ -10,10 +10,10 @@ var app = new Vue({
       p_pid:0,
       p_brand:0,
 
-      //img_url: 'https://storage.cloud.google.com/feliiximg/',
+      //img_url: 'https://storage.googleapis.com/feliiximg/',
 
       img_url: 'https://storage.googleapis.com/feliiximg/',
-       
+
       // menu
       show_header: false,
       show_footer: false,
@@ -22,6 +22,7 @@ var app = new Vue({
       show_total: false,
       show_term: false,
       show_payment_term: false,
+      show_slogan: false,
       show_signature: false,
 
       // header
@@ -37,6 +38,7 @@ var app = new Vue({
 
       prepare_by_first_line : '',
       prepare_by_second_line : '',
+      prepare_by_third_line : '',
 
       // _header
       temp_first_line : '',
@@ -51,6 +53,7 @@ var app = new Vue({
 
       temp_prepare_by_first_line : '',
       temp_prepare_by_second_line : '',
+      temp_prepare_by_third_line : '',
 
       // footer
       footer_first_line : '',
@@ -132,6 +135,13 @@ var app = new Vue({
         item: [],
       },
 
+      slogan:
+      {
+        id:0,
+        page: 0,
+        border: '',
+      },
+
       payment_term:
       {
         page: 0,
@@ -203,18 +213,21 @@ var app = new Vue({
         variation1_value:[],
         variation2_value: [],
         variation3_value: [],
+        variation4_value: [],
     
         variation_product: [],
 
         v1:"",
         v2:"",
         v3:"",
+        v4:"",
 
         accessory_infomation: [],
 
         related_product: [],
         specification: [],
         description: "",
+        replacement_product: [],
 
         // vat for each product
         product_vat : '',
@@ -239,10 +252,14 @@ var app = new Vue({
         attributes:[],
 
         toggle_type:'',
+        toggle : false,
 
         groupedItems : [],
+        groupedItems_replacement : [],
 
         product_array: [],
+        led_array: [],
+
         qp:'',
         srp:'',
 
@@ -258,9 +275,34 @@ var app = new Vue({
         out_cnt : 0,
 
         is_load : false,
+
+        product_set : [],
+        show_accessory: false,
+
+        temp_pages_verify : [],
+
+        is_last_order : '',
+        last_order_name : '',
+        last_order_at : '',
+        last_order_url : '',
+
+
+        show_access : false,
+        quotation_control : false,
+
+        temp_can_view : '',
+        can_view : '',
+        temp_can_duplicate: '',
+        can_duplicate: '',
+        
+        is_pdf : false,
+        cost_lighting : false,
+        cost_furniture : false,
+
+        project_name : '',
     },
   
-    created() {
+    async created()  {
       let _this = this;
       let uri = window.location.href.split("?");
       if (uri.length >= 2) {
@@ -285,12 +327,14 @@ var app = new Vue({
         });
       }
       
-      this.getRecord();
       this.get_product_records();
       this.getUserName();
       this.get_brands();
       this.get_signature();
       this.getTagGroup();
+      this.getQuotationControl();
+      this.getProductControl();
+      await this.getRecord();
     },
   
     computed: {
@@ -314,7 +358,19 @@ var app = new Vue({
   
     watch: {
 
-      
+      show_access() {
+        if(this.show_access) {
+          this.show_header = false;
+          this.show_footer = false;
+          this.show_page = false;
+          this.show_subtotal = false;
+          this.show_total = false;
+          this.show_term = false;
+          this.show_payment_term = false;
+          this.show_slogan = false;
+          this.show_signature = false;
+        }
+      },
   
       show_header() {
         if(this.show_header) {
@@ -324,7 +380,9 @@ var app = new Vue({
           this.show_total = false;
           this.show_term = false;
           this.show_payment_term = false;
+          this.show_slogan = false;
           this.show_signature = false;
+          this.show_access = false;
         }
       },
 
@@ -336,7 +394,9 @@ var app = new Vue({
           this.show_total = false;
           this.show_term = false;
           this.show_payment_term = false;
+          this.show_slogan = false;
           this.show_signature = false;
+          this.show_access = false;
         }
       },
 
@@ -348,7 +408,9 @@ var app = new Vue({
           this.show_total = false;
           this.show_term = false;
           this.show_payment_term = false;
+          this.show_slogan = false;
           this.show_signature = false;
+          this.show_access = false;
         }
       },
 
@@ -359,7 +421,9 @@ var app = new Vue({
           this.show_header = false;
           this.show_total = false;
           this.show_term = false;
+          this.show_slogan = false;
           this.show_signature = false;
+          this.show_access = false;
         }
       },
 
@@ -371,7 +435,9 @@ var app = new Vue({
           this.show_header = false;
           this.show_term = false;
           this.show_payment_term = false;
+          this.show_slogan = false;
           this.show_signature = false;
+          this.show_access = false;
         }
       },
 
@@ -383,7 +449,9 @@ var app = new Vue({
           this.show_total = false;
           this.show_header = false;
           this.show_payment_term = false;
+          this.show_slogan = false;
           this.show_signature = false;
+          this.show_access = false;
         }
       },
 
@@ -395,7 +463,9 @@ var app = new Vue({
           this.show_total = false;
           this.show_header = false;
           this.show_term = false;
+          this.show_slogan = false;
           this.show_signature = false;
+          this.show_access = false;
         }
       },
 
@@ -407,8 +477,24 @@ var app = new Vue({
           this.show_total = false;
           this.show_term = false;
           this.show_payment_term = false;
+          this.show_slogan = false;
           this.show_header = false;
+          this.show_access = false;
         }
+      },
+
+        show_slogan() {
+          if(this.show_slogan) {
+            this.show_footer = false;
+            this.show_page = false;
+            this.show_subtotal = false;
+            this.show_total = false;
+            this.show_term = false;
+            this.show_payment_term = false;
+            this.show_header = false;
+            this.show_signature = false;
+            this.show_access = false;
+          }
       },
       
       department() {
@@ -421,6 +507,67 @@ var app = new Vue({
     },
   
     methods: {
+      getProductControl: function() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append('jwt', token);
+  
+        axios({
+            method: 'get',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/product_control',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            _this.cost_lighting = response.data.cost_lighting;
+            _this.cost_furniture = response.data.cost_furniture;
+  
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
+      },
+      
+      getQuotationControl: function() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append('jwt', token);
+  
+        axios({
+            method: 'get',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/quotation_control',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            _this.quotation_control = response.data.quotation_control;
+  
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
+      },
+
       getTagGroup: function() {
         let _this = this;
           
@@ -575,6 +722,12 @@ var app = new Vue({
             $('#modal_specification_sheet').modal('toggle');
         },
 
+        driver_compute() {
+            $('#modal_driver_computation').modal('toggle');
+        },
+
+        
+
       add_with_image(all) {
 
         var photo = "";
@@ -587,7 +740,7 @@ var app = new Vue({
         var srp = 0;
 
         let item_product = this.shallowCopy(
-          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
+          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3 && element.v4 == this.v4)
         )
 
         if(this.product.product.length > 0 && item_product.id == undefined && all != 'all') {
@@ -612,6 +765,8 @@ var app = new Vue({
               list += (item_product.k2 + ': ' + item_product.v2) + "\n";
             if(this.v3 != "")
               list += (item_product.k3 + ': ' + item_product.v3) + "\n";
+            if(this.v4 != "")
+              list += (item_product.k4 + ': ' + item_product.v4) + "\n";
         }
         else
         {
@@ -627,17 +782,20 @@ var app = new Vue({
         if(all == 'all')
         {
           list = "";
-          var k1, k2, k3;
+          var k1, k2, k3, k4;
           k1 = this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1;
           k2 = this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2;
           k3 = this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3;
+          k4 = this.product.variation4 === "custom" ? this.product.variation4_custom : this.product.variation4;
 
           if(k1 !== '')
-            list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n";
+            list += (this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1) + ': ' + this.product.variation1_value.join(', ') + "\n";
           if(k2 !== '')
-            list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n";
+            list += (this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2) + ': ' + this.product.variation2_value.join(', ') + "\n";
           if(k3 !== '')
-            list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
+            list += (this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3) + ': ' + this.product.variation3_value.join(', ') + "\n";
+          if(k4 !== '')
+            list += (this.product.variation4 === "custom" ? this.product.variation4_custom : this.product.variation4) + ': ' + this.product.variation4_value.join(', ') + "\n";
 
           photo = this.product.photo1;
           photo2 = this.product.photo2;
@@ -695,6 +853,13 @@ var app = new Vue({
         list.replace(/\n+$/, "");
         sn = sn + 1;
 
+        description = "";
+        if(this.product.category == 'Systems Furniture')
+        {
+          description = list;
+          list = this.product.description;
+        }
+
         if(this.toggle_type == 'A')
         {
           item = {
@@ -716,7 +881,7 @@ var app = new Vue({
             srp: srp,
             discount: "0",
             amount: "",
-            desc: "",
+            desc: description,
             list: list,
             num:"",
             ratio:1.0,
@@ -725,6 +890,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            v4: all == 'all' ? '' : this.v4,
           };
         }
 
@@ -745,7 +911,7 @@ var app = new Vue({
             ratio:1.0,
             discount: "0",
             amount: "",
-            desc: "",
+            desc: description,
             list: list,
             num:"",
             notes: "",
@@ -753,6 +919,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            v4: all == 'all' ? '' : this.v4,
           };
         }
 
@@ -770,7 +937,7 @@ var app = new Vue({
         var srp = 0;
 
         let item_product = this.shallowCopy(
-          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
+          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3 && element.v4 == this.v4)
         )
 
         if(this.product.product.length > 0 && item_product.id == undefined && all != 'all') {
@@ -791,6 +958,8 @@ var app = new Vue({
               list += (item_product.k2 + ': ' + item_product.v2) + "\n";
             if(this.v3 != "")
               list += (item_product.k3 + ': ' + item_product.v3) + "\n";
+            if(this.v4 != "")
+              list += (item_product.k4 + ': ' + item_product.v4) + "\n";
         }
         else
         {
@@ -804,17 +973,20 @@ var app = new Vue({
         if(all == 'all')
         {
           list = "";
-          var k1, k2, k3;
+          var k1, k2, k3, k4;
           k1 = this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1;
           k2 = this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2;
           k3 = this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3;
+          k4 = this.product.variation4 === "custom" ? this.product.variation4_custom : this.product.variation4;
 
           if(k1 !== '')
-            list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n";
+            list += (this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1) + ': ' + this.product.variation1_value.join(', ') + "\n";
           if(k2 !== '')
-            list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n";
+            list += (this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2) + ': ' + this.product.variation2_value.join(', ') + "\n";
           if(k3 !== '')
-            list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
+            list += (this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3) + ': ' + this.product.variation3_value.join(', ') + "\n";
+          if(k4 !== '')
+            list += (this.product.variation4 === "custom" ? this.product.variation4_custom : this.product.variation4) + ': ' + this.product.variation4_value.join(', ') + "\n";
 
           photo = this.product.photo1;
 
@@ -872,6 +1044,13 @@ var app = new Vue({
 
         sn = sn + 1;
 
+        description = "";
+        if(this.product.category == 'Systems Furniture')
+        {
+          description = list;
+          list = this.product.description;
+        }
+
         if(this.toggle_type == 'A')
         {
           item = {
@@ -890,7 +1069,7 @@ var app = new Vue({
             srp: srp,
             discount: "0",
             amount: "",
-            desc: "",
+            desc: description,
             list: list,
             num:"",
             notes: "",
@@ -899,6 +1078,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            v4: all == 'all' ? '' : this.v4,
           };
         }
 
@@ -919,7 +1099,7 @@ var app = new Vue({
             ratio:1.0,
             discount: "0",
             amount: "",
-            desc: "",
+            desc: description,
             list: list,
             num:"",
             notes: "",
@@ -927,6 +1107,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            v4: all == 'all' ? '' : this.v4,
           };
         }
 
@@ -943,18 +1124,18 @@ var app = new Vue({
 
         this.specification = [];
  
-       for(var i=0; i < this.special_infomation.length; i++)
+       for(var i=0; i < this.attributes.length; i++)
        {
-         if(this.special_infomation[i].value != "")
+         if(this.attributes[i].type != "custom")
          {
            if(k1 == "")
            {
-             k1 = this.special_infomation[i].category;
-             v1 = this.special_infomation[i].value;
+             k1 = this.attributes[i].category;
+             v1 = this.attributes[i].value.join(' ');
            }else if(k1 !== "" && k2 == "")
            {
-             k2 = this.special_infomation[i].category;
-             v2 = this.special_infomation[i].value;
+             k2 = this.attributes[i].category;
+             v2 = this.attributes[i].value.join(' ');
  
              obj = {k1: k1, v1: v1, k2: k2, v2: v2};
              this.specification.push(obj);
@@ -1068,6 +1249,86 @@ var app = new Vue({
         $('#modal_product_display').modal('toggle');
     },
 
+      close_led_driver: function() {
+        $('#modal_driver_computation').modal('toggle');
+    },
+
+    async save_led_driver() {
+      if (this.submit == true) return;
+
+        this.submit = true;
+  
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append("jwt", token);
+ 
+        form_Data.append("quotation_id", this.id);
+        form_Data.append("led_driver", JSON.stringify(this.led_array));
+     
+        try {
+          let res = await axios({
+            method: 'post',
+            url: 'api/quotation_led_driver_insert',
+            data: form_Data,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+          if(res.status == 200){
+            // test for status you want, etc
+   
+            _this.submit = false;
+
+            Swal.fire({
+              html: res.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+        } 
+          
+        } catch (err) {
+          console.log(err)
+          Swal.fire({
+            text: err,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+            _this.submit = false;
+        }
+
+        await this.reload();
+  
+      
+      },
+
+    
+    get_records: async function(id) {
+      let _this = this;
+      let record = {};
+
+      if(id === -1)
+          return {};
+
+      const params = {
+        id: id,
+      };
+
+      let token = localStorage.getItem("accessToken");
+
+      let res = await axios
+        .get("api/product_display_code", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return res.data;
+        
+    },
+
     getSingleProduct : function(id) {
 
 
@@ -1106,6 +1367,7 @@ var app = new Vue({
             _this.attributes = _this.product.attribute_list;
     
             _this.related_product  = _this.product.related_product;
+            _this.replacement_product = _this.product.replacement_product;
 
             _this.quoted_price = _this.product.quoted_price;
             _this.price = _this.product.price;
@@ -1113,8 +1375,10 @@ var app = new Vue({
             _this.v1 = "";
             _this.v2 = "";
             _this.v3 = "";
+            _this.v4 = "";
     
             _this.chunk(_this.related_product, 4);
+            _this.chunk_replacement(_this.replacement_product, 4);
     
             _this.set_up_variants();
             _this.set_up_specification();
@@ -1143,15 +1407,39 @@ var app = new Vue({
       
     },
 
-      btnEditClick: function(product) {
+      btnEditClick: async function(product) {
+
+        let _this = this;
+        let data = {};
+        if(product.sub_category == '10020000')
+         {
+            data = await this.get_records(product.id);
+
+            this.product = data[0];
+
+            this.product_set = this.product['product_set'];
+
+            for(var i = 0; i < this.product_set.length; i++)
+            {
+              this.product_set[i]['special_infomation'] = this.product_set[i].record[0]['special_information'][0].lv3[0]
+              this.product_set[i]['specification'] = [];
+              this.set_up_specification_set(this.product_set[i]);
+            }
+
+          
+         }
+         else
+          this.product = product;
+
         $('#modal_product_display').modal('toggle');
-        this.product = product;
+  
         this.url = (this.product.photo1 !== '' && this.product.photo1 !== undefined) ? this.img_url + this.product.photo1 : '';
 
         this.special_infomation = product.special_information[0].lv3[0];
         this.attributes = product.attribute_list;
 
         this.related_product  = product.related_product;
+        this.replacement_product = product.replacement_product;
 
         this.quoted_price = product.quoted_price;
         this.price = product.price;
@@ -1159,11 +1447,17 @@ var app = new Vue({
         this.v1 = "";
         this.v2 = "";
         this.v3 = "";
+        this.v4 = "";
 
         this.out = product.out;
         this.out_cnt = product.phased_out_cnt;
 
+        this.last_order_name = product.last_order_name;
+        this.last_order_at = product.last_order_at;
+        this.last_order_url = product.last_order_url;
+
         this.chunk(this.related_product, 4);
+        this.chunk_replacement(this.replacement_product, 4);
 
         this.set_up_variants();
         this.set_up_specification();
@@ -1175,6 +1469,14 @@ var app = new Vue({
           newArr.push(arr.slice(i, i+size));
         }
         this.groupedItems  = newArr;
+      },
+
+      chunk_replacement: function(arr, size) {
+        var newArr = [];
+        for (var i=0; i<arr.length; i+=size) {
+          newArr.push(arr.slice(i, i+size));
+        }
+        this.groupedItems_replacement  = newArr;
       },
 
       set_up_variants() {
@@ -1190,7 +1492,10 @@ var app = new Vue({
         {
           $('#variation3_value').tagsinput('add', this.product.variation3_value[i]);
         }
-  
+        for(var i=0; i<this.product.variation4_value.length; i++)
+        {
+          $('#variation4_value').tagsinput('add', this.product.variation4_value[i]);
+        }
         
       },
 
@@ -1575,7 +1880,7 @@ var app = new Vue({
             _this.submit = false;
         }
 
-        this.reload();
+        await this.reload();
       
       
       },
@@ -1634,7 +1939,60 @@ var app = new Vue({
             _this.submit = false;
         }
 
-        this.reload();
+        await this.reload();
+  
+      
+      },
+
+      save_slogan: async function() {
+        if (this.submit == true) return;
+
+        this.submit = true;
+  
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append("jwt", token);
+ 
+        form_Data.append("quotation_id", this.id);
+        form_Data.append("page", this.slogan.page);
+        form_Data.append("border", this.slogan.border);
+
+        try {
+          let res = await axios({
+            method: 'post',
+            url: 'api/quotation_slogan_insert',
+            data: form_Data,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+          if(res.status == 200){
+            // test for status you want, etc
+   
+            _this.submit = false;
+
+            Swal.fire({
+              html: res.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+        } 
+          
+        } catch (err) {
+          console.log(err)
+          Swal.fire({
+            text: err,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+            _this.submit = false;
+        }
+
+        await this.reload();
   
       
       },
@@ -1689,7 +2047,7 @@ var app = new Vue({
             _this.submit = false;
         }
 
-        this.reload();
+        await this.reload();
   
       
       },
@@ -1702,6 +2060,10 @@ var app = new Vue({
       close_payment_term() {
         this.show_payment_term = false;
 
+      },
+
+      close_slogan() {
+        this.show_slogan = false;
       },
 
       term_item_del: function(fromIndex) {
@@ -1753,6 +2115,36 @@ var app = new Vue({
         this.term.item.splice(toIndex, 0, element);
       },
 
+      led_item_up: function(fromIndex, eid) {
+        var toIndex = fromIndex - 1;
+  
+        if (toIndex < 0) 
+          return;
+
+        var element = this.led_array.find(({ id }) => id === eid);
+        this.led_array.splice(fromIndex, 1);
+        this.led_array.splice(toIndex, 0, element);
+      },
+
+      led_item_down: function(fromIndex, eid) {
+        var toIndex = fromIndex + 1;
+
+        if (toIndex > this.led_array.length - 1) 
+          return;
+  
+        var element = this.led_array.find(({ id }) => id === eid);
+        this.led_array.splice(fromIndex, 1);
+        this.led_array.splice(toIndex, 0, element);
+      },
+
+      led_item_del: function(fromIndex) {
+
+        var index = fromIndex;
+        if (index > -1) {
+          this.led_array.splice(index, 1);
+        }
+      },
+
       payment_term_item_up: function(fromIndex, eid) {
         var toIndex = fromIndex - 1;
   
@@ -1780,7 +2172,56 @@ var app = new Vue({
         this.term.item.push(obj);
       },
 
+      led_driver_search(item) {
+    
+        const params = {
+          tag: item.tag,
+          range: item.range,
+        };
+
+        let token = localStorage.getItem("accessToken");
+        axios
+          .get("api/quotation_led_driver_search", {
+            params,
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then(function(response) {
+            console.log(response.data);
+            let res = response.data;
+              item.products = res.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      },
       
+      add_led() {
+        let order = 0;
+        
+        if(this.led_array.length != 0)
+          order = Math.max.apply(Math, this.led_array.map(function(o) { return o.id; }))
+          
+        obj = {
+          "id" : order + 1,
+          "no" : '',
+          "area" : '',
+          "qty" : '',
+          "watt" : '',
+          "length" : '',
+          "tag" : '',
+          "range" : '',
+          "field" : '',
+          "driver" : '',
+          "products": [],
+
+          "total_watt" : '',
+          "driver_loss" : '',
+          "total_driver_watt" : '',
+        }, 
+  
+        this.led_array.push(obj);
+      },
+
       add_payment_term_item() {
         let order = 0;
         
@@ -1846,7 +2287,7 @@ var app = new Vue({
         form_Data.append("valid", this.total.valid);
         form_Data.append("total", this.total.total);
       
-        axios({
+        await axios({
           method: "post",
           headers: {
             "Content-Type": "multipart/form-data",
@@ -1854,7 +2295,7 @@ var app = new Vue({
           url: "api/quotation_total_insert",
           data: form_Data,
         })
-          .then(function(response) {
+          .then( async function(response) {
             //handle success
             //_this.id = response.data.id;
             
@@ -1864,10 +2305,10 @@ var app = new Vue({
               confirmButtonText: "OK",
             });
   
-            _this.reload();
+            await _this.reload();
             _this.submit = false;
           })
-          .catch(function(error) {
+          .catch(async function(error) {
             //handle error
             Swal.fire({
               text: JSON.stringify(error),
@@ -1875,7 +2316,7 @@ var app = new Vue({
               confirmButtonText: "OK",
             });
   
-            _this.reload();
+            await _this.reload();
             _this.submit = false;
           });
       
@@ -1885,6 +2326,9 @@ var app = new Vue({
         if (this.submit == true) return;
 
         this.submit = true;
+
+        $("#menu").css("visibility", "hidden");
+        $(".mask").toggle();
   
         var token = localStorage.getItem("token");
         var form_Data = new FormData();
@@ -1935,6 +2379,10 @@ var app = new Vue({
             _this.block_value = [];
             _this.submit = false;
 
+            await this.reload();
+            $(".mask").toggle();
+            $("#menu").css("visibility", "visible");
+
             Swal.fire({
               html: res.data.message,
               icon: "info",
@@ -1950,19 +2398,37 @@ var app = new Vue({
             confirmButtonText: "OK",
           });
 
+          $(".mask").toggle();
+            $("#menu").css("visibility", "visible");
             _this.submit = false;
         }
 
-        this.reload();
-
         },
 
-      subtotal_save() {
+      async subtotal_save() {
         if(this.block_value.id == undefined)
           return;
 
         if(this.check_value() == false)
           return;
+
+        if (this.submit == true) return;
+        this.submit = true;
+
+        await this.get_latest_record();
+
+        this.submit = false;
+
+        // check if this.temp_pages and this.temp_pages_verify identical
+        if(JSON.stringify(this.pages ) != JSON.stringify(this.temp_pages_verify))
+        {
+          Swal.fire({
+            text: "This quotation has been modified by other user. Please reload the page and try again.",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
 
         var _id = this.block_value.id;
         var _type = this.block_value.type;
@@ -1974,13 +2440,13 @@ var app = new Vue({
         if(_type == "A" && this.temp_block_a.length >= 0) {
           type.block_a = this.temp_block_a;
 
-          this.subtotal_save_changes(this.id, _id, this.temp_block_a);
+          await this.subtotal_save_changes(this.id, _id, this.temp_block_a);
         }
 
         if(_type == "B" && this.temp_block_b.length >= 0) {
           type.block_b = this.temp_block_b;
 
-          this.subtotal_save_changes(this.id, _id, this.temp_block_b);
+          await this.subtotal_save_changes(this.id, _id, this.temp_block_b);
         }
         
         
@@ -2054,25 +2520,79 @@ var app = new Vue({
       },
 
       block_b_up: function(fromIndex, eid) {
-        var toIndex = fromIndex - 1;
+
+        let _this = this;
+
+        Swal.fire({
+          title: 'Determine Steps',
+          html: 'Input how many steps you want to move: <br/> <input type="text" id="steps" value="1" /> <br/>',
+          confirmButtonText: 'OK',
+          showCancelButton: true,
+          preConfirm: () => {
+            steps = Swal.getPopup().querySelector('#steps').value
+      
+            return {steps: steps}
+          }
+        }).then((result) => {
+          //Swal.fire("alcool: "+`${result.value.alcool}`+" and Cigarro: "+`${result.value.cigarro}`);
+
+          var steps = result.value.steps;
+      
+          for(var i = 0; i < steps; i++)
+          {
+            var toIndex = fromIndex - 1;
   
         if (toIndex < 0) 
           return;
 
-        var element = this.temp_block_b.find(({ id }) => id === eid);
-        this.temp_block_b.splice(fromIndex, 1);
-        this.temp_block_b.splice(toIndex, 0, element);
+        var element = _this.temp_block_b.find(({ id }) => id === eid);
+        _this.temp_block_b.splice(fromIndex, 1);
+        _this.temp_block_b.splice(toIndex, 0, element);
+
+            fromIndex = toIndex;
+          }
+
+        })
+        
+        
       },
 
       block_b_down: function(fromIndex, eid) {
-        var toIndex = fromIndex + 1;
 
-        if (toIndex > this.temp_block_b.length - 1) 
-          return;
-  
-        var element = this.temp_block_b.find(({ id }) => id === eid);
-        this.temp_block_b.splice(fromIndex, 1);
-        this.temp_block_b.splice(toIndex, 0, element);
+        let _this = this;
+
+        Swal.fire({
+          title: 'Determine Steps',
+          html: 'Input how many steps you want to move: <br/> <input type="text" id="steps" value="1" /> <br/>',
+          confirmButtonText: 'OK',
+          showCancelButton: true,
+          preConfirm: () => {
+            steps = Swal.getPopup().querySelector('#steps').value
+      
+            return {steps: steps}
+          }
+        }).then((result) => {
+          //Swal.fire("alcool: "+`${result.value.alcool}`+" and Cigarro: "+`${result.value.cigarro}`);
+
+          var steps = result.value.steps;
+
+          for(var i = 0; i < steps; i++)
+          {
+            var toIndex = fromIndex + 1;
+
+            if (toIndex > _this.temp_block_b.length - 1) 
+              return;
+      
+            var element = _this.temp_block_b.find(({ id }) => id === eid);
+            _this.temp_block_b.splice(fromIndex, 1);
+            _this.temp_block_b.splice(toIndex, 0, element);
+
+          fromIndex = toIndex;
+        }
+          
+          })
+
+        
       },
 
       block_b_del: function(eid) {
@@ -2084,25 +2604,74 @@ var app = new Vue({
       },
 
       block_a_up: function(fromIndex, eid) {
-        var toIndex = fromIndex - 1;
-  
-        if (toIndex < 0) 
-          return;
+        let _this = this;
 
-        var element = this.temp_block_a.find(({ id }) => id === eid);
-        this.temp_block_a.splice(fromIndex, 1);
-        this.temp_block_a.splice(toIndex, 0, element);
+        Swal.fire({
+          title: 'Determine Steps',
+          html: 'Input how many steps you want to move: <br/> <input type="text" id="steps" value="1" /> <br/>',
+          confirmButtonText: 'OK',
+          showCancelButton: true,
+          preConfirm: () => {
+            steps = Swal.getPopup().querySelector('#steps').value
+      
+            return {steps: steps}
+          }
+        }).then((result) => {
+          //Swal.fire("alcool: "+`${result.value.alcool}`+" and Cigarro: "+`${result.value.cigarro}`);
+
+          var steps = result.value.steps;
+      
+          for(var i = 0; i < steps; i++)
+          {
+            var toIndex = fromIndex - 1;
+  
+            if (toIndex < 0) 
+              return;
+  
+            var element = _this.temp_block_a.find(({ id }) => id === eid);
+            _this.temp_block_a.splice(fromIndex, 1);
+            _this.temp_block_a.splice(toIndex, 0, element);
+
+            fromIndex = toIndex;
+          }
+
+        })
+
       },
 
       block_a_down: function(fromIndex, eid) {
-        var toIndex = fromIndex + 1;
+        let _this = this;
 
-        if (toIndex > this.temp_block_a.length - 1) 
-          return;
-  
-        var element = this.temp_block_a.find(({ id }) => id === eid);
-        this.temp_block_a.splice(fromIndex, 1);
-        this.temp_block_a.splice(toIndex, 0, element);
+        Swal.fire({
+          title: 'Determine Steps',
+          html: 'Input how many steps you want to move: <br/> <input type="text" id="steps" value="1" /> <br/>',
+          confirmButtonText: 'OK',
+          showCancelButton: true,
+          preConfirm: () => {
+            steps = Swal.getPopup().querySelector('#steps').value
+      
+            return {steps: steps}
+          }
+        }).then((result) => {
+          //Swal.fire("alcool: "+`${result.value.alcool}`+" and Cigarro: "+`${result.value.cigarro}`);
+
+          var steps = result.value.steps;
+
+          for(var i = 0; i < steps; i++)
+          {
+          var toIndex = fromIndex + 1;
+
+          if (toIndex > _this.temp_block_a.length - 1) 
+            return;
+    
+          var element = _this.temp_block_a.find(({ id }) => id === eid);
+          _this.temp_block_a.splice(fromIndex, 1);
+          _this.temp_block_a.splice(toIndex, 0, element);
+
+          fromIndex = toIndex;
+        }
+          
+          })
       },
 
       block_a_del: function(eid) {
@@ -2405,9 +2974,13 @@ Installation:`;
       cancel_header() {
         this.show_header = false;
       },
+      
+      cancel_access() {
+        this.show_access = false;
+      },
 
-      save_header() {
-        this.show_header = false;
+      async save_header() {
+        
 
         this.first_line = this.temp_first_line;
         this.second_line = this.temp_second_line;
@@ -2420,8 +2993,20 @@ Installation:`;
 
         this.prepare_by_first_line = this.temp_prepare_by_first_line;
         this.prepare_by_second_line = this.temp_prepare_by_second_line;
+        this.prepare_by_third_line = this.temp_prepare_by_third_line;
 
-        this.header_save();
+        await this.header_save();
+        this.show_header = false;
+        
+      },
+
+      save_access() {
+        this.show_access = false;
+
+        this.can_view = this.temp_can_view;
+        this.can_duplicate = this.temp_can_duplicate
+
+        this.access_save();
         
       },
 
@@ -2429,13 +3014,14 @@ Installation:`;
         this.show_footer = false;
       },
 
-      save_footer() {
-        this.show_footer = false;
+      async save_footer() {
+        
 
         this.footer_first_line = this.temp_footer_first_line;
         this.footer_second_line = this.temp_footer_second_line;
 
-        this.footer_save();
+        await this.footer_save();
+        this.show_footer = false;
         
       },
 
@@ -2454,6 +3040,7 @@ Installation:`;
 
         this.prepare_by_first_line = '';
         this.prepare_by_second_line = '';
+        this.prepare_by_third_line = '';
 
         // footer
         this.footer_first_line = '';
@@ -2472,6 +3059,7 @@ Installation:`;
 
         this.temp_prepare_by_first_line = '';
         this.temp_prepare_by_second_line = '';
+        this.temp_prepare_by_third_line = '';
 
         // _footer
         this.temp_footer_first_line = '';
@@ -2484,9 +3072,38 @@ Installation:`;
         // page
         this.pages = [];
         this.temp_pages = [];
+
+        this.can_view = '';
+        this.can_duplicate = '';
+        this.temp_can_view = '';
+        this.temp_can_duplicate = '';
+
       },
 
-      getRecord: function() {
+      get_latest_record: async function() {
+        let _this = this;
+        if(_this.id == 0)
+          return;
+  
+        const params = {
+          id: _this.id,
+        };
+  
+        let token = localStorage.getItem("accessToken");
+
+        let res = await axios({ 
+          method: 'get', 
+          url: 'api/quotation', 
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        this.temp_pages_verify = JSON.parse(JSON.stringify(res.data[0].pages));
+
+        },
+
+
+      getRecord: async function() {
         let _this = this;
 
         if(_this.id == 0)
@@ -2498,7 +3115,7 @@ Installation:`;
   
         let token = localStorage.getItem("accessToken");
   
-        axios
+        await axios
           .get("api/quotation", {
               params,
               headers: { Authorization: `Bearer ${token}` },
@@ -2520,6 +3137,7 @@ Installation:`;
 
               _this.prepare_by_first_line = _this.receive_records[0].prepare_by_first_line;
               _this.prepare_by_second_line = _this.receive_records[0].prepare_by_second_line;
+              _this.prepare_by_third_line = _this.receive_records[0].prepare_by_third_line;
 
               // footer
               _this.footer_first_line = _this.receive_records[0].footer_first_line;
@@ -2548,13 +3166,30 @@ Installation:`;
               // term
               _this.term = _this.receive_records[0].term_info;
 
+              // slogan
+              if(_this.receive_records[0].slogan_info != null)
+              {
+                if(_this.receive_records[0].slogan_info.item.length > 0)
+                {
+                  _this.slogan.id = _this.receive_records[0].slogan_info.item[0].id;
+                  _this.slogan.page = _this.receive_records[0].slogan_info.item[0].page;
+                  _this.slogan.border = _this.receive_records[0].slogan_info.item[0].border;
+                }
+                else
+                  _this.slogan = {id:0, page:0, border:''};
+              }
+              else
+                _this.slogan = {id:0, page:0, border:''};
+
+
               // term
               _this.payment_term = _this.receive_records[0].payment_term_info;
 
               // sig
               _this.sig = _this.receive_records[0].sig_info;
 
-              
+              _this.can_view = _this.receive_records[0].can_view;
+              _this.can_duplicate = _this.receive_records[0].can_duplicate;
 
               // temp
               _this.id = _this.receive_records[0].id;
@@ -2570,6 +3205,7 @@ Installation:`;
 
               _this.temp_prepare_by_first_line = _this.receive_records[0].prepare_by_first_line;
               _this.temp_prepare_by_second_line = _this.receive_records[0].prepare_by_second_line;
+              _this.temp_prepare_by_third_line = _this.receive_records[0].prepare_by_third_line;
 
               // footer
               _this.temp_footer_first_line = _this.receive_records[0].footer_first_line;
@@ -2577,7 +3213,14 @@ Installation:`;
 
               // product array
               _this.product_array = _this.receive_records[0].product_array;
+
+              if(_this.receive_records[0].led_driver.length > 0)
+                _this.led_array = JSON.parse(_this.receive_records[0].led_driver[0]["led_driver"]);
               
+              _this.temp_can_view = _this.receive_records[0].can_view;
+              _this.temp_can_duplicate = _this.receive_records[0].can_duplicate;
+
+              _this.project_name = _this.receive_records[0].project_name;
             }
           })
           .catch(function(error) {
@@ -2625,6 +3268,7 @@ Installation:`;
           "page" : order + 1,
           "sig" : sig,
           "term" : [],
+          "slogan" : [],
           "payment_term" : [],
           "total" : [],
           "types" : types,
@@ -2787,7 +3431,7 @@ Installation:`;
 
         await this.page_copy_save(this.id, obj_id + 1, new_blocks, obj);
 
-        this.reload();
+        await this.reload();
       },
 
       del_block: function(pid, eid) {
@@ -2798,7 +3442,7 @@ Installation:`;
         }
       },
 
-      header_save : function() {
+      header_save : async function() {
         if (this.submit == true) return;
 
         this.submit = true;
@@ -2820,10 +3464,11 @@ Installation:`;
         form_Data.append("prepare_for_third_line", this.prepare_for_third_line);
         form_Data.append("prepare_by_first_line", this.prepare_by_first_line);
         form_Data.append("prepare_by_second_line", this.prepare_by_second_line);
+        form_Data.append("prepare_by_third_line", this.prepare_by_third_line);
     
   
         if(this.id == 0) {
-          axios({
+          await axios({
             method: "post",
             headers: {
               "Content-Type": "multipart/form-data",
@@ -2831,7 +3476,7 @@ Installation:`;
             url: "api/quotation_header_insert",
             data: form_Data,
           })
-            .then(function(response) {
+            .then(async function(response) {
               //handle success
               _this.id = response.data.id;
               
@@ -2841,10 +3486,10 @@ Installation:`;
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
+              await _this.reload();
               _this.submit = false;
             })
-            .catch(function(error) {
+            .catch(async function(error) {
               //handle error
               Swal.fire({
                 text: JSON.stringify(error),
@@ -2852,7 +3497,95 @@ Installation:`;
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
+              await _this.reload();
+              _this.submit = false;
+            });
+        }
+
+        if(this.id != 0) {
+          await axios({
+            method: "post",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            url: "api/quotation_header_update",
+            data: form_Data,
+          })
+            .then(async function(response) {
+              //handle success
+              Swal.fire({
+                html: response.data.message,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+    
+              await _this.reload();
+              _this.submit = false;
+            })
+            .catch(async function(error) {
+              //handle error
+              Swal.fire({
+                text: JSON.stringify(error),
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+    
+              await _this.reload();
+              _this.submit = false;
+            });
+        }
+      
+      },
+
+      
+      access_save : function() {
+        if (this.submit == true) return;
+
+        this.submit = true;
+  
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append("jwt", token);
+ 
+        form_Data.append("id", this.id);
+
+        form_Data.append("can_view", this.can_view);
+        form_Data.append("can_duplicate", this.can_duplicate);
+          
+  
+        if(this.id == 0) {
+          axios({
+            method: "post",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            url: "api/quotation_access_insert",
+            data: form_Data,
+          })
+            .then(async function(response) {
+              //handle success
+              _this.id = response.data.id;
+              
+              Swal.fire({
+                html: response.data.message,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+    
+              await _this.reload();
+              _this.submit = false;
+            })
+            .catch(async function(error) {
+              //handle error
+              Swal.fire({
+                text: JSON.stringify(error),
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+    
+             await _this.reload();
               _this.submit = false;
             });
         }
@@ -2863,10 +3596,10 @@ Installation:`;
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            url: "api/quotation_header_update",
+            url: "api/quotation_access_update",
             data: form_Data,
           })
-            .then(function(response) {
+            .then(async function(response) {
               //handle success
               Swal.fire({
                 html: response.data.message,
@@ -2874,10 +3607,10 @@ Installation:`;
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
+              await _this.reload();
               _this.submit = false;
             })
-            .catch(function(error) {
+            .catch(async function(error) {
               //handle error
               Swal.fire({
                 text: JSON.stringify(error),
@@ -2885,14 +3618,15 @@ Installation:`;
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
+              await _this.reload();
               _this.submit = false;
             });
         }
       
       },
 
-      footer_save : function() {
+
+      footer_save :async function() {
         if (this.submit == true) return;
 
         this.submit = true;
@@ -2910,7 +3644,7 @@ Installation:`;
           
   
         if(this.id == 0) {
-          axios({
+          await axios({
             method: "post",
             headers: {
               "Content-Type": "multipart/form-data",
@@ -2918,7 +3652,7 @@ Installation:`;
             url: "api/quotation_footer_insert",
             data: form_Data,
           })
-            .then(function(response) {
+            .then(async function(response) {
               //handle success
               _this.id = response.data.id;
               
@@ -2928,10 +3662,10 @@ Installation:`;
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
+             await _this.reload();
               _this.submit = false;
             })
-            .catch(function(error) {
+            .catch(async function(error) {
               //handle error
               Swal.fire({
                 text: JSON.stringify(error),
@@ -2939,13 +3673,13 @@ Installation:`;
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
+             await _this.reload();
               _this.submit = false;
             });
         }
 
         if(this.id != 0) {
-          axios({
+          await axios({
             method: "post",
             headers: {
               "Content-Type": "multipart/form-data",
@@ -2953,7 +3687,7 @@ Installation:`;
             url: "api/quotation_footer_update",
             data: form_Data,
           })
-            .then(function(response) {
+            .then(async function(response) {
               //handle success
               Swal.fire({
                 html: response.data.message,
@@ -2961,10 +3695,10 @@ Installation:`;
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
+             await _this.reload();
               _this.submit = false;
             })
-            .catch(function(error) {
+            .catch(async function(error) {
               //handle error
               Swal.fire({
                 text: JSON.stringify(error),
@@ -2972,7 +3706,7 @@ Installation:`;
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
+             await _this.reload();
               _this.submit = false;
             });
         }
@@ -3048,10 +3782,72 @@ Installation:`;
 
       },
 
-      page_save : function() {
+      page_save_pre: async function() {
+        let _this = this;
+        let empty = true;
+        // check if page is empty
+
+        if (this.submit == true) return;
+        this.submit = true;
+
+
+        await this.get_latest_record();
+        
+
+        this.submit = false;
+
+        // check if this.temp_pages and this.temp_pages_verify identical
+        if(JSON.stringify(this.pages ) != JSON.stringify(this.temp_pages_verify))
+        {
+          Swal.fire({
+            text: "This quotation has been modified by other user. Please reload the page and try again.",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          
+          return;
+        }
+
+        for(var i = 0; i < this.temp_pages.length; i++) {
+          if(this.temp_pages[i].types.length != 0){
+            empty = false;
+            break;
+          }
+        }
+
+        if(this.temp_pages.length != 0)
+          empty = false;
+        
+        if(empty)
+        {
+            const alert =  await Swal.fire({
+            title: "WARNING",
+            text: "If click yes, all the pages and subtotal blocks will be erased.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+          });
+          
+          if(alert.value == true)
+              await _this.page_save();
+        }
+        else
+        {
+
+          await _this.page_save();
+        }
+        },
+
+      page_save : async function() {
+      
         if (this.submit == true) return;
 
         this.submit = true;
+
+        $("#menu").css("visibility", "hidden");
+        $(".mask").toggle();
   
         var token = localStorage.getItem("token");
         var form_Data = new FormData();
@@ -3071,84 +3867,99 @@ Installation:`;
         form_Data.append("prepare_for_third_line", this.prepare_for_third_line);
         form_Data.append("prepare_by_first_line", this.prepare_by_first_line);
         form_Data.append("prepare_by_second_line", this.prepare_by_second_line);
+        form_Data.append("prepare_by_third_line", this.prepare_by_third_line);
 
         form_Data.append("footer_first_line", this.footer_first_line);
         form_Data.append("footer_second_line", this.footer_second_line);
 
         form_Data.append("pages", JSON.stringify(this.temp_pages));
+        form_Data.append("pre_pages", JSON.stringify(this.temp_pages_verify));
           
   
         if(this.id == 0) {
-          axios({
-            method: "post",
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            url: "api/quotation_insert",
-            data: form_Data,
-          })
-            .then(function(response) {
-              //handle success
-              _this.id = response.data.id;
-              
+
+          try {
+            let res = await axios({
+              method: 'post',
+              url: 'api/quotation_insert',
+              data: form_Data,
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+
+            if(res.status == 200){
+
+              _this.submit = false;
+
+              await this.reload();
+              $(".mask").toggle();
+              $("#menu").css("visibility", "visible");
+
               Swal.fire({
-                html: response.data.message,
+                html: res.data.message,
                 icon: "info",
                 confirmButtonText: "OK",
               });
-    
-              _this.reload();
-              _this.submit = false;
-            })
-            .catch(function(error) {
-              //handle error
+            } 
+          } catch (err) {
+              console.log(err)
               Swal.fire({
                 text: JSON.stringify(error),
                 icon: "info",
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
-              _this.submit = false;
-            });
+              $(".mask").toggle();
+                $("#menu").css("visibility", "visible");
+                _this.submit = false;
+            }
+        
         }
 
         if(this.id != 0) {
-          axios({
-            method: "post",
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            url: "api/quotation_update",
-            data: form_Data,
-          })
-            .then(function(response) {
-              //handle success
+
+          try {
+            let res = await axios({
+              method: 'post',
+              url: 'api/quotation_update',
+              data: form_Data,
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+
+            if(res.status == 200){
+
+              _this.submit = false;
+
+              await this.reload();
+              $(".mask").toggle();
+              $("#menu").css("visibility", "visible");
+
               Swal.fire({
-                html: response.data.message,
+                html: res.data.message,
                 icon: "info",
                 confirmButtonText: "OK",
               });
-    
-              _this.reload();
-              _this.submit = false;
-            })
-            .catch(function(error) {
-              //handle error
+            } 
+          } catch (err) {
+              console.log(err)
               Swal.fire({
                 text: JSON.stringify(error),
                 icon: "info",
                 confirmButtonText: "OK",
               });
     
-              _this.reload();
-              _this.submit = false;
-            });
+              $(".mask").toggle();
+                $("#menu").css("visibility", "visible");
+                _this.submit = false;
+            }
         }
       
       },
 
-      reload : function() {
+      reload : async function() {
         this.close_all();
 
         this.is_load = false;
@@ -3159,7 +3970,7 @@ Installation:`;
           this.filter_apply();
         }
         else
-          this.getRecord();
+          await this.getRecord();
       },
 
       product_catalog_a() {
@@ -3182,6 +3993,7 @@ Installation:`;
         this.show_total = false;
         this.show_term = false;
         this.show_payment_term = false;
+        this.show_slogan = false;
         this.show_header = false;
         console.log("close all");
       },
@@ -3447,7 +4259,7 @@ Installation:`;
 
       change_v(){
         let item_product = this.shallowCopy(
-          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
+          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3 && element.v4 == this.v4)
         )
   
         if(item_product.id != undefined)
@@ -3469,6 +4281,17 @@ Installation:`;
               this.out = "Y";
               this.out_cnt = 0;
           }
+
+          this.last_order_name = this.product.last_order_name;
+          this.last_order_at = this.product.last_order_at;
+          this.last_order_url = this.product.last_order_url;
+
+          this.product.last_order_name = item_product.last_order_name;
+          this.product.last_order_at = item_product.last_order_at;
+          this.product.last_order_url = item_product.last_order_url;
+          this.last_have_spec = false;
+          this.product.last_have_spec = false;
+
         }
         else
         {
@@ -3480,13 +4303,52 @@ Installation:`;
 
           this.out = this.product['out'];
           this.out_cnt = this.product['phased_out_cnt'];
+
+          this.product.last_order_name = this.last_order_name;
+          this.product.last_order_at = this.last_order_at;
+          this.product.last_order_url = this.last_order_url;
+
+          this.last_order_name = "";
+          this.last_order_at = "";
+          this.last_order_url = "";
+
+          this.product.last_order_url = "";
+          this.last_have_spec = true;
+          this.product.last_have_spec = true;
         }
   
+      },
+
+      last_order_info: function(info) {
+        Swal.fire({
+          title: "<h2><i>Last Order History</i></h2><br>",
+          html: info,
+          confirmButtonText: "Close",
+        });
+      },
+
+      incoming_qty_info: function(info) {
+        if(info == '')
+          return;
+        
+        Swal.fire({
+          title: "<i>Incoming Qty</i>", 
+          html: info,  
+          confirmButtonText: "Close", 
+        });
       },
 
       phased_out_info: function(info) {
         Swal.fire({
           title: "<i>Phased-out Variants:</i>", 
+          html: info,  
+          confirmButtonText: "Close", 
+        });
+      },
+
+      replacement_info: function(info) {
+        Swal.fire({
+          title: "<i>Replacement Product:</i>", 
           html: info,  
           confirmButtonText: "Close", 
         });
@@ -3512,6 +4374,150 @@ Installation:`;
                   link.href = url;
                  
                     link.setAttribute('download', 'Quotation Export_' + _this.quotation_no + '.xlsx');
+                 
+                  document.body.appendChild(link);
+                  link.click();
+  
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+      },
+
+      export_led_driver() {
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+        form_Data.append("led_driver", JSON.stringify(this.led_array));
+        form_Data.append("project_name", this.project_name);
+  
+        axios({
+          method: "post",
+          url: "api/quotation_export_led_driver",
+          data: form_Data,
+          responseType: "blob",
+        })
+            .then(function(response) {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                 
+                    link.setAttribute('download', 'Driver Computation_' + _this.project_name + '.xlsx');
+                 
+                  document.body.appendChild(link);
+                  link.click();
+  
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+      },
+
+      checkProgress() {
+        let _this = this;
+
+        $.get('https://feliixload.myvnc.com/progress', function(data) {
+            let progress = data.progress;
+            $('#progress-bar').css('width', progress + '%').text(progress + '%');
+
+            // Poll every 500ms if the task is not done
+            if (progress < 100) {
+                setTimeout(_this.checkProgress, 1000);
+            }
+            else {
+              // Hide the progress bar when the task is complete (100%)
+              setTimeout(function() {
+                  $('#progress-bar-container').fadeOut();  // Smooth fade out
+                 
+              }, 1000);  // Optional delay before hiding
+
+              _this.is_pdf = false;
+          }
+
+        });
+    },
+
+
+      async export_pdf() {
+
+        if(this.is_pdf)
+          return;
+
+        this.is_pdf = true;
+
+        let _this = this;
+
+        const interval = setInterval(async () => {
+          const progressResponse = await fetch('https://feliixload.myvnc.com/is_progress');
+          const progressData = await progressResponse.json();
+
+          if (progressData.progress == false) {
+              clearInterval(interval); // Stop monitoring when complete
+
+              axios({
+                method: "get",
+                url: "https://feliixload.myvnc.com/quotation?id=" + this.id,
+                responseType: "blob",
+              })
+                  .then(function(response) {
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                       
+                          link.setAttribute('download', 'Quotation Export_' + _this.quotation_no + '.pdf');
+                       
+                        document.body.appendChild(link);
+                        link.click();
+        
+                  })
+                  .catch(function(response) {
+                      //handle error
+                      console.log(response)
+                  });
+      
+                  $('#progress-bar').css('width', '5%').text('5%');
+                  $('#progress-bar-container').show();
+      
+                  setTimeout(function() {
+                    _this.checkProgress();
+                   
+                }, 700);  // Optional delay before hiding
+          }
+      }, 1500); // Monitor every 500ms
+
+        
+            
+      },
+
+
+      
+      cost_analysis() {
+        if(this.name !== 'Dennis Lin' && this.name !== 'Ariel Lin' && this.name !== 'testmanager')
+          return;
+        
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+  
+  
+        axios({
+          method: "post",
+          url: "cost_analysis_quotation",
+          data: form_Data,
+          responseType: "blob",
+        })
+            .then(function(response) {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                 
+                  link.setAttribute('download', 'Cost_Analysis_' + _this.quotation_no + '.xlsx');
                  
                   document.body.appendChild(link);
                   link.click();
@@ -3579,6 +4585,895 @@ Installation:`;
 
       },
 
+      change_url_set: function(set, uid) {
+        if(uid == 1)
+          set.url = set.url1;
+        if(uid == 2)
+          set.url = set.url2;
+        if(uid == 3)
+          set.url = set.url3;
+    },
+  
+    PhaseOutAlert_set(phased_out_text){
+      hl = "";
+      for(var i = 0; i < phased_out_text.length; i++)
+      {
+        hl += "(" + Number(i+1) + ") " + phased_out_text[i] + "<br/>";
+      }
+  
+      Swal.fire({
+        title: 'Phased Out Variants:',
+        html: hl,
+        confirmButtonText: 'OK',
+        });
+      
+    },
+  
+    change_v_set(set){
+      let item_product = this.shallowCopy(
+        set.variation_product.find((element) => element.v1 == set.v1 && element.v2 == set.v2 && element.v3 == set.v3 && element.v4 == set.v4)
+      )
+    
+      if(item_product.id != undefined)
+      {
+        if(item_product.photo != "")
+        set.url = this.img_url + item_product.photo;
+        else
+        set.url = "";
+        set.price_ntd = item_product.currency + " " + Number(item_product.price_ntd).toLocaleString();
+        set.price = "PHP " + Number(item_product.price).toLocaleString();
+        set.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
+    
+        set.str_price_ntd_change = (item_product.price_ntd_change != "" ? "(" + item_product.price_ntd_change + ")" : "");
+        set.str_price_change = (item_product.price_change != "" ? "(" + item_product.price_change + ")" : "");
+        set.str_quoted_price_change = (item_product.quoted_price_change != "" ? "(" + item_product.quoted_price_change + ")" : "");
+    
+        set.phased_out = (item_product.enabled == 0 ? "F" : "");
+    
+        set.sheet_url = 'product_spec_sheet?sd=' + set.pid + '&d=' + item_product.id;
+    
+        set.out = item_product.enabled == 1 ? "" : "Y";
+        set.out_cnt = 0;
+    
+        if(set.record[0]['out'] == 'Y')
+        {
+          set.out = "Y";
+          set.out_cnt = 0;
+        }
+
+        set.last_order_name = item_product.last_order_name;
+        set.last_order_at = item_product.last_order_at;
+        set.last_order_url = item_product.last_order_url;
+        set.last_have_spec = false;
+      }
+      else
+      {
+        set.url = set.url1;
+        set.price_ntd = set.record[0]['price_ntd'];
+        set.price = set.record[0]['price'];
+        set.quoted_price = set.record[0]['quoted_price'];
+    
+        set.str_price_ntd_change = set.record[0]['str_price_ntd_change'];
+        set.str_price_change = set.record[0]['str_price_change'];
+        set.str_quoted_price_change = set.record[0]['str_quoted_price_change'];
+    
+        set.phased_out = "";
+    
+        set.sheet_url = 'product_spec_sheet?sd=' + set.pid;
+    
+        set.out = set.record[0]['out'];
+        set.out_cnt = set.record[0]['phased_out_cnt'];
+
+        set.last_order_name = "";
+      set.last_order_at = "";
+      set.last_order_url = "";
+      set.last_have_spec = true;
+      }
+    
+      this.check_all_set();
+    
+    },
+    
+    check_all_set(){
+      let change = true;
+      let price_ntd = 0;
+      let price = 0;
+      let quoted_price = 0;
+    
+      for(var i=0; i < this.product_set.length; i++){
+        let item_product = this.shallowCopy(
+          this.product_set[i].variation_product.find((element) => element.v1 == this.product_set[i].v1 && element.v2 == this.product_set[i].v2 && element.v3 == this.product_set[i].v3 && element.v4 == this.product_set[i].v4)
+        )
+    
+        if(item_product.id != undefined)
+        {
+          price_ntd += item_product.price_ntd * 1;
+          price += item_product.price * 1;
+          quoted_price += item_product.quoted_price * 1;
+        }
+        else
+          change = false;
+      }
+    
+      if(change)
+      {
+        //this.price_ntd = price_ntd;
+        this.product.price = "PHP " + Number(price).toLocaleString();;
+        this.product.quoted_price = "PHP " + Number(quoted_price).toLocaleString();
+      }
+      else
+      {
+        this.product.price = this.price;
+          this.product.quoted_price = this.quoted_price;
+      }
+    },
+  
+    
+    add_with_image_set_select(all) {
+      let change = true;
+      let price_ntd = 0;
+      let price = 0;
+      let quoted_price = 0;
+      let qty = 0;
+      let srp = 0;
+
+      let list = "";
+      let ps_var = "";
+
+      let sets = [];
+    
+      for(var i=0; i < this.product_set.length; i++){
+        let item_product = this.shallowCopy(
+          this.product_set[i].variation_product.find((element) => element.v1 == this.product_set[i].v1 && element.v2 == this.product_set[i].v2 && element.v3 == this.product_set[i].v3 && element.v4 == this.product_set[i].v4)
+        )
+
+        var list_g = "";
+
+        for(var j=0; j<this.product_set[i].specification.length; j++)
+        {
+            if(this.product_set[i].specification[j].k1 !== '')
+              list_g += this.product_set[i].specification[j].k1 + ': ' + this.product_set[i].specification[j].v1 + "\n";
+            if(this.product_set[i].specification[j].k2 !== '')
+              list_g += this.product_set[i].specification[j].k2 + ': ' + this.product_set[i].specification[j].v2 + "\n";
+        }
+
+        // add phased out information
+        if((this.product_set[i].phased_out_cnt > 0 && this.phased == 1) || (this.product_set[i].phased_out_cnt > 0 && all == 'all'))
+        {
+          list_g += "\n";
+          list_g += "Phased-out Variants:\n";
+          list_g += this.product_set[i].phased_out_text.split("<br/>").join("\n");
+        }
+        
+    
+        if(item_product.id != undefined)
+        {
+          if(item_product.photo != "")
+            this.product_set[i].photo = item_product.photo;
+
+          price_ntd += item_product.price_ntd * 1;
+          price += item_product.price * 1;
+          quoted_price += item_product.quoted_price * 1;
+          qty += this.product_set[i].qty * 1;
+
+          srp = quoted_price != 0 ? quoted_price : price;
+
+          ps_var = ('id: ' + this.product_set[i].id) + "\n";
+
+          if(item_product.v1 != ""){
+            list += (item_product.k1 + ': ' + item_product.v1) + "\n";
+            ps_var += (item_product.k1 + ': ' + item_product.v1) + "\n";
+          }
+          if(item_product.v2 != ""){
+            list += (item_product.k2 + ': ' + item_product.v2) + "\n";
+            ps_var += (item_product.k2 + ': ' + item_product.v2) + "\n";
+          }
+          if(item_product.v3 != ""){
+            list += (item_product.k3 + ': ' + item_product.v3) + "\n";
+            ps_var += (item_product.k3 + ': ' + item_product.v3) + "\n";
+          }
+          if(item_product.v4 != ""){
+            list += (item_product.k4 + ': ' + item_product.v4) + "\n";
+            ps_var += (item_product.k4 + ': ' + item_product.v4) + "\n";
+          }
+
+          sets.push(ps_var);
+
+          list += list_g;
+
+          list += "\n";
+
+        }
+        else
+          change = false;
+      }
+    
+      if(change)
+      {
+        list.replace(/\n+$/, "");
+
+        var block_a_image = 'image';
+        var sn = 0;
+        if(this.toggle_type == 'A')
+          var items = this.temp_block_a;
+
+        if(this.toggle_type == 'B')
+          var items = this.temp_block_b;
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].id > sn) {
+            sn = items[i].id;
+          }
+        }
+
+        sn = sn + 1;
+
+        item = {
+          id: sn,
+          url: this.product_set[0] != undefined ? this.product_set[0].url : "",
+          url2: this.product_set[1] != undefined ? this.product_set[1].url : "",
+          url3: this.product_set[2] != undefined ? this.product_set[2].url : "",
+          file: {
+            name: "",
+          },
+          type : block_a_image,
+          code: this.product.code,
+          photo: this.product_set[0] != undefined ? this.product_set[0].photo : "",
+          photo2: this.product_set[1] != undefined ? this.product_set[1].photo : "",
+          photo3: this.product_set[2] != undefined ? this.product_set[2].photo : "",
+          qty: 1,
+          price: srp,
+          srp: quoted_price,
+          discount: "0",
+          amount: srp,
+          desc: "",
+          list: list,
+          num:"",
+          notes: "",
+          ratio:1.0,
+          pid: this.product.id,
+          v1: "",
+          v2: "",
+          v3: "",
+          v4: "",
+
+          ps_var : sets,
+        };
+
+      }
+      else{
+        alert('Please choose option for each attribute of every sub-product');
+        return;
+      }
+    
+      items.push(item);
+      alert('Add Successfully');
+    },
+
+    
+    add_without_image_set_select(all) {
+      let change = true;
+      let price_ntd = 0;
+      let price = 0;
+      let quoted_price = 0;
+      let qty = 0;
+      let srp = 0;
+
+      let list = "";
+      let ps_var = "";
+
+      let sets = [];
+    
+      for(var i=0; i < this.product_set.length; i++){
+        let item_product = this.shallowCopy(
+          this.product_set[i].variation_product.find((element) => element.v1 == this.product_set[i].v1 && element.v2 == this.product_set[i].v2 && element.v3 == this.product_set[i].v3 && element.v4 == this.product_set[i].v4)
+        )
+
+        var list_g = "";
+ 
+        for(var j=0; j<this.product_set[i].specification.length; j++)
+        {
+            if(this.product_set[i].specification[j].k1 !== '')
+              list_g += this.product_set[i].specification[j].k1 + ': ' + this.product_set[i].specification[j].v1 + "\n";
+            if(this.product_set[i].specification[j].k2 !== '')
+              list_g += this.product_set[i].specification[j].k2 + ': ' + this.product_set[i].specification[j].v2 + "\n";
+        }
+
+        // add phased out information
+        if((this.product_set[i].phased_out_cnt > 0 && this.phased == 1) || (this.product_set[i].phased_out_cnt > 0 && all == 'all'))
+        {
+          list_g += "\n";
+          list_g += "Phased-out Variants:\n";
+          list_g += this.product_set[i].phased_out_text.split("<br/>").join("\n");
+        }
+    
+        if(item_product.id != undefined)
+        {
+          price_ntd += item_product.price_ntd * 1;
+          price += item_product.price * 1;
+          quoted_price += item_product.quoted_price * 1;
+          qty += this.product_set[i].qty * 1;
+
+          srp = quoted_price != 0 ? quoted_price : price;
+
+          ps_var = ('id: ' + this.product_set[i].id) + "\n";
+
+          if(item_product.v1 != ""){
+            list += (item_product.k1 + ': ' + item_product.v1) + "\n";
+            ps_var += (item_product.k1 + ': ' + item_product.v1) + "\n";
+          }
+          if(item_product.v2 != ""){
+            list += (item_product.k2 + ': ' + item_product.v2) + "\n";
+            ps_var += (item_product.k2 + ': ' + item_product.v2) + "\n";
+          }
+          if(item_product.v3 != ""){
+            list += (item_product.k3 + ': ' + item_product.v3) + "\n";
+            ps_var += (item_product.k3 + ': ' + item_product.v3) + "\n";
+          }
+          if(item_product.v4 != ""){
+            list += (item_product.k4 + ': ' + item_product.v4) + "\n";
+            ps_var += (item_product.k4 + ': ' + item_product.v4) + "\n";
+          }
+
+          sets.push(ps_var);
+
+          list += list_g;
+
+          list += "\n";
+
+        }
+        else
+          change = false;
+      }
+    
+      if(change)
+      {
+
+        list.replace(/\n+$/, "");
+
+        var block_a_image = 'noimage';
+        var sn = 0;
+        if(this.toggle_type == 'A')
+          var items = this.temp_block_a;
+
+        if(this.toggle_type == 'B')
+          var items = this.temp_block_b;
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].id > sn) {
+            sn = items[i].id;
+          }
+        }
+
+        sn = sn + 1;
+
+        item = {
+          id: sn,
+          url: "",
+          url2: "",
+          url3: "",
+          file: {
+            name: "",
+          },
+          type : block_a_image,
+          code: this.product.code,
+          photo: "",
+          qty: 1,
+          price: srp,
+          srp: quoted_price,
+          discount: "0",
+          amount: srp,
+          desc: "",
+          list: list,
+          num:"",
+          notes: "",
+          ratio:1.0,
+          pid: this.product.id,
+          v1: "",
+          v2: "",
+          v3: "",
+          v4: "",
+
+          ps_var : sets,
+        };
+
+      }
+      else{
+        alert('Please choose option for each attribute of every sub-product');
+        return;
+      }
+
+      items.push(item);
+      alert('Add Successfully');
+    
+    },
+  
+    
+    set_up_specification_set(set) {
+      let k1 = '';
+      let k2 = '';
+  
+      let v1 = '';
+      let v2 = '';
+  
+     for(var i=0; i < set.special_infomation.length; i++)
+     {
+       if(set.special_infomation[i].value != "")
+       {
+         if(k1 == "")
+         {
+           k1 = set.special_infomation[i].category;
+           v1 = set.special_infomation[i].value;
+         }else if(k1 !== "" && k2 == "")
+         {
+           k2 = set.special_infomation[i].category;
+           v2 = set.special_infomation[i].value;
+  
+           obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+           set.specification.push(obj);
+           k1  = '';
+           k2  = '';
+           v1  = '';
+           v2  = '';
+         }
+       }
+     }
+  
+     if(k1 == "" && set.record[0]['moq'] !== "")
+     {
+       k1 = 'MOQ';
+       v1 = set.record[0]['moq'];
+     }else if(k1 !== "" && k2 == "" && set.record[0]['moq'] !== "")
+     {
+       k2 = 'MOQ';
+       v2 = set.record[0]['moq'];
+   
+       obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+       set.specification.push(obj);
+       k1  = '';
+       k2  = '';
+       v1  = '';
+       v2  = '';
+     }
+  /*
+     if(k1 == "" && this.record[0]['notes'] !== "")
+     {
+       k1 = 'Notes';
+       v1 = this.record[0]['notes'];
+     }else if(k1 !== "" && k2 == "" && this.record[0]['notes'] !== "")
+     {
+       k2 = 'Notes';
+       v2 = this.record[0]['notes'];
+   
+       obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+       this.specification.push(obj);
+       k1  = '';
+       k2  = '';
+       v1  = '';
+       v2  = '';
+     }
+  */
+     if(k1 !== "" && k2 == "")
+     {
+       k2 = '';
+       v2 = '';
+   
+       obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+       set.specification.push(obj);
+     
+     }
+   },
+
+   add_with_image_set(set, all) {
+
+    var photo = "";
+    var photo2 = "";
+    var photo3 = "";
+
+    var price = "";
+    var list = "";
+
+    var srp = 0;
+
+    let item_product = this.shallowCopy(
+      set.product.find((element) => element.v1 == set.v1 && element.v2 == set.v2 && element.v3 == set.v3 && element.v4 == set.v4)
+    )
+
+    if(set.product.length > 0 && item_product.id == undefined && all != 'all') {
+      alert('Please choose an option for each attribute');
+      return;
+    }
+
+    if(item_product.id != undefined)
+    {
+      if(item_product.photo != "")
+        photo = item_product.photo;
+
+        photo2 = set.photo2;
+        photo3 = set.photo3;
+
+        // price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
+        price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
+        srp =  Number(item_product.price);
+        if(set.v1 != "")
+          list += (item_product.k1 + ': ' + item_product.v1) + "\n";
+        if(set.v2 != "")
+          list += (item_product.k2 + ': ' + item_product.v2) + "\n";
+        if(set.v3 != "")
+          list += (item_product.k3 + ': ' + item_product.v3) + "\n";
+    }
+    else
+    {
+      photo = set.photo1;
+      photo2 = set.photo2;
+      photo3 = set.photo3;
+      // price = set.price_org !== null ? set.price_org : set.quoted_price_org;
+      price = set.quoted_price_org !== null ? set.quoted_price_org : set.price_org;
+      srp = Number(set.price_org);
+      list = "";
+    }
+
+    if(all == 'all')
+    {
+      list = "";
+      var k1, k2, k3, k4;
+      k1 = set.variation1 === "custom" ? set.variation1_custom : set.variation1;
+      k2 = set.variation2 === "custom" ? set.variation2_custom : set.variation2;
+      k3 = set.variation3 === "custom" ? set.variation3_custom : set.variation3;
+      k4 = set.variation4 === "custom" ? set.variation4_custom : set.variation4;
+
+      if(k1 !== '')
+        list += set.variation1 === "custom" ? set.variation1_custom + ': ' + set.variation1_value.join(', ') + "\n" : set.variation1 + ': ' + set.variation1_value.join(', ') + "\n";
+      if(k2 !== '')
+        list += set.variation2 === "custom" ? set.variation2_custom + ': ' + set.variation2_value.join(', ') + "\n" : set.variation2 + ': ' + set.variation2_value.join(', ') + "\n";
+      if(k3 !== '')
+        list += set.variation3 === "custom" ? set.variation3_custom + ': ' + set.variation3_value.join(', ') + "\n" : set.variation3 + ': ' + set.variation3_value.join(', ') + "\n";
+      if(k4 !== '')
+        list += set.variation4 === "custom" ? set.variation4_custom + ': ' + set.variation4_value.join(', ') + "\n" : set.variation4 + ': ' + set.variation4_value.join(', ') + "\n";
+
+      photo = set.photo1;
+      photo2 = set.photo2;
+      photo3 = set.photo3;
+
+      if(set.srp !== null || set.srp_quoted !== null)
+        price = set.srp_quoted !== null ? set.srp_quoted : set.srp;
+
+      srp = set.srp;
+        //price = set.srp !== null ? set.srp : set.srp_quoted;
+
+      if(price == null)
+        //price = set.price_org !== null ? set.price_org : set.quoted_price_org;
+        price = set.quoted_price_org !== null ? set.quoted_price_org : set.price_org;
+        
+    }
+
+    for(var i=0; i<set.specification.length; i++)
+    {
+        if(set.specification[i].k1 !== '')
+          list += set.specification[i].k1 + ': ' + set.specification[i].v1 + "\n";
+        if(set.specification[i].k2 !== '')
+          list += set.specification[i].k2 + ': ' + set.specification[i].v2 + "\n";
+    }
+
+    // add phased out information
+    if((set.phased_out_cnt > 0 && set.phased == 1) || (set.phased_out_cnt > 0 && all == 'all'))
+    {
+      // if string or is string array
+      if(typeof set.phased_out_text === 'string' || set.phased_out_text instanceof String)
+      {
+        list += "\n";
+        list += "Phased-out Variants:\n";
+        list += set.phased_out_text.split("<br/>").join("\n");
+      }
+      else if(Array.isArray(set.phased_out_text))
+      {
+        for(var i=0; i<set.phased_out_text.length; i++)
+        {
+          list += "\n";
+          list += "Phased-out Variants:\n";
+          list += set.phased_out_text[i].split("<br/>").join("\n");
+        }
+      }
+      else
+      {
+        list += "\n";
+        list += "Phased-out Variants:\n";
+        list += set.phased_out_text.split("<br/>").join("\n");
+      }
+      
+    }
+
+    if(price == null)
+      price = set.srp_quoted !== 0 ?  set.srp_quoted : set.srp;
+      // price = set.srp !== 0 ?  set.srp : set.srp_quoted;
+
+    if(srp == null)
+      srp = 0;
+
+    var block_a_image = 'image';
+    var sn = 0;
+    if(this.toggle_type == 'A')
+      var items = this.temp_block_a;
+
+    if(this.toggle_type == 'B')
+      var items = this.temp_block_b;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].id > sn) {
+        sn = items[i].id;
+      }
+    }
+
+    list.replace(/\n+$/, "");
+    sn = sn + 1;
+
+    if(this.toggle_type == 'A')
+    {
+      item = {
+        id: sn,
+        url: photo !== '' ? this.img_url + photo  : '',
+        url2 : photo2 !== '' ? this.img_url + photo2 : '',
+        url3 : photo3 !== '' ? this.img_url + photo3 : '',
+
+        file: {
+          name: "",
+        },
+        type : block_a_image,
+        code: set.code,
+        photo: photo,
+        photo2: photo2,
+        photo3: photo3,
+        qty: set.qty,
+        price: price,
+        srp: srp,
+        discount: "0",
+        amount: "",
+        desc: "",
+        list: list,
+        num:"",
+        ratio:1.0,
+        notes: "",
+        pid: set.id,
+        v1: all == 'all' ? '' : set.v1,
+        v2: all == 'all' ? '' : set.v2,
+        v3: all == 'all' ? '' : set.v3,
+        v4: all == 'all' ? '' : set.v4,
+      };
+    }
+
+    if(this.toggle_type == 'B')
+    {
+      item = {
+        id: sn,
+        
+        url:  '',
+        url2 : '',
+        url3 : '',
+
+        code: "",
+        photo: photo,
+        qty: "1",
+        price: price,
+        srp: srp,
+        ratio:1.0,
+        discount: "0",
+        amount: "",
+        desc: "",
+        list: list,
+        num:"",
+        notes: "",
+        pid: set.id,
+        v1: all == 'all' ? '' : set.v1,
+        v2: all == 'all' ? '' : set.v2,
+        v3: all == 'all' ? '' : set.v3,
+        v4: all == 'all' ? '' : set.v4,
+      };
+    }
+
+    items.push(item);
+
+    alert('Add Successfully');
+  },
+
+  add_without_image_set(set, all) {
+
+    var photo = "";
+    var price = "";
+    var list = "";
+
+    var srp = 0;
+
+    let item_product = this.shallowCopy(
+      set.product.find((element) => element.v1 == set.v1 && element.v2 == set.v2 && element.v3 == set.v3 && element.v4 == set.v4)
+    )
+
+    if(set.product.length > 0 && item_product.id == undefined && all != 'all') {
+      alert('Please choose an option for each attribute');
+      return;
+    }
+
+    if(item_product.id != undefined)
+    {
+      if(item_product.photo != "")
+        photo = item_product.photo;
+        //price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
+        price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
+        srp =  Number(item_product.price);
+        if(set.v1 != "")
+          list += (item_product.k1 + ': ' + item_product.v1) + "\n";
+        if(set.v2 != "")
+          list += (item_product.k2 + ': ' + item_product.v2) + "\n";
+        if(set.v3 != "")
+          list += (item_product.k3 + ': ' + item_product.v3) + "\n";
+        if(set.v4 != "")
+          list += (item_product.k4 + ': ' + item_product.v4) + "\n";
+    }
+    else
+    {
+      photo = set.photo1;
+      //price = set.price_org !== null ? set.price_org : set.quoted_price_org;
+      price = set.quoted_price_org !== null ? set.quoted_price_org : set.price_org;
+      srp = Number(set.price_org);
+      list = "";
+    }
+
+    if(all == 'all')
+    {
+      list = "";
+      var k1, k2, k3, k4;
+      k1 = set.variation1 === "custom" ? set.variation1_custom : set.variation1;
+      k2 = set.variation2 === "custom" ? set.variation2_custom : set.variation2;
+      k3 = set.variation3 === "custom" ? set.variation3_custom : set.variation3;
+      k4 = set.variation4 === "custom" ? set.variation4_custom : set.variation4;
+
+      if(k1 !== '')
+        list += set.variation1 === "custom" ? set.variation1_custom + ': ' + set.variation1_value.join(', ') + "\n" : set.variation1 + ': ' + set.variation1_value.join(', ') + "\n";
+      if(k2 !== '')
+        list += set.variation2 === "custom" ? set.variation2_custom + ': ' + set.variation2_value.join(', ') + "\n" : set.variation2 + ': ' + set.variation2_value.join(', ') + "\n";
+      if(k3 !== '')
+        list += set.variation3 === "custom" ? set.variation3_custom + ': ' + set.variation3_value.join(', ') + "\n" : set.variation3 + ': ' + set.variation3_value.join(', ') + "\n";
+      if(k4 !== '')
+        list += set.variation4 === "custom" ? set.variation4_custom + ': ' + set.variation4_value.join(', ') + "\n" : set.variation4 + ': ' + set.variation4_value.join(', ') + "\n";
+
+      photo = set.photo1;
+
+      if(set.srp !== null || set.srp_quoted !== null)
+        price = set.srp_quoted !== null ? set.srp_quoted : set.srp;
+   
+        //price = set.srp !== null ? set.srp : set.srp_quoted;
+
+      if(price == null)
+        //price = set.price_org !== null ? set.price_org : set.quoted_price_org;
+        price = set.quoted_price_org !== null ? set.quoted_price_org : set.price_org;
+        
+        
+      srp = set.srp;
+    }
+
+    if(price == null)
+      price = set.srp_quoted !== 0 ?  set.srp_quoted : set.srp;
+      //price = set.srp !== 0 ?  set.srp : set.srp_quoted;
+
+    if(srp == null)
+      srp = 0;
+
+    for(var i=0; i<set.specification.length; i++)
+    {
+        if(set.specification[i].k1 !== '')
+          list += set.specification[i].k1 + ': ' + set.specification[i].v1 + "\n";
+        if(set.specification[i].k2 !== '')
+          list += set.specification[i].k2 + ': ' + set.specification[i].v2 + "\n";
+    }
+
+    // add phased out information
+    if((set.phased_out_cnt > 0 && set.phased == 1) || (set.phased_out_cnt > 0 && all == 'all'))
+    {
+      // if string or is string array
+      if(typeof set.phased_out_text === 'string' || set.phased_out_text instanceof String)
+      {
+        list += "\n";
+        list += "Phased-out Variants:\n";
+        list += set.phased_out_text.split("<br/>").join("\n");
+      }
+      else if(Array.isArray(set.phased_out_text))
+      {
+        for(var i=0; i<set.phased_out_text.length; i++)
+        {
+          list += "\n";
+          list += "Phased-out Variants:\n";
+          list += set.phased_out_text[i].split("<br/>").join("\n");
+        }
+      }
+      else
+      {
+        list += "\n";
+        list += "Phased-out Variants:\n";
+        list += set.phased_out_text.split("<br/>").join("\n");
+      }
+    }
+
+    list.replace(/\n+$/, "");
+
+    var block_a_image = 'noimage';
+    var sn = 0;
+    if(this.toggle_type == 'A')
+      var items = this.temp_block_a;
+
+    if(this.toggle_type == 'B')
+      var items = this.temp_block_b;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].id > sn) {
+        sn = items[i].id;
+      }
+    }
+
+    sn = sn + 1;
+
+    if(this.toggle_type == 'A')
+    {
+      item = {
+        id: sn,
+        url: "",
+        url2: "",
+        url3: "",
+        file: {
+          name: "",
+        },
+        type : block_a_image,
+        code: set.code,
+        photo: "",
+        qty: set.qty,
+        price: price,
+        srp: srp,
+        discount: "0",
+        amount: "",
+        desc: "",
+        list: list,
+        num:"",
+        notes: "",
+        ratio:1.0,
+        pid: set.id,
+        v1: all == 'all' ? '' : set.v1,
+        v2: all == 'all' ? '' : set.v2,
+        v3: all == 'all' ? '' : set.v3,
+        v4: all == 'all' ? '' : set.v4,
+      };
+    }
+
+    if(this.toggle_type == 'B')
+    {
+      item = {
+        id: sn,
+        
+        url: '',
+        url2 : '',
+        url3 : '',
+
+        code: set.code,
+        photo: "",
+        qty: "1",
+        price: price,
+        srp: srp,
+        ratio:1.0,
+        discount: "0",
+        amount: "",
+        desc: "",
+        list: list,
+        num:"",
+        notes: "",
+        pid: set.id,
+        v1: all == 'all' ? '' : set.v1,
+        v2: all == 'all' ? '' : set.v2,
+        v3: all == 'all' ? '' : set.v3,
+        v4: all == 'all' ? '' : set.v4,
+      };
+    }
+
+    items.push(item);
+    alert('Add Successfully');
+  },
+  
 
     }
   

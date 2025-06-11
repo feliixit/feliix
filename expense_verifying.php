@@ -1,3 +1,4 @@
+<?php include 'check.php';?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +39,7 @@
 <script type="text/javascript" src="js/main.js" defer></script>
 
 <!-- import CSS -->
-<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="css/element-ui/theme-chalk/index.css">
 
 
 
@@ -276,8 +277,20 @@ $(function(){
                             <li>{{record.liquidate_date}}</li>
                         </ul>
                         <ul>
+                            <li class="head">Total Amount in Liquidation Listing</li>
+                            <li>{{ isNaN(record.total_amount_liquidate) ? "" : Number(record.total_amount_liquidate).toLocaleString() }}</li>
+                        </ul>
+                        <ul>
                             <li class="head">Amount Liquidated</li>
                             <li>{{ isNaN(record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
+                        </ul>
+                        <ul>
+                            <li class="head">Amount of Return Money</li>
+                            <li>{{ isNaN(record.amount_of_return) ? "" : Number(record.amount_of_return).toLocaleString() }}</li>
+                        </ul>
+                        <ul>
+                            <li class="head">Method to Return Money</li>
+                            <li>{{record.method_of_return}}</li>
                         </ul>
                         <ul>
                             <li class="head">Liquidation Files</li>
@@ -287,6 +300,26 @@ $(function(){
                         <ul>
                             <li class="head">Remarks</li>
                             <li>{{ (record.request_type == 'New') ? record.remark_liquidated  : "---"}}</li>
+                        </ul>
+                    </div>
+
+
+                    <span>Liquidation Listing</span>
+
+                    <div class="tablebox listing" style="margin-top: 2px;">
+                        <ul class="head">
+                            <li>Vendor</li>
+                            <li>Particulars</li>
+                            <li>Price</li>
+                            <li>Qty</li>
+                            <li>Amount</li>
+                        </ul>
+                        <ul v-for='(item, index) in record.apply_for_petty_liquidate' :key="index" >
+                            <li>{{ item.payee }}</li>
+                            <li>{{ item.particulars }}</li>
+                            <li>{{ Number(item.price).toLocaleString() }}</li>
+                            <li>{{ Number(item.qty).toLocaleString() }}</li>
+                            <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
                         </ul>
                     </div>
 
@@ -308,6 +341,15 @@ $(function(){
                             <li><b>Actual Amount After Verification</b></li>
                             <li><input type="text" style="width:100%" v-model="actual_amount"></li>
 
+                            <li style="margin-top: 15px;"><b>Method to Return Money</b></li>
+                            <li>
+                                <select style="width:100%" v-model="method_of_return">
+                                    <option value="Cash">Cash</option>
+                                    <option value="DigiBanker">DigiBanker</option>
+                                    <option value="GCash">GCash</option>
+                                </select>
+                            </li>
+
                             <li style="margin-top: 15px;"><b>Proof of Return or Release of Payment Balance</b></li>
                             <li>
                                 <input type="file" style="width:100%" ref="file" name="file[]" multiple>
@@ -327,13 +369,13 @@ $(function(){
         </div>
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 <script defer src="js/a076d05399.js"></script>
 
 <script>
@@ -341,6 +383,6 @@ $(function(){
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/expense_verifying.js"></script>
 </html>

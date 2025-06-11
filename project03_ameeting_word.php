@@ -21,6 +21,9 @@ try {
     // decode jwt
     $decoded = JWT::decode($jwt, $key, array('HS256'));
 
+    if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 }
@@ -338,7 +341,7 @@ $textrun->addText(htmlspecialchars($down_payment_date, ENT_COMPAT, 'UTF-8'), arr
 
 $table->addRow();
 $textrun = $table->addCell(10500, $styleCell)->addTextRun();
-$textrun->addText(htmlspecialchars("Account Executive: ", ENT_COMPAT, 'UTF-8'), array('font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("Customer Value Supervisor: ", ENT_COMPAT, 'UTF-8'), array('font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 $textrun->addText(htmlspecialchars($account_executive, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();

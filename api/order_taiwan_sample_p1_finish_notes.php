@@ -99,6 +99,7 @@ try{
             $query = "update od_item
             SET
                 `status` = :status,
+                `status_at` = now(),
                 confirm = :confirm
             where id = :id";
 

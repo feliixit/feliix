@@ -587,6 +587,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'v1' => "",
                 'v2' => "",
                 'v3' => "",
+                'v4' => "",
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
@@ -619,6 +620,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'v1' => "",
                 'v2' => "",
                 'v3' => "",
+                'v4' => "",
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
@@ -651,6 +653,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'v1' => "",
                 'v2' => "",
                 'v3' => "",
+                'v4' => "",
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
@@ -690,7 +693,9 @@ function GetItems($option_id, $legend_id, $db){
         pid,
         v1,
         v2,
-        v3
+        v3,
+        v4,
+        ps_var
         FROM   price_comparison_item
         WHERE  option_id = " . $option_id . "
         AND  legend_id = " . $legend_id . "
@@ -730,15 +735,18 @@ function GetItems($option_id, $legend_id, $db){
         $desc = $row['desc'];
         $pid = $row['pid'];
 
-        $srp = GetProductPrice($row['pid'], $row['v1'], $row['v2'], $row['v3'], $db);
+        $srp = GetProductPrice($row['pid'], $row['v1'], $row['v2'], $row['v3'], $row['v4'], $db);
       
         $v1 = $row['v1'];
         $v2 = $row['v2'];
         $v3 = $row['v3'];
+        $v4 = $row['v4'];
+
+        $ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
        
-        $url1 = $photo1 == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo1;
-        $url2 = $photo2 == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo2;
-        $url3 = $photo3 == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo3;
+        $url1 = $photo1 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo1;
+        $url2 = $photo2 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo2;
+        $url3 = $photo3 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo3;
 
   
         $merged_results[] = array(
@@ -764,6 +772,8 @@ function GetItems($option_id, $legend_id, $db){
             'v1' => $v1,
             'v2' => $v2,
             'v3' => $v3,
+            'v4' => $v4,
+            'ps_var' => $ps_var,    
             'url1' => $url1,
             'url2' => $url2,
             'url3' => $url3,
@@ -776,12 +786,13 @@ function GetItems($option_id, $legend_id, $db){
 }
 
 
-function GetProducts($pid, $v1, $v2, $v3, $db)  {
+function GetProducts($pid, $v1, $v2, $v3, $v4, $db)  {
 
     $query = "SELECT price,
             1st_variation,
             2rd_variation,
-            3th_variation
+            3th_variation,
+            4th_variation
         FROM   product
         WHERE  product_id = " . $pid . "
         AND `status` <> -1 
@@ -801,8 +812,9 @@ function GetProducts($pid, $v1, $v2, $v3, $db)  {
         $val1 = GetValue($row['1st_variation']);
         $val2 = GetValue($row['2rd_variation']);
         $val3 = GetValue($row['3th_variation']);
+        $val4 = GetValue($row['4th_variation']);
 
-        if($val1 == $v1 && $val2 == $v2 && $val3 == $v3)
+        if($val1 == $v1 && $val2 == $v2 && $val3 == $v3 && $val4 == $v4)
             break;
     }
 
@@ -820,13 +832,13 @@ function GetValue($str)
     return isset($obj[1]) ? $obj[1] : "";
 }
 
-function GetProductPrice($pid, $v1, $v2, $v3, $db)
+function GetProductPrice($pid, $v1, $v2, $v3, $v4, $db)
 {
     $srp = 0;
     $p_srp = 0;
 
-    if($v1 != '' || $v2 != '' || $v3 != '')
-     $p_srp = GetProducts($pid, $v1, $v2, $v3, $db);
+    if($v1 != '' || $v2 != '' || $v3 != '' || $v4 != '')
+        $p_srp = GetProducts($pid, $v1, $v2, $v3, $v4, $db);
 
     if($p_srp > 0)
     {
@@ -908,6 +920,7 @@ function FloorGroups($groups)
                         'v1' => "",
                         'v2' => "",
                         'v3' => "",
+                        'v4' => "",
                         'url1' => "",
                         'url2' => "",
                         'url3' => "",
@@ -1260,7 +1273,7 @@ function GetSigInfo($qid, $db)
                 "id" => $id,
                 "type" => $type,
                 "photo" => $photo,
-                "url" =>  $photo != '' ? 'https://storage.cloud.google.com/feliiximg/' . $photo : '',
+                "url" =>  $photo != '' ? 'https://storage.googleapis.com/feliiximg/' . $photo : '',
                 "name" => $name,
                 "position" => $position,
                 "phone" => $phone,

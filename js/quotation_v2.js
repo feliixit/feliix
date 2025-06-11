@@ -7,7 +7,7 @@ var app = new Vue({
       l_id:0,
       id:0,
 
-      img_url: 'https://storage.cloud.google.com/feliiximg/',
+      img_url: 'https://storage.googleapis.com/feliiximg/',
        
       // menu
       show_header: false,
@@ -797,6 +797,7 @@ var app = new Vue({
             _this.attributes = _this.product.attribute_list;
     
             _this.related_product  = _this.product.related_product;
+            _this.replacement_product = _this.product.replacement_product;
 
             _this.quoted_price = _this.product.quoted_price;
             _this.price = _this.product.price;
@@ -806,6 +807,7 @@ var app = new Vue({
             _this.v3 = "";
     
             _this.chunk(_this.related_product, 4);
+            _this.chunk_replacement(_this.replacement_product, 4);
     
             _this.set_up_variants();
             _this.set_up_specification();

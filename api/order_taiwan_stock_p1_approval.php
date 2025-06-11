@@ -84,16 +84,36 @@ try {
 }
 
 
+// seperate the items from 'C' and 'J'
+$c_items = array();
+$w_items = array();
+
+for($i=0; $i<count($items_array); $i++) 
+{
+    $item_id = $items_array[$i]['id'];
+    $item_status = $items_array[$i]['confirm'];
+
+    if($item_status == 'C')
+    {
+        array_push($c_items, $items_array[$i]);
+    }
+    else if($item_status == 'J')
+    {
+        array_push($w_items, $items_array[$i]);
+    }
+}
+
 try{
 
-    for($i=0; $i<count($items_array); $i++) 
+    for($i=0; $i<count($c_items); $i++) 
     {
-        $item_id = $items_array[$i]['id'];
+        $item_id = $c_items[$i]['id'];
 
         if($item_id != 0)
         {
             $query = "update od_item
             SET
+            `status_at` = now(),
                 `status` = 2
             where id = :id and confirm = 'C' ";
 
@@ -116,6 +136,40 @@ try{
         }
 
     }
+
+    
+    for($i=0; $i<count($w_items); $i++) 
+    {
+        $item_id = $w_items[$i]['id'];
+
+        if($item_id != 0)
+        {
+            $query = "update od_item
+            SET
+                `status` = 3,
+                `status_at` = now()
+            where id = :id and confirm = 'J' ";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            $stmt->bindParam(':id', $item_id);
+        }
+    
+        $jsonEncodedReturnArray = "";
+        if ($stmt->execute()) {
+            $returnArray = array('ret' => $item_id);
+            $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+        }
+        else
+        {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+        }
+
+    }
+
 
     $query = "INSERT INTO od_process
     SET
@@ -160,11 +214,28 @@ try{
         die();
     }
 
-    order_type_notification($user_name, 'access3', 'access1, access2', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $action, $items_array, $od_id, "stock");
+    $access7 = GetAccess7($db, $od_id);
+    $access7 = ltrim($access7, ',');
+
+    if(count($c_items) > 0)
+        order_type_notification($user_name, 'access3', 'access1, access2', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $action, $c_items, $od_id, "stock");
+
+    if(count($w_items) > 0)
+        order_type_notification_warehouse($user_name, 'access1, access3, access4, access5', 'access2', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $action, $w_items, $od_id, "stock", $access7);
 
     echo $jsonEncodedReturnArray;
 }
 catch (Exception $e)
 {
     error_log($e->getMessage());
+}
+
+function GetAccess7($db, $uid)
+{
+    $query = "SELECT access7 FROM od_main WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $uid);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['access7'];
 }

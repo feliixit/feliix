@@ -191,7 +191,7 @@ function GetOrderInfo($task_id, $db)
 {
     $sql = "select id, od_name, order_type, serial_name
             from od_main
-            where task_id in (select id from project_other_task where stage_id = " . $task_id . ")";
+            where task_id in (select id from project_other_task where stage_id = " . $task_id . ") and status <> -1";
 
     $stmt = $db->prepare($sql);
     $stmt->execute();
@@ -214,7 +214,7 @@ function GetInquiryInfo($task_id, $db)
 {
     $sql = "select id, iq_name, order_type, serial_name
             from iq_main
-            where task_id in (select id from project_other_task where stage_id = " . $task_id . ")";
+            where task_id in (select id from project_other_task where stage_id = " . $task_id . ") and status <> -1";
 
     $stmt = $db->prepare($sql);
     $stmt->execute();

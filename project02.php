@@ -28,9 +28,26 @@ try {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $user_id = $decoded->data->id;
+        $username = $decoded->data->username;
 
-$GLOBALS['position'] = $decoded->data->position;
-$GLOBALS['department'] = $decoded->data->department;
+        $GLOBALS['position'] = $decoded->data->position;
+        $GLOBALS['department'] = $decoded->data->department;
+
+        if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
+        $database = new Database();
+        $db = $database->getConnection();
+
+        $special_agreement = false;
+
+        $query = "SELECT * FROM access_control WHERE special_agreement LIKE '%" . $username . "%' ";
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $special_agreement = true;
+        }
+
 
 $position = $decoded->data->position;
 $department = $decoded->data->department;
@@ -39,21 +56,21 @@ $department = $decoded->data->department;
 $test_manager = $decoded->data->test_manager;
 
 // 5. 針對 Reporting Section的內容，只有 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到 幫Mary Jude Jeng Articulo(9) 和 Glendon Wendell Co(41)
-if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41 || $user_id == 139)
+if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41 || $user_id == 190 || $user_id == 153 || $user_id == 198)
 $access5 = true;
 
 // QOUTE AND PAYMENT Management
 if(trim(strtoupper($department)) == 'SALES')
 {
-if(trim(strtoupper($position)) == 'SALES MANAGER')
+if(trim(strtoupper($position)) == 'CUSTOMER VALUE DIRECTOR')
 {
-$access6 = true;
+$access5 = true;
 }
 }
 
 if(trim(strtoupper($department)) == 'LIGHTING')
 {
-if(trim(strtoupper($position)) == 'LIGHTING MANAGER')
+if(trim(strtoupper($position)) == 'LIGHTING VALUE CREATION DIRECTOR')
 {
 $access6 = true;
 }
@@ -61,7 +78,7 @@ $access6 = true;
 
 if(trim(strtoupper($department)) == 'OFFICE')
 {
-if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+if(trim(strtoupper($position)) == 'OFFICE SPACE VALUE CREATION DIRECTOR')
 {
 $access6 = true;
 }
@@ -79,7 +96,7 @@ if(trim(strtoupper($department)) == 'ENGINEERING')
 {
 if(trim(strtoupper($position)) == "ENGINEERING MANAGER")
 {
-$access6 = true;
+$access5 = true;
 }
 }
 
@@ -87,7 +104,7 @@ if(trim(strtoupper($department)) == 'ADMIN')
 {
 if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
 {
-$access6 = true;
+$access5 = true;
 }
 }
 
@@ -197,6 +214,7 @@ header('location:index');
             dialogshow($('.list_function a.fn6'), $('.list_function .dialog.fn6'));
             dialogshow($('.list_function a.fn7'), $('.list_function .dialog.fn7'));
             dialogshow($('.list_function a.fn8'), $('.list_function .dialog.fn8'));
+            dialogshow($('.list_function a.fn10'), $('.list_function .dialog.fn10'));
 
             $('header').click(function () {
                 dialogclear()
@@ -337,6 +355,32 @@ header('location:index');
             display: block;
             min-width: 180px;
         }
+
+        div.red {
+            color: red;
+        }
+
+        div.red a {
+            color: red!important;
+        }
+
+        .dialog.left {
+            left: unset;
+            right: 12px;
+        }
+
+        .dialog.left::before {
+            border-color: transparent var(--fth04) transparent transparent;
+            left: unset;
+            right: -5px;
+        }
+
+        .dialog.left::after {
+            border-color: transparent #fff transparent transparent;
+            left: unset;
+            right: 0;
+        }
+       
     </style>
 
 </head>
@@ -1173,7 +1217,66 @@ header('location:index');
                 <div class="popupblock">
                     <a id="status_fn9" class="fn9" @click="apply_for_expense()">Apply Expense</a>
                 </div>
+<?php if ($special_agreement == true) { ?>
+                <div class="popupblock">
+                    <a id="status_fn10" class="fn10" :ref="'a_fn10'">Special Agreement</a>
+                    <div id="special_dialog" class="dialog left fn10" :ref="'dlg_fn10'">
+                        <h6>Special Agreement:</h6>
+                        <div class="formbox">
+                            <dl>
+                                <dt class="head">Description:</dt>
+                                <dd><textarea name="" id="" v-model="special_remark"></textarea></dd>
 
+                                <dt></dt>
+                                <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                            <span class="upload-des">choose file</span>
+                                            <input class="input" type="file" name="special_file" value placeholder="choose file"
+                                                   ref="special_file" v-show="special_canSub" @change="special_changeFile()" multiple/>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd>
+                                    <div class="browser_group">
+
+                                        <div class="pad">
+                                            <div class="file-list">
+                                                <div class="file-item" v-for="(item,index) in special_fileArray" :key="index">
+                                                    <p>
+                                                        {{item.name}}
+                                                        <span @click="special_deleteFile(index)" v-show="item.progress==0"
+                                                              class="upload-delete"><i class="fas fa-backspace"></i>
+                                                            </span>
+                                                    </p>
+                                                    <div class="progress-container" v-show="item.progress!=0">
+                                                        <div class="progress-wrapper">
+                                                            <div class="progress-progress"
+                                                                 :style="'width:'+item.progress*100+'%'"></div>
+                                                        </div>
+                                                        <div class="progress-rate">
+                                                            <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                            <span v-else><i class="fas fa-check-circle"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="btnbox">
+                                                <a class="btn small" @click="special_clear">Cancel</a>
+                                                <a class="btn small green" @click="special_create">Save</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </dd>
+
+
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+<?php } ?>
             </div>
         </div>
         <div class="block left">
@@ -1374,10 +1477,12 @@ if ($access6 == true) {
                     <ul>
                         <li class="morespace">
                             <div v-for='(receive_record, index) in project_orders'>
-                                • {{ receive_record.order_type == 'taiwan' ? 'Order – Close Deal' : receive_record.order_type == 'mockup' ? 'Order – Mockup' : '' }} <br>
+                                • {{ receive_record.order_type == 'taiwan' ? 'Order – Close Deal' : receive_record.order_type == 'mockup' ? 'Order – Mockup' : receive_record.order_type == 'sample' ? 'Order – Sample' : receive_record.order_type == 'stock' ? 'Order – Stock' : '' }} <br>
                                 <span>
                                         <a v-if="receive_record.order_type == 'taiwan'" :href="'order_taiwan_p4?id=' + receive_record.id" target="_blank" class="attch">{{ receive_record.serial_name + ' ' + receive_record.od_name }}</a>
                                         <a v-if="receive_record.order_type == 'mockup'" :href="'order_taiwan_mockup_p4?id=' + receive_record.id" target="_blank" class="attch">{{ receive_record.serial_name + ' ' + receive_record.od_name }}</a>
+                                        <a v-if="receive_record.order_type == 'sample'" :href="'order_taiwan_sample_p4?id=' + receive_record.id" target="_blank" class="attch">{{ receive_record.serial_name + ' ' + receive_record.od_name }}</a>
+                                        <a v-if="receive_record.order_type == 'stock'" :href="'order_taiwan_stock_p4?id=' + receive_record.id" target="_blank" class="attch">{{ receive_record.serial_name + ' ' + receive_record.od_name }}</a>
                                 </span>
                                 <br>({{ receive_record.username  }} at {{ receive_record.created_at  }})
                             </div>
@@ -1396,6 +1501,24 @@ if ($access6 == true) {
                                 <span v-for="item in receive_record.items">
                                         <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank"
                                            class="attch">{{item.filename}}</a>
+                                    </span>
+                                <br>({{ receive_record.username }} at {{ receive_record.created_at }})
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a" v-if="title != 'technician'">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Transmittal</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                            <div v-for='(receive_record, index) in transmittal' :class="receive_record.followup == 'Y' ? 'red' : ''">
+                                <a :href="'transmittal?id=' + receive_record.id">• {{ receive_record.comment }}</a> <br v-if="receive_record.items.length > 0">
+                                <span v-for="item in receive_record.items">
+                                        <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank"
+                                           class="attch" style="color: var(--fth05);">{{item.filename}}</a>
                                     </span>
                                 <br>({{ receive_record.username }} at {{ receive_record.created_at }})
                             </div>
@@ -1423,7 +1546,27 @@ if ($access6 == true) {
                         </li>
                     </ul>
                 </div>
-
+<?php if ($special_agreement == true) { ?>
+                <div class="tablebox lv2a">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Special Agreement</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                            <div v-for='(receive_record, index) in project_specials'>
+                                <div style="white-space: break-spaces;">• {{ receive_record.comment }}</div>
+                                <span v-for="item in receive_record.items">
+                                        <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank"
+                                           class="attch">{{item.filename}}</a>
+                                    </span>
+                                <br>
+                                ({{ receive_record.username }} at {{ receive_record.created_at }})
+                                <br>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+<?php } ?>
             </div>
 
             <div class="Info_B" style="display: none;">
@@ -1614,6 +1757,8 @@ if ($access6 == true) {
                             <template v-for="(od, idx) in receive_record.order" >
                                 <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'order_taiwan_sample_p4?id=' + od.id"  v-if="od.order_type == 'sample'"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'order_taiwan_stock_p4?id=' + od.id"  v-if="od.order_type == 'stock'"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.inquiry" >
                                 <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank">• {{ od.serial_name }} {{ od.iq_name }} </a>
@@ -1634,9 +1779,9 @@ if ($access6 == true) {
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/project02.js"></script>
 <script src="js/a076d05399.js"></script>
 <script>

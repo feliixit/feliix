@@ -81,8 +81,10 @@ else
         die();
     }
 
-    if($user_id != 1 && $user_id != 2)
+   if($user_id != 1 && $user_id != 2)
         EmailNotify($id, $db);
+
+    update_product_category_tags_index($id, $db);
 
     http_response_code(200);
     echo json_encode(array("message" => "Deleted at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -91,12 +93,12 @@ else
 
 function EmailNotify($id, $db){
     $_record = GetProductCategory($id, $db);
-    if(count($_record) > 0)
+    if(count($_record) > 0 && $_record[0]['category'] != "20000000")
         product_notify("delete", $_record[0]);
 }
 
 function GetProductCategory($id, $db){
-    $query = "SELECT p.id, p.category, p.sub_category, p.brand, p.code, p.photo1, p.created_at, p.create_id, p.updated_at, p.updated_id, p.deleted_time, p.attributes, c.username creator, u.username updator, d.username deletor  FROM product_category  p left join user c on p.create_id = c.id left join user u on p.updated_id = u.id  left join user d on p.deleted_id = d.id WHERE p.id = :id";
+    $query = "SELECT p.id, p.category, p.sub_category, p.brand, p.code, p.photo1, p.created_at, p.create_id, p.updated_at, p.updated_id, p.deleted_id, p.deleted_time, p.attributes, c.username creator, u.username updator, d.username deletor  FROM product_category  p left join user c on p.create_id = c.id left join user u on p.updated_id = u.id  left join user d on p.deleted_id = d.id WHERE p.id = :id";
 
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $id);
@@ -111,20 +113,24 @@ function GetProductCategory($id, $db){
         $variation1_value = [];
         $variation2_value = [];
         $variation3_value = [];
+        $variation4_value = [];
 
         $variation1_text = "";
         $variation2_text = "";
         $variation3_text = "";
+        $variation4_text = "";
 
         if(count($product) > 0)
         {
             $variation1_text = $product[0]['k1'];
             $variation2_text = $product[0]['k2'];
             $variation3_text = $product[0]['k3'];
+            $variation4_text = $product[0]['k4'];
 
             $variation1_value = [];
             $variation2_value = [];
             $variation3_value = [];
+            $variation4_value = [];
 
             for($i = 0; $i < count($product); $i++)
             {
@@ -139,6 +145,10 @@ function GetProductCategory($id, $db){
                 if (!in_array($product[$i]['v3'],$variation3_value))
                 {
                     array_push($variation3_value,$product[$i]['v3']);
+                }
+                if (!in_array($product[$i]['v4'],$variation4_value))
+                {
+                    array_push($variation4_value,$product[$i]['v4']);
                 }
             }
         }
@@ -156,6 +166,8 @@ function GetProductCategory($id, $db){
         $variation2_custom = $variation2_text;
         $variation3 = 'custom';
         $variation3_custom = $variation3_text;
+        $variation4 = 'custom';
+        $variation4_custom = $variation4_text;
 
         for($i = 0; $i < count($special_information); $i++)
         {
@@ -181,6 +193,12 @@ function GetProductCategory($id, $db){
                         $variation3 = $variation3_text;
                         $variation3_custom = "";
                     }
+
+                    if($lv3[$j]['category'] == $variation4_text)
+                    {
+                        $variation4 = $variation4_text;
+                        $variation4_custom = "";
+                    }
                 }
             }
             
@@ -202,6 +220,12 @@ function GetProductCategory($id, $db){
         {
             $variation3 = "";
             $variation3_custom = "";
+        }
+
+        if($variation4_text == "")
+        {
+            $variation4 = "";
+            $variation4_custom = "";
         }
 
         $attribute_list = [];
@@ -229,6 +253,10 @@ function GetProductCategory($id, $db){
                 if($variation3_text == $special_info_json[$i]->category)
                 {
                     $value = $variation3_value;
+                }
+                if($variation4_text == $special_info_json[$i]->category)
+                {
+                    $value = $variation4_value;
                 }
 
                 if(count($value) > 0)
@@ -262,6 +290,13 @@ function GetProductCategory($id, $db){
                                 );
         }
 
+        if($variation4 == "custom" && $variation4_custom != "4th Variation")
+        {
+            $attribute_list[] = array("category" => $variation4_text,
+                                   "value" => $variation4_value,
+                                );
+        }
+
         $merged_results[] = array( "id" => $row["id"],
                             "category" => $row["category"],
                             "tags" => explode(',', $row["tags"]),
@@ -275,6 +310,7 @@ function GetProductCategory($id, $db){
                             "updated_at" => $row["updated_at"],
                             "updated_id" => $row["updated_id"],
 
+                            "deleted_id" => $row["deleted_id"],
                             "deleted_time" => $row["deleted_time"],
 
                             "creator" => $row["creator"],
@@ -311,7 +347,7 @@ function GetValue($str)
 }
 
 function GetProduct($id, $db){
-    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+    $sql = "SELECT *, CONCAT('https://storage.googleapis.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
 
     $merged_results = array();
 
@@ -323,9 +359,11 @@ function GetProduct($id, $db){
         $k1 = GetKey($row['1st_variation']);
         $k2 = GetKey($row['2rd_variation']);
         $k3 = GetKey($row['3th_variation']);
+        $k4 = GetKey($row['4th_variation']);
         $v1 = GetValue($row['1st_variation']);
         $v2 = GetValue($row['2rd_variation']);
         $v3 = GetValue($row['3th_variation']);
+        $v4 = GetValue($row['4th_variation']);
         $checked = '';
         $code = $row['code'];
         $price = $row['price'];
@@ -349,9 +387,11 @@ function GetProduct($id, $db){
                                     "k1" => $k1, 
                                     "k2" => $k2, 
                                     "k3" => $k3, 
+                                    "k4" => $k4,
                                     "v1" => $v1, 
                                     "v2" => $v2, 
                                     "v3" => $v3, 
+                                    "v4" => $v4,
                                     "checked" => $checked, 
                                     "code" => $code, 
                                     "price" => $price, 
@@ -553,7 +593,7 @@ function GetAccessoryInfomation($cat_id, $db, $product_id){
 
 function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
 
-    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.cloud.google.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
+    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.googleapis.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY id ";
 
@@ -586,5 +626,12 @@ function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
 
 }
 
+function update_product_category_tags_index($id, $db) {
+    // clear all data
+    $query = "DELETE FROM product_category_tags_index WHERE pid = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+}
 
 ?>

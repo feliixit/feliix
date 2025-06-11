@@ -74,6 +74,44 @@ switch ($method) {
 
         $block_array = GetQuotationItems($qid, $db);
 
+        // get order type
+        $order_type = "";
+        $query = "SELECT order_type FROM `od_main` WHERE id = :od_id";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':od_id', $od_id);
+        try {
+            if ($stmt->execute()) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $order_type = $row['order_type'];
+            } 
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
+        }
+
+        $which_pool = "Project Pool";
+        $as_sample = "No";
+
+        if($order_type == "mockup")
+        {
+            $which_pool = "Project Pool";
+            $as_sample = "Yes";
+        }
+        
+        if($order_type == "stock")
+        {
+            $which_pool = "Stock Pool";
+            $as_sample = "No";
+        }
+        
+        if($order_type == "sample")
+        {
+            $which_pool = "Stock Pool";
+            $as_sample = "Yes";
+        }
         
         try {
 
@@ -98,13 +136,19 @@ switch ($method) {
                     `listing` = :listing,
                     `qty` = :qty,
                     `backup_qty` = '',
+                    `unit` = '',
                     `srp` = :srp,
                     `date_needed` = :date_needed,
                     `pid` = :pid,
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
+                    `v4` = :v4,
+                    `ps_var` = :ps_var,
+                    `which_pool` = :which_pool,
+                    `as_sample` = :as_sample,
                     `status` = 0,
+                    `status_at` = now(),
                     `normal` = :normal,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -118,8 +162,8 @@ switch ($method) {
                 $brand_other = '';
 
                 $photo1 = isset($block_array[$i]['photo']) ? $block_array[$i]['photo'] : '';
-                $photo2 = '';
-                $photo3 = '';
+                $photo2 = isset($block_array[$i]['photo2']) ? $block_array[$i]['photo2'] : '';
+                $photo3 = isset($block_array[$i]['photo3']) ? $block_array[$i]['photo3'] : '';
 
                 $code = isset($block_array[$i]['code']) ? $block_array[$i]['code'] : '';
 
@@ -134,13 +178,16 @@ switch ($method) {
                 $date_needed =  '';
                 $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
 
-
                 $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
                 $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
                 $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+                $v4 = isset($block_array[$i]['v4']) ? $block_array[$i]['v4'] : '';
+
+                $ps_var = isset($block_array[$i]['ps_var']) ? $block_array[$i]['ps_var'] : [];
+                $json_ps_var = json_encode($ps_var);
 
                 // check if normal product
-                $is_normal = IsNormalProduct($pid, $v1, $v2, $v3, $db);
+                $is_normal = IsNormalProduct($pid, $v1, $v2, $v3, $v4, $db);
 
                 // bind the values
                 $stmt->bindParam(':od_id', $od_id);
@@ -163,6 +210,11 @@ switch ($method) {
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+                $stmt->bindParam(':v4', $v4);
+
+                $stmt->bindParam(':ps_var', $json_ps_var);
+                $stmt->bindParam(':which_pool', $which_pool);
+                $stmt->bindParam(':as_sample', $as_sample);
 
                 $stmt->bindParam(':normal', $is_normal);
               
@@ -314,6 +366,8 @@ function GetBlocks($qid, $db){
         `type`,
         code,
         photo,
+        photo2,
+        photo3,
         qty,
         price,
         discount,
@@ -322,6 +376,8 @@ function GetBlocks($qid, $db){
         v1,
         v2,
         v3,
+        v4,
+        ps_var,
         listing,
         num,
         pid
@@ -343,6 +399,8 @@ function GetBlocks($qid, $db){
         $type = $row['type'];
         $code = $row['code'];
         $photo = $row['photo'];
+        $photo2 = $row['photo2'];
+        $photo3 = $row['photo3'];
         $qty = $row['qty'];
         $price = $row['price'];
         $num = $row['num'];
@@ -353,10 +411,14 @@ function GetBlocks($qid, $db){
         $v1 = $row['v1'];
         $v2 = $row['v2'];
         $v3 = $row['v3'];
+        $v4 = $row['v4'];
+
+        $ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
+
         $listing = $row['listing'];
     
         $type == "" ? "" : "image";
-        $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+        $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
   
         $merged_results[] = array(
             "id" => $id,
@@ -364,6 +426,8 @@ function GetBlocks($qid, $db){
             "code" => $code,
             "type" => $type,
             "photo" => $photo,
+            "photo2" => $photo2,
+            "photo3" => $photo3,
             "type" => $type,
             "url" => $url,
             "qty" => $qty,
@@ -376,6 +440,8 @@ function GetBlocks($qid, $db){
             "v1" => $v1,
             "v2" => $v2,
             "v3" => $v3,
+            "v4" => $v4,
+            "ps_var" => $ps_var,
             "list" => $listing,
           
         );
@@ -435,6 +501,8 @@ function GetQuotationItems($qid, $db){
                 $type = $row['type'];
                 $code = $row['code'];
                 $photo = $row['photo'];
+                $photo2 = $row['photo2'];
+                $photo3 = $row['photo3'];
                 $qty = $row['qty'];
                 $price = $row['price'];
                 $num = $row['num'];
@@ -445,10 +513,13 @@ function GetQuotationItems($qid, $db){
                 $v1 = $row['v1'];
                 $v2 = $row['v2'];
                 $v3 = $row['v3'];
+                $v4 = $row['v4'];
+                //$ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
+                $ps_var = $row['ps_var'];
                 $listing = $row['list'];
             
                 $type == "" ? "" : "image";
-                $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+                $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
             
                 $merged_results[] = array(
                     "id" => $id,
@@ -456,6 +527,8 @@ function GetQuotationItems($qid, $db){
                     "code" => $code,
                     "type" => $type,
                     "photo" => $photo,
+                    "photo2" => $photo2,
+                    "photo3" => $photo3,
                     "type" => $type,
                     "url" => $url,
                     "qty" => $qty,
@@ -468,6 +541,8 @@ function GetQuotationItems($qid, $db){
                     "v1" => $v1,
                     "v2" => $v2,
                     "v3" => $v3,
+                    "v4" => $v4,
+                    "ps_var" => $ps_var,
                     "list" => $listing,
                     
                 );
@@ -543,7 +618,7 @@ function GetBrandInfo($pid, $db)
     return $brand;
 }
 
-function IsNormalProduct($pid, $v1, $v2, $v3, $db){
+function IsNormalProduct($pid, $v1, $v2, $v3, $v4, $db){
     $is_normal = 0;
     $variation_mode = 0;
 
@@ -574,21 +649,23 @@ function IsNormalProduct($pid, $v1, $v2, $v3, $db){
    
     }
 
-    if($variation_mode == 1 && $v1 == '' && $v2 == '' && $v3 == '')
+    if($variation_mode == 1 && $v1 == '' && $v2 == '' && $v3 == '' && $v4 == '')
         $is_normal = 1;
 
     return $is_normal;
 }
 
 function MatchBrandPattern($code){
-    $patterns = ['FELIIX CL ==> COLORS',
+    $patterns = ['FELIIX CL ==>COLORS',
     'FELIIX DL ==>DANCELIGHT',
     'FELIIX ET ==>ELITES',
     'FELIIX EL ==>EVERLIGHT',
+    'FELIIX GD ==>GLEDOPTO',
     'FELIIX GT ==>GENTECH',
     'FELIIX HG ==>HUANG GONG',
     'FELIIX LD ==>LEDOUX',
     'FELIIX RT ==>ROOSTER',
+    'FELIIX SG ==>SASUGAS',
     'FELIIX SD ==>SEEDDESIGN',
     'FELIIX SB ==>SHAN BEN',
     'FELIIX ST ==>SHINE TOP',

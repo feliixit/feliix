@@ -125,7 +125,7 @@ function SendNotifyMail($last_id, $uid, $item_id)
     $database = new Database();
     $db = $database->getConnection();
 
-    f($item_id != 0)
+    if($item_id != 0)
         $_record = GetTaskReplyDetail($last_id, $db);
     else 
         $_record = GetTaskDetail($last_id, $db);

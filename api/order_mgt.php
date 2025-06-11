@@ -92,6 +92,8 @@ $query = "SELECT pm.id,
                 ps.id as stage_id,
                 pm.serial_name,
                 pm.task_type,
+                p.pic1,
+                p.pic2,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
@@ -255,6 +257,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_at = $row['updated_at'];
 
     $task_type = $row['task_type'];
+    $pic1 = $row['pic1'];
+    $pic2 = $row['pic2'];
 
     if($task_type != "")
     {
@@ -280,6 +284,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_at" => $updated_at,
  
         "task_type" => $task_type,
+        "pic1"=> $pic1,
+        "pic2"=> $pic2
      
     );
 }
@@ -317,6 +323,9 @@ function GetTaskDetail($task_id, $task_type, $db)
 
     if($task_type == 'OS')
         $table = "project_other_task_o";
+
+    if($task_type == 'SVC')
+        $table = "project_other_task_sv";
 
     $query = "select title from " . $table . " where id = " . $task_id;
     $stmt = $db->prepare( $query );

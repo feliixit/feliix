@@ -99,7 +99,8 @@ try{
             $query = "update od_item
             SET
                 `status` = :status,
-                confirm = :confirm
+                confirm = :confirm,
+                `status_at` = now()
             where id = :id";
 
             if($pre_status != '')

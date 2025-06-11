@@ -60,7 +60,7 @@ $image = '';
 if(isset($_FILES['file']['name']))
 {
     $image_name = $_FILES['file']['name'];
-    $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
+    $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo","dwf","bmp");
     $extension = pathinfo($image_name, PATHINFO_EXTENSION);
     if(in_array(strtolower($extension), $valid_extensions))
     {

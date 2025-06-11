@@ -24,6 +24,9 @@ try {
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
 
+            if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
 $GLOBALS['position'] = $decoded->data->position;
 $GLOBALS['department'] = $decoded->data->department;
 
@@ -32,7 +35,7 @@ $test_manager = "1";
 }
 
 //  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
-if($user_id == 48 || $user_id == 2 || $user_id == 1 || $user_id == 6 || $user_id == 3 || $user_id == 89 || $user_id == 129 || $user_id == 137 || $user_id == 138 || $user_id == 148)
+if($user_id == 48 || $user_id == 2 || $user_id == 1 || $user_id == 6 || $user_id == 3 || $user_id == 89 || $user_id == 129 || $user_id == 137 || $user_id == 138 || $user_id == 148 || $user_id == 191 || $user_id == 195)
 $test_manager = "1";
 }
 
@@ -85,17 +88,17 @@ header( 'location:index' );
     <link rel="stylesheet" type="text/css" href="css/ui.css"/>
     <link rel="stylesheet" type="text/css" href="css/case.css"/>
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
+    <link rel="stylesheet" href="css/chosen/chosen.min.css">
 
     <!-- jQuery和js載入 -->
     <!-- <script defer src="//code.jquery.com/jquery-1.11.3.min.js"></script> -->
 
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js" defer></script>
-    <script defer src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
+    <script defer src="js/chosen/chosen.jquery.min.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -662,11 +665,11 @@ header( 'location:index' );
                         <li>{{receive_record.created_at}}<br>{{receive_record.created_by}}</li>
                         <li>{{receive_record.post[0].updated_at}}<br>{{receive_record.post[0].username}}</li>
                         <li>
-                            <button v-show="receive_record.is_edited == 1" @click="editRow(receive_record)"><i
+                            <button v-show="receive_record.is_edited == 1 && ((receive_record.project_category == 'Office Systems' && quotation_control == true) || receive_record.project_category != 'Office Systems') " @click="editRow(receive_record)"><i
                                     class="fas fa-edit"></i></button>
-                            <button v-show="receive_record.is_edited == 1" @click="duplicateRow(receive_record)"><i
+                            <button v-show="receive_record.is_edited == 1 && ((receive_record.project_category == 'Office Systems' && quotation_control == true) || receive_record.project_category != 'Office Systems') "  @click="duplicateRow(receive_record)"><i
                                     class="fas fa-copy"></i></button>
-                            <button v-show="receive_record.is_edited == 1" @click="deleteRow(receive_record)"><i
+                            <button v-show="receive_record.is_edited == 1 && ((receive_record.project_category == 'Office Systems' && quotation_control == true) || receive_record.project_category != 'Office Systems') " @click="deleteRow(receive_record)"><i
                                     class="fas fa-trash"></i></button>
                             <button v-show="receive_record.is_edited == 0" @click="confirmRow(receive_record)"><i
                                     class="fas fa-check"></i></button>
@@ -691,9 +694,9 @@ header( 'location:index' );
     </div>
 </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/quotation_mgt.js"></script>
 
 </html>

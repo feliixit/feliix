@@ -21,6 +21,10 @@ try {
         $GLOBALS['position'] = $decoded->data->position;
         $GLOBALS['department'] = $decoded->data->department;
 
+        
+if($decoded->data->limited_access == true)
+header( 'location:index' );
+
         //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
         //    header( 'location:index.php' );
     }
@@ -66,9 +70,9 @@ try {
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+          href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
@@ -79,7 +83,7 @@ try {
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
@@ -201,7 +205,8 @@ try {
         }
 
         #tb_product_list tbody tr td:nth-of-type(2) {
-            width: 400px;
+            width: 420px;
+            padding-right: 20px
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) {
@@ -213,6 +218,10 @@ try {
         }
 
         #tb_product_list tbody tr td:nth-of-type(5) {
+            width: 150px;
+        }
+
+        #tb_product_list tbody tr td:nth-of-type(6) {
             width: 80px;
         }
 
@@ -231,12 +240,30 @@ try {
             padding-bottom: 3px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(5) button {
+        #tb_product_list tbody tr td span.stock_qty,
+        #tb_product_list tbody tr td span.stock_qty_ware {
+            background-color: yellowgreen;
+            color: #fff;
+            font-size: 14px;
+            display: inline-block;
+            font-weight: 600;
+            border-radius: 5px;
+            margin: 3px 0 13px;
+            padding: 1px 15px 2px;
+            cursor: pointer;
+        }
+
+        #tb_product_list tbody tr td span.stock_qty_ware {
+            background-color: #5bc0de;
+        }
+
+        #tb_product_list tbody tr td:nth-of-type(6) button {
             border: 2px solid black;
             width: 34px;
             height: 34px;
             box-sizing: border-box;
-            padding: 3px 6px 6px 6px;
+            padding: 6px;
+            line-height: 1.0;
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) ul:last-of-type {
@@ -271,6 +298,95 @@ try {
             border-radius: 5px;
             padding: 0 7px 2px 6px;
             margin: 0 2px;
+        }
+
+        #tb_product_list tbody tr.set_format1 td, #tb_product_list tbody tr.set_format2 td {
+            background-color: rgba(255,255,0,0.1)!important;
+        }
+
+        #tb_product_list tbody tr.set_format1 > td:nth-of-type(1) {
+            width: 995px!important;
+            columns: 2!important;
+            padding: 10px 25px!important;
+        }
+
+        #tb_product_list tbody tr.set_format1 > td:nth-of-type(1) ul {
+            margin-bottom: 0;
+            break-inside: avoid-column;
+        }
+
+        #tb_product_list tbody tr.set_format1 > td:nth-of-type(1) > div.product_set_desc {
+            padding: 1px 7px 1px 5px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        #tb_product_list tbody tr.set_format1 > td:nth-of-type(1) > div.product_set_desc > div {
+            font-weight: 400;
+            white-space: pre-line;
+            padding-left: 10px;
+        }
+
+        #tb_product_list tbody tr.set_format1 > td:nth-of-type(2) {
+            width: 220px!important;
+        }
+
+        #tb_product_list tbody tr.set_format1 > td:nth-of-type(3) {
+            width: 150px!important;
+        }
+
+        #tb_product_list tbody tr.set_format1 > td:nth-of-type(4) {
+            width: 80px!important;
+        }
+
+        #tb_product_list tbody tr.set_format1 > td:nth-of-type(4) button {
+            border: 2px solid black;
+            width: 34px;
+            box-sizing: border-box;
+            padding: 6px
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(1) {
+            width: 115px!important;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(1) img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(2) {
+            width: 420px!important;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(2) ul {
+            margin-bottom: 0;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(3) {
+            width: 460px!important;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(3) ul {
+            margin-bottom: 0;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 3px;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(3) ul:last-of-type {
+            border-bottom: none;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(4) {
+            width: 220px!important;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(5) {
+            width: 150px!important;
+        }
+
+        #tb_product_list tbody tr.set_format2 > td:nth-of-type(6) {
+            width: 80px!important;
         }
 
         #tb_quotation_list {
@@ -478,6 +594,12 @@ try {
             cursor: pointer;
         }
 
+        .tb_order span.status_date {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
         .block.A .tb_order thead tr th:nth-of-type(2), .block.A .tb_order tbody tr td:nth-of-type(2) {
             min-width: 90px;
             text-align: center;
@@ -513,14 +635,22 @@ try {
         }
 
         .block.A .tb_order thead tr th:nth-of-type(8), .block.A .tb_order tbody tr td:nth-of-type(9) {
-            min-width: 180px;
+            min-width: 130px;
         }
 
         .block.A .tb_order thead tr th:nth-of-type(9), .block.A .tb_order tbody tr td:nth-of-type(10) {
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .block.A .tb_order thead tr th:nth-of-type(10), .block.A .tb_order tbody tr td:nth-of-type(11) {
+            min-width: 200px;
+        }
+
+        .block.A .tb_order thead tr th:nth-of-type(11), .block.A .tb_order tbody tr td:nth-of-type(12) {
+            min-width: 280px;
+        }
+
+        .block.A .tb_order thead tr th:nth-of-type(12), .block.A .tb_order tbody tr td:nth-of-type(13) {
             min-width: 450px;
         }
 
@@ -794,7 +924,7 @@ try {
             font-size: 23px;
             font-weight: 500;
             background-color: rgba(7, 220, 237, 0.5);
-            z-index: 999;
+            z-index: 1100;
         }
 
         .modal{
@@ -915,6 +1045,26 @@ try {
             padding: 30px 20px 5px;
         }
 
+        .infobox .basic_info div.last_order_history button {
+            font-size: 16px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-bottom: 3px;
+            padding: 0 7px 3px;
+            border-radius: 10px;
+        }
+
+        .infobox .basic_info div.last_order_history span {
+            font-size: 16px;
+            font-weight: 500;
+            color: red;
+        }
+
+        .infobox .basic_info div.last_order_history span a {
+            color: blue;
+        }
 
         .infobox .basic_info span.phasedout {
             font-size: 16px;
@@ -1053,6 +1203,24 @@ try {
 
         }
 
+        div.upper_section.product_set {
+            background: rgba(255,255,0,0.1);
+        }
+
+        div.upper_section.product_set .infobox .basic_info {
+            border-bottom: none;
+        }
+
+        div.upper_section.product_set .infobox .product_set_desc {
+            font-size: 16px;
+            margin-left: 22px;
+            padding: 0 20px 15px;
+        }
+
+        div.upper_section.product_set .infobox .product_set_desc span {
+            font-weight: 500;
+        }
+
         .middle_section {
             margin: 0 20px;
             border: 2px solid rgb(225, 225, 225);
@@ -1146,6 +1314,14 @@ try {
             opacity: 0.7;
             top: 35%;
             width: 4%;
+        }
+
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23e0e0e0' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5L4.25 4l2.5-2.5L5.25 0z'/%3e%3c/svg%3e") !important;
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23e0e0e0' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5L3.75 4l-2.5 2.5L2.75 8l4-4-4-4z'/%3e%3c/svg%3e") !important;
         }
 
         .extendex-top {
@@ -1316,6 +1492,46 @@ try {
             border-radius: 10px;
         }
 
+        #modal_product_catalog tbody td ul.supporting_attachment {
+            margin-top: 2px;
+        }
+
+        #modal_product_catalog tbody td ul.supporting_attachment li:nth-of-type(1) {
+            padding: 1px 0;
+        }
+
+        #modal_product_catalog tbody td ul.supporting_attachment span {
+            background-color: orange;
+            color: #fff;
+            font-size: 13px;
+            display: inline-block;
+            font-weight: 600;
+            border-radius: 5px;
+            margin: 3px 0px;
+            padding: 1px 10px 2px;
+            cursor: pointer;
+            border: none;
+        }
+
+        #modal_product_catalog tbody td ul.supporting_attachment span + span {
+            margin-left: 5px;
+        }
+
+        #modal_product_catalog tbody td ul.supporting_attachment li ~ li {
+            padding-left: 5px;
+        }
+
+        #modal_product_catalog tbody td ul.last_order_history button {
+            font-size: 14px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-left: 3px;
+            padding: 0 5px 3px;
+            border-radius: 10px;
+        }
+
         #modal_product_catalog tbody td div.phasedout_variant {
             text-align: left;
             color: red;
@@ -1337,6 +1553,14 @@ try {
 
         #modal_product_catalog tbody td div.phasedout_variant button:focus {
             outline-color: transparent!important;
+        }
+
+        #tb_product_list ul li:nth-of-type(1) span.phasedout_replacement {
+            background-color: orange;
+            color: white;
+            padding: 0px 5px 3px;
+            border-radius: 10px;
+            cursor: pointer;	
         }
 
         @media print {
@@ -1468,8 +1692,10 @@ try {
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
                         <th>Backup Qty</th>
+                        <th>Unit</th>
                         <th style="display: none;">Amount</th>
-                        <th>Date Needed by Client</th>
+                        <th>Date Needed</th>
+                        <th>Inventory Remarks</th>
                         <th>Notes</th>
                         <th>Shipping Way</th>
                         <th>Action</th>
@@ -1482,14 +1708,15 @@ try {
                         <td> {{item.serial_number}} </td>
                         <td>
                             <div class="read_block" v-if="!item.is_edit">
-                            {{ item.confirm_text }}<br>
-                            
+                                {{ item.confirm_text }}<br>
+                                <span class="status_date">{{ item.status_at }}</span>
                             </div>
 
                             <div class="write_block" v-if="item.is_edit">
                                 <select v-model="item.confirm">
                                     <option value="N">Not Yet Confirmed</option>
                                     <option value="C">Confirmed</option>
+                                    <option value="J">From Warehouse</option>
                                     <option value="D">Deleted</option>
                                 </select>
                             </div>
@@ -1573,6 +1800,15 @@ try {
                 </div>
             </td>
 
+            <td>
+                <div class="read_block" v-if="!item.is_edit">
+                    {{ item.unit }}
+                </div>
+                <div class="write_block" v-if="item.is_edit">
+                    <input type="text" v-model="item.unit">
+                </div>
+            </td>
+
             <td style="display: none;">
                 <div class="read_block" v-if="!item.is_edit">
                     {{ item.srp != '' ? '₱ ' + item.srp : '' }}
@@ -1588,6 +1824,30 @@ try {
                 </div>
                 <div class="write_block" v-if="item.is_edit">
                     <input type="text" v-model="item.date_needed">
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_edit">
+                    <!-- 收到的這個品項屬於哪種類型的庫存數量 -->
+                    Which Inventory Pool to Go?<br>
+                    {{ item.which_pool }}<br>
+                    <!-- 收到的這個品項是否當成樣品 -->
+                    Used as Sample?<br>
+                    {{ item.as_sample }}
+                </div>
+                <div class="write_block" v-if="item.is_edit">
+                    Which Inventory Pool to Go?<br>
+                    <select v-model="item.which_pool">
+                        <option value="Project Pool">Project Pool</option>
+                        <option value="Stock Pool">Stock Pool</option>
+                    </select>
+                    <br><br>
+                    Used as Sample?<br>
+                    <select v-model="item.as_sample">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
                 </div>
             </td>
 
@@ -1708,7 +1968,7 @@ try {
                     <th colspan="2">Description</th>
                     <th>Qty Needed</th>
                     <th style="display: none;">Amount</th>
-                    <th>Date Needed by Client</th>
+                    <th>Date Needed</th>
                     <th>Notes</th>
                     <th>Action</th>
                 </tr>
@@ -1778,7 +2038,7 @@ try {
                                 1 ( show available swatches ) , change the size to 1.5x 1.5 ,kindly include cable
                                 management ( cable outlets) and vertical pole ( same color with the table legs grey
                                 color.
-                                <a href="https://storage.cloud.google.com/feliiximg/1648525715_additional table.jpg"
+                                <a href="https://storage.googleapis.com/feliiximg/1648525715_additional table.jpg"
                                    target="_blank" class="attch">additional table.jpg</a>
                                 <i class="t">(Stan Fernandez at 2022-03-29 11:48:35)</i>
                                 <div class="already_read">Dennis Lin</div>
@@ -1794,7 +2054,7 @@ try {
                                 1 ( show available swatches ) , change the size to 1.5x 1.5 ,kindly include cable
                                 management ( cable outlets) and vertical pole ( same color with the table legs grey
                                 color.
-                                <a href="https://storage.cloud.google.com/feliiximg/1648525715_additional table.jpg"
+                                <a href="https://storage.googleapis.com/feliiximg/1648525715_additional table.jpg"
                                    target="_blank" class="attch">additional table.jpg</a>
                                 <i class="t">(Stan
                                     Fernandez at 2022-03-29 11:48:35)</i>
@@ -1857,7 +2117,7 @@ try {
 <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
      aria-hidden="true" id="modal_product_catalog">
 
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
         <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
 
@@ -1947,20 +2207,281 @@ try {
                             <th>Information</th>
                             <th>Specification</th>
                             <th>Price</th>
+                                <th>Inventory Status</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(item, index) in displayedPosts">
+                        <template v-for="(item, index) in displayedPosts">
+                                <!-- Product Set 子類別的產品，套用以下格式輸出到頁面上 -->
+                                <!-- set_format1 會套用在 Product Set 產品的主敘述，set_format2 會套用在 Product Set 產品的 Product1, Product 2, Product 3 -->
+                                <tr class="set_format1" v-if="item.sub_category == '10020000'">
+                                    <!-- 如果這個 Product Set 產品有 Product1 和 Product 2，則 rowspan=3；如果這個 Product Set 產品有 Product1 和 Product 2 和 Product 3，則 rowspan=4 -->
+                                    <td colspan="3">
+                                        <ul>
+                                            <li>
+                                                ID:
+                                            </li>
+                                            <li>
+                                                {{ item.id }}
+                                            </li>
+
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                Code:
+                                            </li>
+                                            <li>
+                                                {{ item.code }}
+                                            </li>
+
+                                        </ul>
+
+                                        <ul>
+                                            <li>
+                                                Category:
+                                            </li>
+                                            <li>
+                                                {{ item.category}} >> {{ item.sub_category_name}}
+                                            </li>
+
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                Tags:
+                                            </li>
+                                            <li>
+                                                <span v-for="(it, index) in item.tags">{{ it }}</span>
+                                            </li>
+
+                                        </ul>
+
+                                        <ul>
+                                            <li>
+                                                Created:
+                                            </li>
+                                            <li>
+                                                {{ item.created_at }} {{ item.created_name !== null ? '(' + item.created_name + ')' : '' }}
+                                            </li>
+
+                                        </ul>
+
+                                        <ul>
+                                            <li>
+                                                Updated:
+                                            </li>
+                                            <li>
+                                                {{ item.updated_name !== null ? item.updated_at : '' }} {{ item.updated_name !== null ? '(' + item.updated_name + ')' : '' }}
+                                            </li>
+
+                                        </ul>
+
+                                        <ul class="supporting_attachment">
+                                            <li></li>
+                                            <li>
+                                                <span v-if="item.product_ics.length > 0">IES File</span>
+                                                <span v-if="item.product_skp.length > 0">SketchUp File</span>
+                                                <span v-if="item.product_manual.length > 0">Supporting File</span>
+                                                <span v-if="item.is_replacement_product.length > 0">Replacement Product</span>
+                                            </li>
+                                        </ul>
+
+                                        <div class="product_set_desc">
+                                Description:
+                                <div>{{ item.description }}</div>
+                            </div>
+
+                                    </td>
+
+                                    <td>
+                                        <span>SRP: {{ item.price }}<br></span>
+                                        <span>QP: {{ item.quoted_price }}<br></span>
+                                    </td>
+
+                                    <td></td>
+
+                                    <!-- 如果這個 Product Set 產品有 Product1 和 Product 2，則 rowspan=3；如果這個 Product Set 產品有 Product1 和 Product 2 和 Product 3，則 rowspan=4 -->
+                                    <td :rowspan="item.product_set_cnt + 1">
+                                        <button id="edit01" @click="btnEditClick(item)" v-if="item.status != -1"><i aria-hidden="true" class="fas fa-caret-right"></i></button>
+                                    </td>
+                                </tr>
+
+
+                                <!-- set_format1 會套用在 Product Set 產品的主敘述，set_format2 會套用在 Product Set 產品的 Product1, Product 2, Product 3 -->
+                                <tr class="set_format2" v-for="(set, index) in item.product_set">
+                                    <td>
+                                        <img :src="img_url + set.photo1" v-if="set.photo1"></a>
+                                    </td>
+                                    <td>
+                                    <ul v-if="set.out == 'Y' || (set.out == 'Y' && set.replacement_product.length > 0) || (set.status == -1 && set.replacement_product.length > 0)">
+                            <li>
+                                    <!-- 依據這個停產的產品是否有 Replacement Product 的資料，沒有資料則用第一個 <span>，有資料則用二個 <span> -->
+                                    <span class="phasedout" v-if="set.replacement_product.length == 0">Phased Out</span>
+                                    <span class="phasedout_replacement" v-if="set.status != -1 && set.replacement_product.length > 0" @click="replacement_info(set.replacement_text)">Phased Out</span>
+                                    <span class="phasedout_replacement" v-if="set.status == -1 && set.replacement_product.length > 0" @click="replacement_info(set.replacement_text)">Deleted</span>
+                            </li>
+                                            <li></li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                ID:
+                                            </li>
+                                            <li>
+                                                {{ set.id }}
+                                            </li>
+
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                Code:
+                                            </li>
+                                            <li>
+                                                {{ set.code }}
+                                            </li>
+
+                                        </ul>
+
+                                        <ul>
+                                            <li>
+                                                Category:
+                                            </li>
+                                            <li>
+                                                {{ set.category}} >> {{ set.sub_category_name}}
+                                            </li>
+
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                Tags:
+                                            </li>
+                                            <li>
+                                                <span v-for="(it, index) in set.tags">{{ it }}</span>
+                                            </li>
+
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                Brand:
+                                            </li>
+                                            <li>
+                                                {{ set.brand }}
+                                            </li>
+
+                                        </ul>
+
+                                        <ul>
+                                            <li>
+                                                Created:
+                                            </li>
+                                            <li>
+                                                {{ set.created_at }} {{ set.created_name !== null ? '(' + set.created_name + ')' : '' }}
+                                            </li>
+
+                                        </ul>
+
+                                        <ul>
+                                            <li>
+                                                Updated:
+                                            </li>
+                                            <li>
+                                                {{ set.updated_name !== null ? set.updated_at : '' }} {{ set.updated_name !== null ? '(' + set.updated_name + ')' : '' }}
+                                            </li>
+
+                                        </ul>
+
+                                        <ul class="supporting_attachment">
+                                            <li></li>
+                                            <li>
+                                                <span v-if="set.product_ics.length > 0">IES File</span>
+                                                <span v-if="set.product_skp.length > 0">SketchUp File</span>
+                                                <span v-if="set.product_manual.length > 0">Supporting File</span>
+                                                <span v-if="set.is_replacement_product.length > 0">Replacement Product</span>
+                                            </li>
+                                        </ul>
+
+                                        <!-- 針對一個產品 ID， if (它的主產品在 product_category 資料表 last_order 欄位有值 or 它的任何一個子規格在 product 資料表 last_order 欄位有值)，就需要顯示下面的 <ul class="last_order_history"> 結構 -->
+                                        <ul class="last_order_history" v-if="set.is_last_order != ''">
+                                            <li>
+                                                Last Order History:
+                                            </li>
+                                            <li>
+                                                <button @click="last_order_info(set.is_last_order)">info</button>
+                                            </li>
+
+                                        </ul>
+
+                                        <!-- 如果停產的子規格數目大於 0，才需要顯示下面的<div class="phasedout_variant"> 結構 -->
+                                        <div class="phasedout_variant" v-if="set.phased_out_cnt > 0">
+
+                                            <!-- 如果停產的子規格數目大於或等於2，則顯示下面這一行 -->
+                                            ※ {{ set.phased_out_cnt }} variant{{ set.phased_out_cnt > 1 ? 's' : '' }} are phased out.
+
+                                            <!-- 當使用者點擊下方的 info 按鈕，這時候系統才會向資料庫利用這個產品的id，去查詢product這張表裡這個商品是哪些子規格停產，之後則會利用 sweetalert2@9 跑出一個彈出訊息框，訊息框裡面會列出停產子規格的資訊 -->
+                                            <!-- 並不需要網頁載入時，就把所有停產的子規格查詢出來 且 掛在網頁上。只有當使用者點擊下方的 info 按鈕，才需去額外查詢停產的子規格，以減少頁面負載量。 -->
+                                            <button @click="phased_out_info(set.phased_out_text)">info</button>
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+                                        <ul v-for="(att, index) in set.attribute_list">
+                                            <li>
+                                                {{ att.category }}:
+                                            </li>
+                                            <li v-if="att.value.length > 1">
+                                                <span v-for="(att_value, index) in att.value">{{att_value}}</span>
+                                            </li>
+                                            <li v-if="att.value.length == 1">
+                                                <template v-for="(att_value, index) in att.value">{{att_value}}</template>
+                                            </li>
+
+                                        </ul>
+
+                                    </td>
+
+                                    <td>
+                                        <span v-show="((cost_lighting == true && set.category == 'Lighting') || (cost_furniture == true && set.category == 'Systems Furniture')) && toggle == true">CP: {{ set.price_ntd }} <br v-if="set.str_price_ntd_change"> {{ set.str_price_ntd_change ?  set.str_price_ntd_change : '' }} <br></span>
+                                        <span>SRP: {{ set.price }} <br v-if="set.str_price_change"> {{ set.str_price_change ?  set.str_price_change : '' }} <br></span>
+                                        <span>QP: {{ set.quoted_price }} <br v-if="set.str_quoted_price_change"> {{ set.str_quoted_price_change ? set.str_quoted_price_change : '' }} <br></span>
+                                    </td>
+
+                                    <td>
+                                        Incoming<br>
+                                        <span class="stock_qty" @click="incoming_qty_info(set.incoming_html)">{{ set.incoming_qty }}</span><br>
+                                        Project Pool<br>
+                                        <span class="stock_qty_ware">{{ set.project_qty }}</span>
+                                        <span class="stock_qty_ware">{{ set.project_s_qty }}</span>
+                                        <br>
+
+                                        Stock Pool<br>
+                                        <span class="stock_qty_ware">{{ set.stock_qty }}</span>
+                                        <span class="stock_qty_ware">{{ set.stock_s_qty }}</span>
+                                        <br>
+                                        <!--
+                                        Project-Locked<br>
+                                        <span class="stock_qty_ware">10</span><br>
+                                        Freely Usable<br>
+                                        <span class="stock_qty_ware">5</span>
+                                        -->
+                                    </td>
+                                </tr>
+
+
+                                <!-- 非 Product Set 子類別的產品，套用以下格式輸出到頁面上 -->
+                                <tr v-for="(item, index) in displayedPosts">
+                                <tr v-if="item.sub_category != '10020000'">
 
                             <td><img
                                     :src="img_url + item.photo1" v-if="item.photo1 !== ''">
                             </td>
                             <td>
-                                <ul v-if="item.out == 'Y'">
-                                    <li>
-                                        <span class="phasedout">Phased Out</span>
-                                    </li>
+                            <ul v-if="item.out == 'Y' || (item.out == 'Y' && item.replacement_product.length > 0) || (item.status == -1 && item.replacement_product.length > 0)">
+                            <li>
+                                    <!-- 依據這個停產的產品是否有 Replacement Product 的資料，沒有資料則用第一個 <span>，有資料則用二個 <span> -->
+                                    <span class="phasedout" v-if="item.replacement_product.length == 0">Phased Out</span>
+                                    <span class="phasedout_replacement" v-if="item.status != -1 && item.replacement_product.length > 0" @click="replacement_info(item.replacement_text)">Phased Out</span>
+                                    <span class="phasedout_replacement" v-if="item.status == -1 && item.replacement_product.length > 0" @click="replacement_info(item.replacement_text)">Deleted</span>
+                            </li>
                                     <li></li>
                                 </ul>
                                 <ul>
@@ -2020,6 +2541,27 @@ try {
                                     </li>
                                 </ul>
 
+                                <ul class="supporting_attachment">
+                                            <li></li>
+                                            <li>
+                                                <span v-if="item.product_ics.length > 0">IES File</span>
+                                                <span v-if="item.product_skp.length > 0">SketchUp File</span>
+                                                <span v-if="item.product_manual.length > 0">Supporting File</span>
+                                                <span v-if="item.is_replacement_product.length > 0">Replacement Product</span>
+                                            </li>
+                                        </ul>
+
+                                <!-- 針對一個產品 ID， if (它的主產品在 product_category 資料表 last_order 欄位有值 or 它的任何一個子規格在 product 資料表 last_order 欄位有值)，就需要顯示下面的 <ul class="last_order_history"> 結構 -->
+                                <ul class="last_order_history"  v-if="item.is_last_order != ''">
+                                    <li>
+                                        Last Order History:
+                                    </li>
+                                    <li>
+                                        <button @click="last_order_info(item.is_last_order)">info</button>
+                                    </li>
+
+                                </ul>
+
                                 <!-- 如果停產的子規格數目大於 0，才需要顯示下面的<div class="phasedout_variant"> 結構 -->
                                 <div class="phasedout_variant" v-if="item.phased_out_cnt > 0">
 
@@ -2047,17 +2589,37 @@ try {
                                 </ul>
                             </td>
                             <td>
-                                <span v-show="show_ntd === true">CP: {{ item.price_ntd }} <br v-if="item.str_price_ntd_change"> {{ item.str_price_ntd_change ?  item.str_price_ntd_change : '' }}<br></span>
+                                <span v-show="((cost_lighting == true && item.category == 'Lighting') || (cost_furniture == true && item.category == 'Systems Furniture'))">CP: {{ item.price_ntd }} <br v-if="item.str_price_ntd_change"> {{ item.str_price_ntd_change ?  item.str_price_ntd_change : '' }}<br></span>
                                 <span>SRP: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
                                 <span>QP: {{ item.quoted_price }} <br v-if="item.str_quoted_price_change"> {{ item.str_quoted_price_change ? item.str_quoted_price_change : '' }}<br></span>
+                                </td>
+                                <td>
+                                    Incoming<br>
+                                    <span class="stock_qty" @click="incoming_qty_info(item.incoming_html)">{{ item.incoming_qty }}</span><br>
+                                    Project Pool<br>
+                                        <span class="stock_qty_ware">{{ item.project_qty }}</span>
+                                        <span class="stock_qty_ware">{{ item.project_s_qty }}</span>
+                                        <br>
+
+                                        Stock Pool<br>
+                                        <span class="stock_qty_ware">{{ item.stock_qty }}</span>
+                                        <span class="stock_qty_ware">{{ item.stock_s_qty }}</span>
+                                        <br>
+                                    <!--
+                                    Project-Locked<br>
+                                    <span class="stock_qty_ware">10</span><br>
+                                    Freely Usable<br>
+                                    <span class="stock_qty_ware">5</span>
+                                    -->
                             </td>
                             <td>
-                                <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true" 
+                                <button id="edit01" @click="btnEditClick(item)" v-if="item.status != -1"><i aria-hidden="true" 
                                                                                    class="fas fa-caret-right"></i>
                                 </button>
                             </td>
                         </tr>
 
+                            </template>
 
                         </tbody>
                     </table>
@@ -2076,46 +2638,669 @@ try {
 <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
      aria-hidden="true" id="modal_product_display">
 
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
         <div class="modal-content"
              style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
 
-            <template v-if="product.variation_mode != 1">
-                <div class="upper_section">
-                    <div class="imagebox">
-                        <div class="selected_image">
-                            <img :src="url" v-if="url !== ''">
-                        </div>
-                        <div class="image_list">
-                            <img v-if="product.photo1" :src="img_url + product.photo1"
-                                 @click="change_url(product.photo1)"/>
-                            <img v-if="product.photo2" :src="img_url + product.photo2"
-                                 @click="change_url(product.photo2)"/>
-                            <img v-if="product.photo3" :src="img_url + product.photo3"
-                                 @click="change_url(product.photo3)"/>
-                            <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
-                        </div>
-                    </div>
+                <!-- 如果載入的產品為 Product Set 子類別的產品，則需要使用下面的結構來顯示 Product Set 產品的基本資訊 -->
+                <div class="upper_section product_set noPrint" v-if="product.sub_category == '10020000'">
+
                     <div class="infobox">
                         <div class="basic_info">
-                        <span class="phasedout" v-if="out == 'Y' && out_cnt == 0">Phased Out</span>
-                                <span class="phasedout1" v-if="out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
-                                <span class="phasedout1" v-if="out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ out_cnt }} variants are phased out</span>
-                        <h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
-                            {{product.brand}}</h6>
-                            <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
-                            <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
-                                product.sub_category_name}}</h6>
-                            <!---->
-                            <div class="tags"><span v-for="(it, index) in product.tags">{{ it }}</span></div>
+                            
+                            <h3>ID: {{ product.pid }}</h3>
+                            <h3 style="word-break: break-all;">{{product.code}}</h3>
+                            <h6>{{ product.category}} >> {{ product.sub_category_name}}</h6>
+                            <div class="tags">
+                                <span v-for="(it, index) in product.tags">{{ it }}</span>
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="infobox">
                         <ul class="price_stock">
-                            <li>
-                                Suggested Retail Price: <span>{{price}}</span><span></span></li>
-                            <li>
-                                Quoted Price: <span>{{quoted_price}}</span><span></span></li>
+
+                            <li id="print_srp">
+                                Standard Retail Price: <span>{{product.price}}</span>
+                            </li>
+
+                            <li id="print_qp">
+                                Quoted Price: <span>{{product.quoted_price}}</span>
+                            </li>
+
                         </ul>
+
+                        <!-- 如果這個 Product Set 的 Description 是空值，則整個 <div class="product_set_desc"> 都不用被建立出來 -->
+                        <div class="product_set_desc">
+                            <span>Description: </span> {{ product.description }}
+                        </div>
+
+                        <!-- 針對 Product Set 產品的新加入方法 -->
+                        <div class="btnbox">
+                            <ul>
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image_set_select()" v-if="out==''">Add with Image</button>
+                                </li>
+                                <li>
+                                    <button class="btn btn-info" @click="add_without_image_set_select()" v-if="out==''">Add without Image</button>
+                                </li>
+                            </ul>
+
+                            <ul>
+                                <li>
+                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 如果載入的產品為 Product Set 子類別的產品，則需要使用原本整個 product_display_code 的結構，來一個一個顯示其中的 Product 1、Product 2、Product 3 -->
+                <template v-if="product.sub_category == '10020000'" v-for="(set, set_index) in product.product_set">
+                    <template v-if="set.variation_mode != 1">
+                        <div class="upper_section">
+                            <div class="imagebox">
+                                <div class="selected_image">
+                                    <img :src="set.url" v-if="set.url !== ''">
+                                </div>
+                                <div class="image_list">
+                                    <img v-if="set.photo1" :src="img_url + set.photo1"
+                                        @click="change_url_set(set, 1)"/>
+                                    <img v-if="set.photo2" :src="img_url + set.photo2"
+                                        @click="change_url_set(set, 2)"/>
+                                    <img v-if="set.photo3" :src="img_url + set.photo3"
+                                        @click="change_url_set(set, 3)"/>
+                                    <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                                </div>
+                            </div>
+                            <div class="infobox">
+                                <div class="basic_info">
+
+                                    <!-- 網頁載入時，if「這個產品的主產品在 product_category 資料表 last_order 欄位有值」或者「它的任何一個子規格在 product 資料表 last_order 欄位有值」，就需要顯示下面的 <div class="last_order_history"> -->
+                                    <div class="last_order_history" v-if="set.is_last_order != ''">
+                                        <!-- 在網頁載入時 或 當使用者還沒選擇任何一個子規格組合時，只會顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                                        <!-- 當使用者選擇了一個子規格組合時(也就是每個維度選項都選擇了)，只會顯示下方 <span> 結構來列出該子規格最後訂購日期和相關訂單，但是不會顯示下方的 <button> 結構 -->
+                                        <!-- 但當使用者本來選擇了某一個子規格組合，後來變成沒有選擇任何子規格時，則會只顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                                        <button @click="last_order_info(set.is_last_order)" v-if="set.last_have_spec">Last Order History</button>
+                                        <span v-if="set.last_order_name != ''">Last Ordered: {{ set.last_order_at }} at <a :href="set.last_order_url">{{ set.last_order_name }}</a></span>
+                                    </div>
+                                
+                                    <span class="phasedout" v-if="set.out == 'Y' && set.out_cnt == 0">Phased Out</span>
+                                    <span class="phasedout1" v-if="set.out_cnt == 1" @click="PhaseOutAlert_set(set.phased_out_text1)">1 variant is phased out</span>
+                                    <span class="phasedout1" v-if="set.out_cnt > 1" @click="PhaseOutAlert_set(set.phased_out_text1)">{{ set.out_cnt }} variants are phased out</span>
+                                <h3 style="word-break: break-all;">{{set.code}}</h3> <h6>
+                                    {{set.brand}}</h6>
+                                    <h6>{{ set.category}} >> {{
+                                        set.sub_category_name}}</h6>
+                                    <!---->
+                                    <div class="tags"><span v-for="(it, index) in set.tags">{{ it }}</span></div>
+                                </div>
+                                <ul class="price_stock">
+                                    <li>
+                                        Suggested Retail Price: <span>{{set.price}}</span><span></span></li>
+                                    <li>
+                                        Quoted Price: <span>{{set.quoted_price}}</span><span></span></li>
+                                </ul>
+
+                                <ul class="variants" v-if="set.variation1_value.length > 0">
+                            <li>
+                                Variants
+                            </li>
+                            <li v-if="set.variation1_value[0] !== '' && set.variation1_value[0] !== undefined">
+                                {{ set.variation1 !== 'custom' ? set.variation1 + ': ' : set.variation1_custom + ': '}} <template v-for="(item, index) in set.variation1_value">{{ (index + 1 !== set.variation1_value.length) ? item + ', ' : item}} </template>
+                            </li>
+                            <li v-show="set.variation1_value[0] !== '' && set.variation1_value[0] !== undefined">
+                                <select class="form-control" v-model="set.v1" @change="change_v_set(set)">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in set.variation1_value" :value="item" :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+                            <li v-if="set.variation2_value[0] !== '' && set.variation2_value[0] !== undefined">
+                                {{ set.variation2 !== 'custom' ? set.variation2 + ': ' : set.variation2_custom + ': ' }} <template v-for="(item, index) in set.variation2_value">{{ (index + 1 !== set.variation2_value.length) ? item + ', ' : item}} </template>
+                            </li>
+                            <li v-show="set.variation2_value[0] !== '' && set.variation2_value[0] !== undefined">
+                                <select class="form-control" v-model="set.v2" @change="change_v_set(set)">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in set.variation2_value" :value="item" :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+                            <li v-if="set.variation3_value[0] !== '' && set.variation3_value[0] !== undefined">
+                                {{ set.variation3 !== 'custom' ? set.variation3 + ': ' : set.variation3_custom + ': ' }} <template v-for="(item, index) in set.variation3_value">{{ (index + 1 !== set.variation3_value.length) ? item + ', ' : item}} </template>
+                            </li>
+                            <li v-show="set.variation3_value[0] !== '' && set.variation3_value[0] !== undefined">
+                                <select class="form-control" v-model="set.v3" @change="change_v_set(set)">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in set.variation3_value" :value="item" :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+                            <li v-if="set.variation4_value[0] !== '' && set.variation4_value[0] !== undefined">
+                                {{ set.variation4 !== 'custom' ? set.variation4 + ': ' : set.variation4_custom + ': ' }} <template v-for="(item, index) in set.variation4_value">{{ (index + 1 !== set.variation4_value.length) ? item + ', ' : item}} </template>
+                            </li>
+                            <li v-show="set.variation4_value[0] !== '' && set.variation4_value[0] !== undefined">
+                                <select class="form-control" v-model="set.v4" @change="change_v_set(set)">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in set.variation4_value" :value="item" :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+
+                            <template v-for="(item, index) in set.accessory_infomation" v-if="show_accessory">
+                                <li>{{ item.category }}</li>
+                                <li>
+                                    <select class="selectpicker" data-width="100%" :id="set.id + 'tag'+index">
+                                        <option :data-thumbnail="set.detail.url" v-for="(detail, index) in item.detail[0]">
+                                            {{detail.code}}
+                                        </option>
+                                    </select>
+                                </li>
+                            </template>
+                        </ul>
+
+
+                                <div class="btnbox">
+                                    <ul>
+                                        <li>
+                                            <button class="btn btn-info" @click="add_with_image_set(set)" v-if="set.out==''">Add with Image</button>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-info" @click="add_without_image_set(set)" v-if="set.out==''">Add without Image
+                                            </button>
+                                        </li>
+                                    </ul>
+<!--
+                                    <ul v-if="set.variation_mode == 1">
+                                        <li>
+                                            <button class="btn btn-info" @click="add_with_image_set(set,'all')"  v-if="set.out == '' && (set.out=='' || set.variation_mode == 1)"> Add all spec. with
+                                                Image
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-info" @click="add_without_image_set(set, 'all')" v-if="set.out == '' && (set.out=='' || set.variation_mode == 1)" > Add all spec.
+                                                without Image
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    -->
+                                    <ul>
+                                        <li>
+                                            <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="middle_section" v-if="set.specification.length > 0"><h5>Specification</h5>
+                            <table>
+                                <tbody>
+                                <template v-for="(item, index) in set.specification">
+                                    <tr>
+                                        <td>
+                                            {{item.k1}}
+                                        </td>
+                                        <td>
+                                            {{item.v1}}
+                                        </td>
+                                        <td>
+                                            {{item.k2}}
+                                        </td>
+                                        <td> {{item.v2}}</td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="middle_section"
+                            v-if="set.related_product !== undefined ? set.related_product.length !== 0 : false">
+                            <h5>Related Products</h5>
+
+                            <div id="carouselExampleControls" class="carousel slide">
+
+                                <div class="carousel-inner">
+
+                                    <div v-for='(g, groupIndex) in set.groupedItems'
+                                        :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                        <div class="row custom">
+                                            <div class="col custom" v-for='(item, index) in g'>
+                                                <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                                <div>
+                                                    <a @click="getSingleProduct(item.id)">
+                                                        {{ item.code }}
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                    <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                    <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                    <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                                data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                                data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="middle_section"
+                            v-if="set.replacement_product !== undefined ? set.replacement_product.length !== 0 : false">
+                            <h5>Replacement Product</h5>
+
+                            <div id="carouselExampleControls_replacement" class="carousel slide">
+
+                                <div class="carousel-inner">
+
+                                    <div v-for='(g, groupIndex) in set.groupedItems_replacement'
+                                        :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                        <div class="row custom">
+                                            <div class="col custom" v-for='(item, index) in g'>
+                                                <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                                <div>
+                                                    <a @click="getSingleProduct(item.id)">
+                                                        {{ item.code }}
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                    <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                    <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                    <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls_replacement" role="button"
+                                data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls_replacement" role="button"
+                                data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="lower_section"
+                            v-if="(set.notes != null && set.notes != '') || set.description != ''"><h5>
+                            Description</h5>
+                            <p>
+                                {{ set.description }}
+                            </p>
+                            <p v-if="set.notes != null && set.notes != ''">
+                                Notes: {{ set.notes }}
+                            </p>
+                        </div>
+                    </template>
+
+
+
+
+
+                    <template v-if="set.variation_mode == 1">
+                        <div class="upper_section">
+
+                            <div class="imagebox">
+                                <div class="selected_image">
+                                    <img :src="set.url" v-if="set.url !== ''">
+                                </div>
+                                <div class="image_list">
+                                    <img v-if="set.photo1" :src="img_url + set.photo1"
+                                        @click="change_url_set(set, 1)"/>
+                                    <img v-if="set.photo2" :src="img_url + set.photo2"
+                                        @click="change_url(set, 2)"/>
+                                    <img v-if="set.photo3" :src="img_url + set.photo3"
+                                        @click="change_url(set, 3)"/>
+                                    <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                                </div>
+
+                            </div>
+
+
+                            <div class="infobox">
+                                <div class="basic_info">
+
+                                    <!-- 網頁載入時，if「這個產品的主產品在 product_category 資料表 last_order 欄位有值」或者「它的任何一個子規格在 product 資料表 last_order 欄位有值」，就需要顯示下面的 <div class="last_order_history"> -->
+                                    <div class="last_order_history" v-if="set.is_last_order != ''">
+                                        <!-- 在網頁載入時 或 當使用者還沒選擇任何一個子規格組合時，只會顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                                        <!-- 當使用者選擇了一個子規格組合時(也就是每個維度選項都選擇了)，只會顯示下方 <span> 結構來列出該子規格最後訂購日期和相關訂單，但是不會顯示下方的 <button> 結構 -->
+                                        <!-- 但當使用者本來選擇了某一個子規格組合，後來變成沒有選擇任何子規格時，則會只顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                                        <button @click="last_order_info(set.is_last_order)" v-if="set.last_have_spec">Last Order History</button>
+                                        <span v-if="set.last_order_name != ''">Last Ordered: {{ set.last_order_at }} at <a :href="set.last_order_url">{{ set.last_order_name }}</a></span>
+                                    </div>
+
+                                    <span class="phasedout" v-if="set.out == 'Y' && set.out_cnt == 0">Phased Out</span>
+                                    <span class="phasedout1" v-if="set.out_cnt == 1" @click="PhaseOutAlert_set(set.phased_out_text1)">1 variant is phased out</span>
+                                    <span class="phasedout1" v-if="set.out_cnt > 1" @click="PhaseOutAlert_set(set.phased_out_text1)">{{ set.out_cnt }} variants are phased out</span>
+
+                                    <h3>{{set.code}}</h3> <h6>{{set.brand}}</h6>
+                                    <h6>{{ set.category}} >> {{
+                                        set.sub_category_name}}</h6>
+                                    <div class="tags" v-if="set.tags !== undefined ? set.tags[0] !== '' : false">
+                                        <span v-for="(it, index) in set.tags">{{ it }}</span>
+                                    </div>
+                                </div>
+
+                                <ul class="price_stock">
+
+                                    <li>
+                                        Suggested Retail Price: <span>{{set.price}}</span><span></span>
+                                    </li>
+
+                                    <li>
+                                        Quoted Price: <span>{{set.quoted_price}}</span><span></span>
+                                    </li>
+
+                                </ul>
+
+                                <ul class="variants">
+                                    <li>
+                                        Select:
+                                    </li>
+                                    <li v-if="set.variation1_value[0] !== '' && set.variation1_value[0] !== undefined">
+                                        {{ set.variation1 !== 'custom' ? set.variation1 :
+                                        set.variation1_custom}}
+                                    </li>
+                                    <li v-show="set.variation1_value[0] !== '' && set.variation1_value[0] !== undefined">
+                                        <select class="form-control" v-model="set.v1" @change="change_v_set(set)">
+                                            <option value=""></option>
+                                            <option v-for="(item, index) in set.variation1_value" :value="item"
+                                                    :key="item">{{item}}
+                                            </option>
+                                        </select>
+                                    </li>
+                                    <li v-if="set.variation2_value[0] !== '' && set.variation2_value[0] !== undefined">
+                                        {{ set.variation2 !== 'custom' ? set.variation2 : set.variation2_custom
+                                        }}
+                                    </li>
+                                    <li v-show="set.variation2_value[0] !== '' && set.variation2_value[0] !== undefined">
+                                        <select class="form-control" v-model="set.v2" @change="change_v_set(set)">
+                                            <option value=""></option>
+                                            <option v-for="(item, index) in set.variation2_value" :value="item"
+                                                    :key="item">{{item}}
+                                            </option>
+                                        </select>
+                                    </li>
+                                    <li v-if="set.variation3_value[0] !== '' && set.variation3_value[0] !== undefined">
+                                        {{ set.variation3 !== 'custom' ? set.variation3 : set.variation3_custom
+                                        }}
+                                    </li>
+                                    <li v-show="set.variation3_value[0] !== '' && set.variation3_value[0] !== undefined">
+                                        <select class="form-control" v-model="set.v3" @change="change_v_set(set)">
+                                            <option value=""></option>
+                                            <option v-for="(item, index) in set.variation3_value" :value="item"
+                                                    :key="item">{{item}}
+                                            </option>
+                                        </select>
+                                    </li>
+                                    <li v-if="set.variation4_value[0] !== '' && set.variation4_value[0] !== undefined">
+                                        {{ set.variation4 !== 'custom' ? set.variation4 : set.variation4_custom
+                                        }}
+                                    </li>
+                                    <li v-show="set.variation4_value[0] !== '' && set.variation4_value[0] !== undefined">
+                                        <select class="form-control" v-model="set.v4" @change="change_v_set(set)">
+                                            <option value=""></option>
+                                            <option v-for="(item, index) in set.variation4_value" :value="item"
+                                                    :key="item">{{item}}
+                                            </option>
+                                        </select>
+                                    </li>
+
+                                    <template v-for="(item, index) in set.accessory_infomation" v-if="show_accessory">
+                                        <li>{{ item.category }}</li>
+                                        <li>
+                                            <select class="selectpicker" data-width="100%" :id="'tag'+index">
+                                                <option :data-thumbnail="set.detail.url"
+                                                        v-for="(detail, index) in item.detail[0]">
+                                                    {{detail.code}}
+                                                </option>
+                                            </select>
+                                        </li>
+                                    </template>
+
+                                </ul>
+
+                                <div class="btnbox">
+                                    <ul>
+                                        <li>
+                                            <button class="btn btn-info" @click="add_with_image_set(set)" v-if="set.out==''">Add with Image</button>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-info" @click="add_without_image_set(set)" v-if="set.out==''">Add without Image
+                                            </button>
+                                        </li>
+                                    </ul>
+<!--
+                                    <ul>
+                                        <li>
+                                            <button class="btn btn-info" @click="add_with_image_set(set, 'all')" v-if="set.out == '' && (set.out=='' || set.variation_mode == 1)">Add all spec. with
+                                                Image
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-info" @click="add_without_image_set(set, 'all')" v-if="set.out == '' && (set.out=='' || set.variation_mode == 1)">Add all spec.
+                                                without Image
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    -->
+                                    <ul>
+                                        <li>
+                                            <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="middle_section"  v-if="set.specification !== undefined ? set.specification.length !== 0 : false">
+                            <h5>Specification</h5>
+
+                            <table>
+                                <tbody>
+                                <template v-for="(item, index) in set.specification">
+                                    <tr>
+                                        <td>
+                                            {{item.k1}}
+                                        </td>
+                                        <td>
+                                            {{item.v1}}
+                                        </td>
+                                        <td>
+                                            {{item.k2}}
+                                        </td>
+                                        <td> {{item.v2}}</td>
+                                    </tr>
+                                </template>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <div class="middle_section"
+                            v-if="set.related_product !== undefined ? set.related_product.length !== 0 : false">
+                            <h5>Related Products</h5>
+
+                            <div id="carouselExampleControls" class="carousel slide">
+
+                                <div class="carousel-inner">
+
+                                    <div v-for='(g, groupIndex) in set.groupedItems'
+                                        :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                        <div class="row custom">
+                                            <div class="col custom" v-for='(item, index) in g'>
+                                                <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                                <div>
+                                                    <a @click="getSingleProduct(item.id)">
+                                                        {{ item.code }}
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                    <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                    <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                    <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                                data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                                data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="middle_section"
+                            v-if="set.replacement_product !== undefined ? set.replacement_product.length !== 0 : false">
+                            <h5>Replacement Product</h5>
+
+                            <div id="carouselExampleControls_replacement" class="carousel slide">
+
+                                <div class="carousel-inner">
+
+                                    <div v-for='(g, groupIndex) in set.groupedItems_replacement'
+                                        :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                        <div class="row custom">
+                                            <div class="col custom" v-for='(item, index) in g'>
+                                                <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                                <div>
+                                                    <a @click="getSingleProduct(item.id)">
+                                                        {{ item.code }}
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                    <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                    <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                    <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls_replacement" role="button"
+                                data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls_replacement" role="button"
+                                data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="lower_section"
+                            v-if="(set.notes != null && set.notes != '') || set.description != ''">
+                            <h5>Description</h5>
+                            <p>
+                                {{ set.description }}
+                            </p>
+                            <p v-if="set.notes != null && set.notes != ''">
+                                Notes: {{ set.notes }}
+                            </p>
+                            <!--
+                            <div class="desc_imgbox">
+                                <img src="images/realwork.png">
+                                <img src="images/realwork.png">
+                                <img src="images/wash_hands.png">
+                                <img src="images/realwork.png">
+                            </div>
+                            -->
+                        </div>
+                    </template>
+
+
+
+                    
+                </template>
+
+                <template v-if="product.sub_category != '10020000'">
+                    <template v-if="product.variation_mode != 1">
+                        <div class="upper_section">
+                            <div class="imagebox">
+                                <div class="selected_image">
+                                    <img :src="url" v-if="url !== ''">
+                                </div>
+                                <div class="image_list">
+                                    <img v-if="product.photo1" :src="img_url + product.photo1"
+                                        @click="change_url(product.photo1)"/>
+                                    <img v-if="product.photo2" :src="img_url + product.photo2"
+                                        @click="change_url(product.photo2)"/>
+                                    <img v-if="product.photo3" :src="img_url + product.photo3"
+                                        @click="change_url(product.photo3)"/>
+                                    <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                                </div>
+                            </div>
+                            <div class="infobox">
+                                <div class="basic_info">
+
+                                <!-- 網頁載入時，if「這個產品的主產品在 product_category 資料表 last_order 欄位有值」或者「它的任何一個子規格在 product 資料表 last_order 欄位有值」，就需要顯示下面的 <div class="last_order_history"> -->
+                                <div class="last_order_history"  v-if="product.is_last_order != ''">
+
+                                <!-- 在網頁載入時 或 當使用者還沒選擇任何一個子規格組合時，只會顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                                <!-- 當使用者選擇了一個子規格組合時(也就是每個維度選項都選擇了)，只會顯示下方 <span> 結構來列出該子規格最後訂購日期和相關訂單，但是不會顯示下方的 <button> 結構 -->
+                                <!-- 但當使用者本來選擇了某一個子規格組合，後來變成沒有選擇任何子規格時，則會只顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                                <button @click="last_order_info(product.is_last_order)" v-if="product.last_have_spec">Last Order History</button>
+                                <span v-if="product.last_order_url != ''">Last Ordered: {{ product.last_order_at }} at <a :href="product.last_order_url">{{ product.last_order_name }}</a></span>
+                                </div>
+
+                                    <span class="phasedout" v-if="out == 'Y' && out_cnt == 0">Phased Out</span>
+                                    <span class="phasedout1" v-if="out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
+                                    <span class="phasedout1" v-if="out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ out_cnt }} variants are phased out</span>
+                                <h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
+                                    {{product.brand}}</h6>
+                                    <h6>{{ product.category}} >> {{
+                                        product.sub_category_name}}</h6>
+                                    <!---->
+                                    <div class="tags"><span v-for="(it, index) in product.tags">{{ it }}</span></div>
+                                </div>
+                                <ul class="price_stock">
+                                    <li>
+                                        Suggested Retail Price: <span>{{price}}</span><span></span></li>
+                                    <li>
+                                        Quoted Price: <span>{{quoted_price}}</span><span></span></li>
+                                </ul>
 
                         <ul class="variants" style="display: none;">
                             <li>
@@ -2232,6 +3417,48 @@ try {
                         </a>
                     </div>
                 </div>
+                <div class="middle_section"
+                         v-if="product.replacement_product !== undefined ? product.replacement_product.length !== 0 : false">
+                        <h5>Replacement Product</h5>
+
+                        <div id="carouselExampleControls_replacement" class="carousel slide">
+
+                            <div class="carousel-inner">
+
+                                <div v-for='(g, groupIndex) in groupedItems_replacement'
+                                     :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                    <div class="row custom">
+                                        <div class="col custom" v-for='(item, index) in g'>
+                                            <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                            <div>
+                                                <a @click="getSingleProduct(item.id)">
+                                                    {{ item.code }}
+                                                </a>
+                                            </div>
+					    <div>
+                                                <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls_replacement" role="button"
+                               data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls_replacement" role="button"
+                               data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
                 <div class="lower_section"
                      v-if="(product.notes != null && product.notes != '') || product.description != ''"><h5>
                     Description</h5>
@@ -2265,6 +3492,17 @@ try {
 
                     <div class="infobox">
                         <div class="basic_info">
+
+                                <!-- 網頁載入時，if「這個產品的主產品在 product_category 資料表 last_order 欄位有值」或者「它的任何一個子規格在 product 資料表 last_order 欄位有值」，就需要顯示下面的 <div class="last_order_history"> -->
+                                <div class="last_order_history"  v-if="product.is_last_order != ''">
+
+                                <!-- 在網頁載入時 或 當使用者還沒選擇任何一個子規格組合時，只會顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                                <!-- 當使用者選擇了一個子規格組合時(也就是每個維度選項都選擇了)，只會顯示下方 <span> 結構來列出該子規格最後訂購日期和相關訂單，但是不會顯示下方的 <button> 結構 -->
+                                <!-- 但當使用者本來選擇了某一個子規格組合，後來變成沒有選擇任何子規格時，則會只顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                                <button @click="last_order_info(product.is_last_order)" v-if="product.last_have_spec">Last Order History</button>
+                                <span v-if="product.last_order_url != ''">Last Ordered: {{ product.last_order_at }} at <a :href="product.last_order_url">{{ product.last_order_name }}</a></span>
+                                </div>
+
                                 <span class="phasedout" v-if="out == 'Y' && out_cnt == 0">Phased Out</span>
                                 <span class="phasedout1" v-if="out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
                                 <span class="phasedout1" v-if="out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ out_cnt }} variants are phased out</span>
@@ -2326,6 +3564,18 @@ try {
                                 <select class="form-control" v-model="v3" @change="change_v()">
                                     <option value=""></option>
                                     <option v-for="(item, index) in product.variation3_value" :value="item"
+                                            :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+                            <li v-if="product.variation4_value[0] !== '' && product.variation4_value[0] !== undefined">
+                                {{ product.variation4 !== 'custom' ? product.variation4 : product.variation4_custom
+                                }}
+                            </li>
+                            <li v-show="product.variation4_value[0] !== '' && product.variation4_value[0] !== undefined">
+                                <select class="form-control" v-model="v4" @change="change_v()">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in product.variation4_value" :value="item"
                                             :key="item">{{item}}
                                     </option>
                                 </select>
@@ -2452,8 +3702,48 @@ try {
                         </a>
                     </div>
                 </div>
+                <div class="middle_section"
+                         v-if="product.replacement_product !== undefined ? product.replacement_product.length !== 0 : false">
+                        <h5>Replacement Product</h5>
 
+                        <div id="carouselExampleControls_replacement" class="carousel slide">
 
+                            <div class="carousel-inner">
+
+                                <div v-for='(g, groupIndex) in groupedItems_replacement'
+                                     :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                    <div class="row custom">
+                                        <div class="col custom" v-for='(item, index) in g'>
+                                            <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                            <div>
+                                                <a @click="getSingleProduct(item.id)">
+                                                    {{ item.code }}
+                                                </a>
+                                            </div>
+					    <div>
+                                                <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls_replacement" role="button"
+                               data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls_replacement" role="button"
+                               data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
                 <div class="lower_section"
                      v-if="(product.notes != null && product.notes != '') || product.description != ''">
                     <h5>Description</h5>
@@ -2473,6 +3763,7 @@ try {
                     -->
                 </div>
             </template>
+                </template>
 
         </div>
 
@@ -2486,7 +3777,7 @@ try {
 <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
      aria-hidden="true" id="modal_product_display_simple">
 
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
         <div class="modal-content"
              style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
@@ -2509,13 +3800,22 @@ try {
                     </div>
                     <div class="infobox">
                         <div class="basic_info">
+                            <!-- 網頁載入時，if「這個產品的主產品在 product_category 資料表 last_order 欄位有值」或者「它的任何一個子規格在 product 資料表 last_order 欄位有值」，就需要顯示下面的 <div class="last_order_history"> -->
+                            <div class="last_order_history"  v-if="is_last_order != ''">
+
+                            <!-- 在網頁載入時 或 當使用者還沒選擇任何一個子規格組合時，只會顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                            <!-- 當使用者選擇了一個子規格組合時(也就是每個維度選項都選擇了)，只會顯示下方 <span> 結構來列出該子規格最後訂購日期和相關訂單，但是不會顯示下方的 <button> 結構 -->
+                            <!-- 但當使用者本來選擇了某一個子規格組合，後來變成沒有選擇任何子規格時，則會只顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                            <button @click="last_order_info(p_product.is_last_order)" v-if="p_product.last_have_spec">Last Order History</button>
+                            <span v-if="p_product.last_order_url != ''">Last Ordered: {{ p_product.last_order_at }} at <a :href="p_product.last_order_url">{{ p_product.last_order_name }}</a></span>
+                            </div>
+
                         <span class="phasedout" v-if="p_out == 'Y' && p_out_cnt == 0">Phased Out</span>
                                 <span class="phasedout1" v-if="p_out_cnt == 1" @click="p_PhaseOutAlert(p_product.phased_out_text1)">1 variant is phased out</span>
                                 <span class="phasedout1" v-if="p_out_cnt > 1" @click="p_PhaseOutAlert(p_product.phased_out_text1)">{{ p_out_cnt }} variants are phased out</span>
                         <h3 style="word-break: break-all;">{{p_product.code}}</h3> <h6>
                             {{p_product.brand}}</h6>
-                            <h6 v-if="p_category == 'Lighting'">{{ p_product.category}}</h6>
-                            <h6 v-if="p_category != 'Lighting'">{{ p_product.category}} >> {{
+                            <h6>{{ p_product.category}} >> {{
                                 p_product.sub_category_name}}</h6>
                             <!---->
                             <div class="tags"><span v-for="(it, index) in p_product.tags">{{ it }}</span></div>
@@ -2582,13 +3882,22 @@ try {
 
                     <div class="infobox">
                         <div class="basic_info">
+                            <!-- 網頁載入時，if「這個產品的主產品在 product_category 資料表 last_order 欄位有值」或者「它的任何一個子規格在 product 資料表 last_order 欄位有值」，就需要顯示下面的 <div class="last_order_history"> -->
+                            <div class="last_order_history"  v-if="is_last_order != ''">
+
+                            <!-- 在網頁載入時 或 當使用者還沒選擇任何一個子規格組合時，只會顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                            <!-- 當使用者選擇了一個子規格組合時(也就是每個維度選項都選擇了)，只會顯示下方 <span> 結構來列出該子規格最後訂購日期和相關訂單，但是不會顯示下方的 <button> 結構 -->
+                            <!-- 但當使用者本來選擇了某一個子規格組合，後來變成沒有選擇任何子規格時，則會只顯示下方的 <button> 結構，但是不會顯示下方 <span> 結構 -->
+                            <button @click="last_order_info(p_product.is_last_order)" v-if="p_product.last_have_spec">Last Order History</button>
+                            <span v-if="p_product.last_order_url != ''">Last Ordered: {{ p_product.last_order_at }} at <a :href="p_product.last_order_url">{{ p_product.last_order_name }}</a></span>
+                            </div>
+
                                 <span class="phasedout" v-if="p_out == 'Y' && p_out_cnt == 0">Phased Out</span>
                                 <span class="phasedout1" v-if="p_out_cnt == 1" @click="p_PhaseOutAlert(p_product.phased_out_text1)">1 variant is phased out</span>
                                 <span class="phasedout1" v-if="p_out_cnt > 1" @click="p_PhaseOutAlert(p_product.phased_out_text1)">{{ p_out_cnt }} variants are phased out</span>
 
                             <h3>{{p_product.code}}</h3> <h6>{{p_product.brand}}</h6>
-                            <h6 v-if="p_category == 'Lighting'">{{ p_product.category}}</h6>
-                            <h6 v-if="p_category != 'Lighting'">{{ p_product.category}} >> {{
+                            <h6>{{ p_product.category}} >> {{
                                 p_product.sub_category_name}}</h6>
                             <div class="tags" v-if="p_product.tags !== undefined ? p_product.tags[0] !== '' : false">
                                 <span v-for="(it, index) in p_product.tags">{{ it }}</span>
@@ -2647,6 +3956,18 @@ try {
                                     </option>
                                 </select>
                             </li>
+                            <li v-if="p_product.variation4_value[0] !== '' && p_product.variation4_value[0] !== undefined">
+                                {{ p_product.variation4 !== 'custom' ? p_product.variation4 : p_product.variation4_custom
+                                }}
+                            </li>
+                            <li v-show="p_product.variation4_value[0] !== '' && p_product.variation4_value[0] !== undefined">
+                                <select class="form-control" v-model="p_v4" @change="p_change_v()">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in p_product.variation4_value" :value="item"
+                                            :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
 
                             <template v-for="(item, index) in p_product.accessory_infomation" v-if="p_show_accessory">
                                 <li>{{ item.category }}</li>
@@ -2693,7 +4014,7 @@ try {
 <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
      aria-hidden="true" id="modal_quotation_list">
 
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
         <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
 
@@ -2920,10 +4241,10 @@ try {
 
 
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/order_taiwan_p1.js"></script>
-<script src="https://superal.github.io/canvas2image/canvas2image.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="js/canvas2image/canvas2image.js"></script>
+<script defer src="js/html2canvas/html2canvas.min.js"></script>
 </html>

@@ -500,7 +500,7 @@ else
 
                         if (isset($_FILES['files']['name'][$i])) {
                             $image_name = $_FILES['files']['name'][$i];
-                            $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
+                            $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo","dwf");
                             $extension = pathinfo($image_name, PATHINFO_EXTENSION);
                             if (in_array(strtolower($extension), $valid_extensions)) {
                                 //$upload_path = 'img/' . time() . '.' . $extension;
@@ -671,7 +671,7 @@ else
 
                         if (isset($_FILES['files']['name'][$i])) {
                             $image_name = $_FILES['files']['name'][$i];
-                            $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
+                            $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo","dwf");
                             $extension = pathinfo($image_name, PATHINFO_EXTENSION);
                             if (in_array(strtolower($extension), $valid_extensions)) {
                                 //$upload_path = 'img/' . time() . '.' . $extension;

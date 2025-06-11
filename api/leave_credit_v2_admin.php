@@ -106,9 +106,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 /* fetch data */
 if($edate2 != "")
-    $query = "SELECT SUM(`sil`) sil, sum(`vl_sl`) vl_sl, sum(`vl`) vl, sum(`sl`) sl, sum(`halfday`) halfday, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate2 . "' and status in (0, 1) and uid = " . $user_id . " group by  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
+    $query = "SELECT SUM(`sil`) sil, sum(`vl_sl`) vl_sl, sum(`vl`) vl, sum(`sl`) sl, sum(`ul`) ul, sum(`halfday`) halfday, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate2 . "' and status in (0, 1) and uid = " . $user_id . " group by  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
 else
-    $query = "SELECT SUM(`sil`) sil, sum(`vl_sl`) vl_sl, sum(`vl`) vl, sum(`sl`) sl, sum(`halfday`) halfday, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE and start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate1 . "' and status in (0, 1) and uid = " . $user_id . " group by  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
+    $query = "SELECT SUM(`sil`) sil, sum(`vl_sl`) vl_sl, sum(`vl`) vl, sum(`sl`) sl, sum(`ul`) ul, sum(`halfday`) halfday, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE and start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate1 . "' and status in (0, 1) and uid = " . $user_id . " group by  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -138,6 +138,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $vl_sl = $row['vl_sl'];
     $vl = $row['vl'];
     $sl = $row['sl'];
+    $ul = $row['ul'];
     $halfday = $row['halfday'];
 
     $approval = $row['approval'];
@@ -151,6 +152,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $vl_sl_taken += $vl_sl;
         $vl_taken += $vl;
         $sl_taken += $sl;
+        $ul_taken += $ul;
         $halfday_taken += $halfday;
     }
     else
@@ -159,6 +161,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $vl_sl_approval += $vl_sl;
         $vl_approval += $vl;
         $sl_approval += $sl;
+        $ul_approval += $ul;
         $halfday_approval += $halfday;
 
     }

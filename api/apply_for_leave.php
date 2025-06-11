@@ -497,12 +497,16 @@ function getLeaveType($type){
 
     if($type =="A")
         $leave_type = "Service Incentive Leave";
-    if($type =="B")
+    if($type =="N")
+        $leave_type = "Vaction Leave";
+    if($type =="B" || $type =="S")
         $leave_type = "Sick Leave";
-    if($type =="C")
+    if($type =="C" || $type =="U")
         $leave_type = "Unpaid Leave";
     if($type =="D")
         $leave_type = "Absence";
+    if($type =="H")
+        $leave_type = "Manager Halfday Planning";
     
     return $leave_type;
 }

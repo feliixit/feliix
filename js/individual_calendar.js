@@ -44,9 +44,9 @@ var filter = new Vue({
 
                 if(_this.username == "dereck" || _this.username == "Dennis Lin" || _this.username == "Kristel Tan" || _this.username == "Kuan")
                     _this.getAllMan();
-                else if(_this.title == "Sales Manager" || 
-                        _this.title == "Lighting Manager" || 
-                        _this.title == "Office Systems Manager" || 
+                else if(_this.title == "Customer Value Director" || 
+                        _this.title == "Lighting Value Creation Director" || 
+                        _this.title == "Office Space Value Creation Director" || 
                         _this.title == "Brand Manager" || 
                         _this.title == "Service Manager" || 
                         _this.title == "Operations Manager" ||
@@ -546,7 +546,7 @@ var filter = new Vue({
           ],
           perPage: 5,
       
-          baseURL: 'https://storage.cloud.google.com/feliiximg/',
+          baseURL: 'https://storage.googleapis.com/feliiximg/',
       
       
           // calendar
@@ -872,7 +872,7 @@ var memo = new Vue({
       ],
       perPage: 5,
   
-      baseURL: 'https://storage.cloud.google.com/feliiximg/',
+      baseURL: 'https://storage.googleapis.com/feliiximg/',
   
   
       // calendar

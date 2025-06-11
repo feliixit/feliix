@@ -209,6 +209,8 @@ switch ($method) {
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
+                    `v4` = :v4,
+                    `ps_var` = :ps_var,
                     `pid` = :pid,
                     `status` = 0,
                     `create_id` = :create_id,
@@ -247,8 +249,12 @@ switch ($method) {
                 $v1 = $temp_block_a['v1'];
                 $v2 = $temp_block_a['v2'];
                 $v3 = $temp_block_a['v3'];
-                $pid = $temp_block_a['pid'];
+                $v4 = $temp_block_a['v4'];
 
+                $ps_var = isset($temp_block_a['ps_var']) ? $temp_block_a['ps_var'] : [];
+                $json_ps_var = json_encode($ps_var);
+
+                $pid = $temp_block_a['pid'];
 
                 $qty == '' ? $qty = 0 : $qty = $qty;
                 $ratio == '' ? $ratio = 1.0 : $ratio = $ratio;
@@ -278,6 +284,8 @@ switch ($method) {
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+                $stmt->bindParam(':v4', $v4);
+                $stmt->bindParam(':ps_var', $json_ps_var);
                 $stmt->bindParam(':pid', $pid);
 
                 
@@ -368,7 +376,7 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
         if(isset($_FILES[$type]['name']))
         {
             $image_name = $_FILES[$type]['name'];
-            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
+            $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo","dwf","bmp");
             $extension = pathinfo($image_name, PATHINFO_EXTENSION);
             if (in_array(strtolower($extension), $valid_extensions)) 
             {

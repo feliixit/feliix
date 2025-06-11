@@ -4,7 +4,7 @@ var app = new Vue({
     name: "",
     request_no: "",
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     date_requested: "",
     request_type: "",

@@ -13,11 +13,12 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
-    baseURL: "https://storage.cloud.google.com/feliiximg/",
+    baseURL: "https://storage.googleapis.com/feliiximg/",
 
     proof_remark: "",
 
     proof_id: 0,
+    id: 0,
 
     // paging
     page: 1,
@@ -56,7 +57,9 @@ var app = new Vue({
         tmp = v.split("=");
         if (tmp.length == 2) {
           switch (tmp[0]) {
-           
+            case "id":
+              _this.id = tmp[1];
+              break;
             case "fk":
               _this.fil_keyowrd = tmp[1];
               break;
@@ -99,6 +102,7 @@ var app = new Vue({
     },
 
     proof_id() {
+      console.log(this.proof_id);
       this.detail(this.proof_id);
     },
 
@@ -131,7 +135,8 @@ var app = new Vue({
     paginate: function(posts) {
       console.log("paginate");
 
-      this.proof_id = 0;
+      if(this.id == 0)
+        this.proof_id = 0;
 
       if (this.page < 1) this.page = 1;
       if ((this.page > this.pages.length) && this.pages.length > 0) 
@@ -199,7 +204,7 @@ var app = new Vue({
         this.view_proof = true;
     },
 
-    getLeaveCredit: function(page) {
+    getLeaveCredit: async function(page) {
       let _this = this;
 
       this.total = 0;
@@ -211,12 +216,12 @@ var app = new Vue({
         fk: _this.fil_keyowrd,
         page: _this.page,
         size: _this.perPage,
-      
+        pid : _this.id,
       };
 
       let token = localStorage.getItem("accessToken");
 
-      axios
+      let u = await axios
         .get("api/downpayment_proof", {
           params,
           headers: { Authorization: `Bearer ${token}` },
@@ -225,7 +230,15 @@ var app = new Vue({
           console.log(response.data);
           _this.receive_records = response.data;
           if(_this.receive_records.length > 0)
+          {
             _this.total = _this.receive_records[0].cnt;
+            if(_this.id != 0)
+            {
+              _this.proof_id = _this.id;
+              _this.detail(_this.proof_id);
+            }
+            
+          }
         })
         .catch(function(error) {
           console.log(error);
@@ -396,6 +409,8 @@ var app = new Vue({
 
       this.proof_id = id;
 
+      console.log(this.proof_id);
+
       //let favorite = [];
 
       //for (i = 0; i < this.receive_records.length; i++)
@@ -430,12 +445,16 @@ var app = new Vue({
 
       this.who_detail = '';
 
-      if(this.record.special == 's' && this.name == 'Kuan')
+      if(this.record.special == 's' && (this.record.kind == '0' || this.record.kind == '1') && this.name == 'Kuan')
         this.who_detail = 's';
+
+      if(this.record.special == 's' && this.record.kind == '2' && this.name == 'Glendon Wendell Co')
+        this.who_detail = 'g';
+
       if(this.record.special == '' && this.name == 'Glendon Wendell Co')
         this.who_detail = 'g';
 
-      if(this.record.special == 'sn' && this.name == 'Kristel Tan' && this.record.kind == '0' && this.record.final_amount <= 100000)
+      if(this.record.special == 'sn' && this.name == 'Manilynne Nicol' && this.record.kind == '0' && this.record.final_amount <= 100000)
         this.who_detail = 't';
 
       if(this.record.special == 'sn' && this.name == 'Kuan' && this.record.kind == '0' && this.record.final_amount > 100000)
@@ -690,6 +709,7 @@ var app = new Vue({
       this.bank_account = "";
 
       this.proof_id = 0;
+      this.id = 0;
       this.proof_remark = "";
 
       this.getLeaveCredit();

@@ -61,14 +61,14 @@ try {
     <link rel="stylesheet" type="text/css" href="css/ui.css"/>
     <link rel="stylesheet" type="text/css" href="css/case.css"/>
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap/4.5.0/bootstrap.min.css">
 
     <link rel="stylesheet" href="css/vue-select.css" type="text/css">
 
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/fullcalendar@5.1.0/main.min.css">
+    <link rel="stylesheet" type="text/css" href="css/fullcalendar@5.1.0/main.min.css">
 
 
-    <script type="text/javascript" src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
+    <script type="text/javascript" src="js/fullcalendar@5.1.0/main.min.js"></script>
     <script src="js/moment.js"></script>
 
     <!-- jQuery和js載入 -->
@@ -938,7 +938,7 @@ try {
                                 var elm = '<div class="file-element">' +
                                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
                                     '<label for="' + element + '">' + 
-                                        '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                                        '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
                                     '</label>' +
                                 '</div>';
             
@@ -1560,7 +1560,7 @@ try {
                 var elm = '<div class="file-element">' +
                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
                     '<label for="' + element + '">' + 
-                        '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                        '<a href="https://storage.googleapis.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
                     '</label>' +
                     '</div>';
 
@@ -1622,11 +1622,11 @@ try {
 
 </script>
 
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/exif-js.js"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script type="text/javascript" src="js/meeting_calendar.js" defer></script>
 
 </html>

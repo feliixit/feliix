@@ -60,6 +60,7 @@ if (!isset($jwt)) {
                     listing,
                     qty,
                     backup_qty,
+                    unit,
                     srp,
                     date_needed,
                     shipping_way,
@@ -69,7 +70,10 @@ if (!isset($jwt)) {
                     v1,
                     v2,
                     v3,
+                    v4,
+                    ps_var,
                     eta,
+                    date_send,
                     arrive,
                     remark,
                     remark_t,
@@ -85,12 +89,16 @@ if (!isset($jwt)) {
                     delivery,
                     final,
                     btn2,
+                    `which_pool`,
+                    `as_sample`,
                     `status`,
                     test_updated_name,
                     test_updated_at,
                     delivery_updated_name,
                     delivery_updated_at,
-                    normal
+                    normal,
+                    status_at,
+                    received_list
                     FROM od_item, 
                     (SELECT @a:=@a+1 serial_number, id FROM od_item, (SELECT @a:= 0) AS a WHERE status <> -1 and od_id=$id order by ABS(sn)) b
                     WHERE status <> -1 and od_id=$id and od_item.id = b.id
@@ -140,12 +148,14 @@ if (!isset($jwt)) {
         $listing = $row['listing'];
         $qty = $row['qty'];
         $backup_qty = $row['backup_qty'];
+        $unit = $row['unit'];
         $srp = $row['srp'];
         $date_needed = $row['date_needed'];
         $shipping_way = $row['shipping_way'];
         $shipping_number = $row['shipping_number'];
         $shipping_vendor = $row['shipping_vendor'];
         $eta = $row['eta'];
+        $date_send = $row['date_send'];
         $arrive = $row['arrive'];
         $remark = $row['remark'];
         $remark_t = $row['remark_t'];
@@ -166,6 +176,11 @@ if (!isset($jwt)) {
         $v1 = $row['v1'];
         $v2 = $row['v2'];
         $v3 = $row['v3'];
+        $v4 = $row['v4'];
+
+        $ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
+
+        $received_list = json_decode($row['received_list'] == null ? "[]" : $row['received_list'], true);
 
         $serial_number = $row['serial_number'];
 
@@ -175,10 +190,18 @@ if (!isset($jwt)) {
         $delivery_updated_at = $row['delivery_updated_at'];
 
         $btn2 = $row['btn2'];
+        $which_pool = $row['which_pool'];
+        $as_sample = $row['as_sample'];
 
         $status = $row['status'];
 
         $normal = $row['normal'];
+
+        if($row['status_at'] != null)
+            $status_at = date_format(date_create($row['status_at']), "Y-m-d");
+        else
+            $status_at = "";
+        $date_send = $row['date_send'];
 
         $notes = GetNotes($row['id'], $db);
 
@@ -201,6 +224,7 @@ if (!isset($jwt)) {
             "listing" => $listing,
             "qty" => $qty,
             "backup_qty" => $backup_qty,
+            "unit" => $unit,
             "srp" => $srp,
             "date_needed" => $date_needed,
             "shipping_way" => $shipping_way,
@@ -210,7 +234,10 @@ if (!isset($jwt)) {
             "v1" => $v1,
             "v2" => $v2,
             "v3" => $v3,
+            "v4" => $v4,
+            "ps_var" => $ps_var,
             "eta" => $eta,
+            "date_send" => $date_send, 
             "arrive" => $arrive,
             "remark" => $remark,
             "remark_t" => $remark_t,
@@ -227,6 +254,8 @@ if (!isset($jwt)) {
             "final" => $final,
             "status" => $status,
             "btn2" => $btn2,
+            "which_pool" => $which_pool,
+            "as_sample" => $as_sample,
             "test_updated_name" => $test_updated_name,
             "test_updated_at" => $test_updated_at,
             "delivery_updated_name" => $delivery_updated_name,
@@ -236,6 +265,9 @@ if (!isset($jwt)) {
             "notes_a" => $notes_a,
             "serial_number" => $serial_number,
             "normal" => $normal,
+            "status_at" => $status_at,
+            "date_send" => $date_send,
+            "received_list" => $received_list,
         );
     }
 
@@ -471,6 +503,9 @@ function GetConfirmText($loc)
             break;
         case "N":
             $location = "Not Yet Confirmed";
+            break;
+        case "J":
+            $location = "From Warehouse";
             break;
         case "D":
             $location = "Deleted";

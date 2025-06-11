@@ -21,7 +21,7 @@ include_once 'config/database.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
- 
+
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -119,15 +119,26 @@ if($jwt){
                 $sheet->setCellValue('A'. $i, $row["date"]);
                 // title 
                 $i = $i + 1;
-                $sheet->setCellValue('A'. $i, 'Account Executive');
+                $sheet->setCellValue('A'. $i, 'Customer Value Supervisor');
                 $sheet->setCellValue('B'. $i, 'Monthly Quota');
                 $sheet->setCellValue('C'. $i, 'Category');
                 $sheet->setCellValue('D'. $i, 'Project Name');
                 $sheet->setCellValue('E'. $i, 'Collected Payments');
                 $sheet->setCellValue('F'. $i, 'Remaining Amount to Quota');
                 $sheet->setCellValue('G'. $i, 'Remark');
+
+                $sheet->getColumnDimension('A')->setWidth(32);
+                $sheet->getColumnDimension('B')->setWidth(22);
+                $sheet->getColumnDimension('C')->setWidth(22);
+                $sheet->getColumnDimension('D')->setWidth(56);
+                $sheet->getColumnDimension('E')->setWidth(24);
+                $sheet->getColumnDimension('F')->setWidth(28);
+                $sheet->getColumnDimension('G')->setWidth(32);
     
                 $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
+                $sheet->getStyle('A'. $i. ':' . 'G' . $i)->applyFromArray($styleArray);
+
+                $total = 0;
 
                 foreach($row['report'] as $rp)
                 {
@@ -135,33 +146,36 @@ if($jwt){
                     {
                         $i = $i + 1;
                         $sheet->setCellValue('A' . $i, $rp['username']);
-                        $sheet->setCellValue('B' . $i, '2,200,000.00');
+                        $sheet->setCellValue('B' . $i, $row['date'] > '2025/01' ? '6,600,000.00' : '2,200,000.00');
                         $sheet->setCellValue('C' . $i, $low['catagory']);
                         $sheet->setCellValue('D' . $i, $low['project_name']);
                         $sheet->setCellValue('E' . $i, number_format((float)$low['amount'], 2, '.', ''));
-                        //$sheet->setCellValue('F' . $i, number_format(2200000.00 - (float)$rp['subtotal'], 2, '.', ''));
-                        //$sheet->setCellValue('G' . $i, 2200000.00 - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
+                        //$sheet->setCellValue('F' . $i, number_format($quota - (float)$rp['subtotal'], 2, '.', ''));
+                        //$sheet->setCellValue('G' . $i, $quota - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
+                        $sheet->getStyle('A'. $i. ':' . 'G' . $i)->applyFromArray($styleArray);
                     }
 
                     foreach ($rp['o_catagory'] as $oow)
                     {
                         $i = $i + 1;
                         $sheet->setCellValue('A' . $i, $rp['username']);
-                        $sheet->setCellValue('B' . $i, '2,200,000.00');
+                        $sheet->setCellValue('B' . $i, $row['date'] > '2025/01' ? '6,600,000.00' : '2,200,000.00');
                         $sheet->setCellValue('C' . $i, 'Office Systems');
                         $sheet->setCellValue('D' . $i, $oow['project_name']);
                         $sheet->setCellValue('E' . $i, number_format((float)$oow['amount'], 2, '.', ''));
-                        //$sheet->setCellValue('F' . $i, number_format(2200000.00 - (float)$rp['subtotal'], 2, '.', ''));
-                        //$sheet->setCellValue('G' . $i, 2200000.00 - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
+                        //$sheet->setCellValue('F' . $i, number_format($quota - (float)$rp['subtotal'], 2, '.', ''));
+                        //$sheet->setCellValue('G' . $i, $quota - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
+                        $sheet->getStyle('A'. $i. ':' . 'G' . $i)->applyFromArray($styleArray);
                     }
 
                     $i = $i + 1;
                     $sheet->setCellValue('D' . $i, "Sub Total:");
                     $sheet->setCellValue('E' . $i, number_format((float)$rp['subtotal'], 2, '.', ''));
-                    $sheet->setCellValue('F' . $i, number_format(2200000.00 - (float)$rp['subtotal'], 2, '.', ''));
-                    $sheet->setCellValue('G' . $i, 2200000.00 - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
+                    $sheet->setCellValue('F' . $i, number_format(($row['date'] > '2025/01' ? 6600000 : 2200000) - (float)$rp['subtotal'], 2, '.', ''));
+                    $sheet->setCellValue('G' . $i, ($row['date'] > '2025/01' ? 6600000 : 2200000) - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
 
                     $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
+                    $sheet->getStyle('A'. $i. ':' . 'G' . $i)->applyFromArray($styleArray);
 
                     $total = $total + (float)$rp['subtotal'];
                 }
@@ -171,7 +185,7 @@ if($jwt){
                 $sheet->setCellValue('E' . $i, number_format($total, 2, '.', ''));
               
                 $sheet->getStyle('A' . $i . ':' . 'J' . $i)->getFont()->setBold(true);
-                //$sheet->getStyle('A'. $i. ':' . 'J' . $i)->applyFromArray($styleArray);
+                $sheet->getStyle('A'. $i. ':' . 'G' . $i)->applyFromArray($styleArray);
 
                 $i = $i + 2;
             }

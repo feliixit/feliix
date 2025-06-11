@@ -65,6 +65,7 @@ if($jwt){
                     prepare_for_third_line,
                     prepare_by_first_line,
                     prepare_by_second_line,
+                    prepare_by_third_line,
                     footer_first_line,
                     footer_second_line,
                     (SELECT COUNT(*) FROM quotation_page WHERE quotation_id = quotation.id and quotation_page.status <> -1) page_count
@@ -324,6 +325,7 @@ function GetBlocks($qid, $db){
         v1,
         v2,
         v3,
+        v4,
         listing,
         num,
         notes,
@@ -360,6 +362,7 @@ function GetBlocks($qid, $db){
         $v1 = $row['v1'];
         $v2 = $row['v2'];
         $v3 = $row['v3'];
+        $v4 = $row['v4'];
         $listing = $row['listing'];
 
         $type == "" ? "" : "image";
@@ -391,6 +394,7 @@ function GetBlocks($qid, $db){
             "v1" => $v1,
             "v2" => $v2,
             "v3" => $v3,
+            "v4" => $v4,
             "list" => $listing,
          
         );

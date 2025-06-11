@@ -26,15 +26,15 @@ $sql = "SELECT user.id,
                 ON user.title_id = user_title.id
             WHERE  user.`status` = 1
             AND Upper(user_title.title) IN (
-                    'ASSISTANT SALES MANAGER', 'SALES MANAGER', 'LIGHTING MANAGER',
-                    'OFFICE SYSTEMS MANAGER',
+                    'ASSISTANT CUSTOMER VALUE DIRECTOR', 'CUSTOMER VALUE DIRECTOR', 'LIGHTING VALUE CREATION DIRECTOR',
+                    'OFFICE SPACE VALUE CREATION DIRECTOR',
                     'ASSISTANT BRAND MANAGER',
                     'BRAND MANAGER',
                     'ENGINEERING MANAGER',
                     'OPERATIONS MANAGER', 
                     'MANAGING DIRECTOR') ";
 
-$review_start_date = date("Y-m", strtotime("-2 month"));
+$review_start_date = date("Y-m", strtotime("-3 month"));
 $review_end_date = date("Y-m", strtotime("-1 month"));
 
 $stmt = $db->prepare($sql);

@@ -713,9 +713,9 @@ if (!isset($jwt)) {
 
             if($status == '1')
             {
-                $sql = "select ck.sid
+                $sql = "select ck.sid, ck.feliix
                             from car_calendar_check ck
-                        where ck.`feliix` = 1 
+                        where 1 = 1
                         and ck.car_use = :car_use 
                         and ck.date_use = :date_use 
                         and ck.status <> -1 ";
@@ -728,14 +728,15 @@ if (!isset($jwt)) {
                 $stmt->execute();
 
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $sql = "select * from work_calendar_main where id = " . $row['sid'] . " and status = 2 and is_enabled = 1";
-                    $stmt1 = $db->prepare($sql);
+                    // $sql = "select * from work_calendar_main where id = " . $row['sid'] . " and status = 2 and is_enabled = 1";
+                    // $stmt1 = $db->prepare($sql);
 
-                    $stmt1->execute();
+                    // $stmt1->execute();
 
-                    while ($row_feliix = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                    // while ($row_feliix = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                    if($row['feliix'] == 0)
                         $auto_pass = false;
-                    }
+                    // }
                 }
 
                 if($auto_pass)
@@ -922,6 +923,7 @@ if (!isset($jwt)) {
                 $driver = $row['driver'];
             }
 
+
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -953,7 +955,7 @@ if (!isset($jwt)) {
                 $driver_check = $check2[0]["driver"];
             }
 
-            
+            $cc = "";
             $creator = $created_by;
 
             $date = date("Y-m-d", strtotime($start_time));
@@ -973,6 +975,15 @@ if (!isset($jwt)) {
                 $att = get_schedule_file($id);
                 withdraw_car_request_mail_4($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
             }
+
+            // remove db_sea car_calendar_check's data
+            $sql = "update car_calendar_check set `status` = -1, deleted_at = now(), deleted_by = :deleted_by where sid = :sid and date_use = :date_use and car_use = :car_use and feliix = '1' and `status` <> -1";
+            $stmts = $db_sea->prepare($sql);
+            $stmts->bindParam(':deleted_by', $user_name);
+            $stmts->bindParam(':sid', $id);
+            $stmts->bindParam(':date_use', $date);
+            $stmts->bindParam(':car_use', $service);
+            $stmts->execute();
 
 
             http_response_code(200);
@@ -1092,7 +1103,7 @@ if (!isset($jwt)) {
 
                     if (isset($_FILES['files']['name'][$i])) {
                         $image_name = $_FILES['files']['name'][$i];
-                        $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
+                        $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo","dwf");
                         $extension = pathinfo($image_name, PATHINFO_EXTENSION);
                         if (in_array(strtolower($extension), $valid_extensions)) {
                             //$upload_path = 'img/' . time() . '.' . $extension;
@@ -1266,7 +1277,7 @@ if (!isset($jwt)) {
 
                     if (isset($_FILES['files']['name'][$i])) {
                         $image_name = $_FILES['files']['name'][$i];
-                        $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
+                        $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo","dwf");
                         $extension = pathinfo($image_name, PATHINFO_EXTENSION);
                         if (in_array(strtolower($extension), $valid_extensions)) {
                             //$upload_path = 'img/' . time() . '.' . $extension;
@@ -1557,7 +1568,7 @@ function get_schedule_file($id)
     $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
     
     $table->addRow();
-    $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
+    $table->addCell(2000, ['borderSize' => 6])->addText("Technician needed:", array('bold' => true));
 
     // CONCAT installer_needed and installer_needed_other and remove duplicate
     //$installer_needed_other = str_replace(" ", "", $installer_needed_other);
@@ -1909,7 +1920,7 @@ function get_schedule_file_full($id)
     $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
     
     $table->addRow();
-    $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
+    $table->addCell(2000, ['borderSize' => 6])->addText("Technician needed:", array('bold' => true));
 
     // CONCAT installer_needed and installer_needed_other and remove duplicate
     //$installer_needed_other = str_replace(" ", "", $installer_needed_other);
@@ -2153,7 +2164,7 @@ function grab_image($image_url,$image_file){
 function RefactorInstallerNeeded($merged_results, $db)
 {
     $tech = [];
-    $query = "SELECT username  FROM `user` where status = 1 and title_id in (21, 22, 56, 57)";
+    $query = "SELECT username  FROM `user` where status = 1 and title_id in (21, 22, 56, 57, 66)";
     $stmt = $db->prepare($query);
     $stmt->execute();
 

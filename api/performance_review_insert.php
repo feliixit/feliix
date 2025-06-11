@@ -117,6 +117,15 @@ else
             send_review_mail($s_date, $e_date, $user_id, $employee_id, $dead_date);
         }
 
+        if($period == 3)
+        {
+            $s_date = $review_month;
+            $e_date = GetNextMonth3($review_month);
+            $dead_date = GetDeadMonth3($review_month);
+
+            send_review_mail_adm($s_date, $e_date, $user_id, $employee_id, $dead_date);
+            send_review_mail($s_date, $e_date, $user_id, $employee_id, $dead_date);
+        }
         
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") ));
@@ -139,9 +148,21 @@ function GetNextMonth($d)
     return $date;
 }
 
+function GetNextMonth3($d)
+{
+    $date = date('Y-m', strtotime('+2 month', strtotime($d . '-01')));
+    return $date;
+}
+
 function GetDeadMonth($d)
 {
     $date = date('Y-m-d', strtotime('+2 month', strtotime($d . '-10')));
+    return $date;
+}
+
+function GetDeadMonth3($d)
+{
+    $date = date('Y-m-d', strtotime('+3 month', strtotime($d . '-10')));
     return $date;
 }
 

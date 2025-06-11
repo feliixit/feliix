@@ -653,6 +653,8 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     `v1` = :v1,
     `v2` = :v2,
     `v3` = :v3,
+    `v4` = :v4,
+    `ps_var` = :ps_var,
     `discount` = :discount,
     `status` = 0,
     `create_id` = :create_id,
@@ -660,6 +662,9 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     
     // prepare the query
     $stmt = $db->prepare($query);
+
+    $ps_var = isset($gp['ps_var']) ? $gp['ps_var'] : [];
+    $json_ps_var = json_encode($ps_var);
     
     // bind the values
     $stmt->bindParam(':price_id', $price_id);
@@ -682,6 +687,8 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     $stmt->bindParam(':v1', $gp['v1']);
     $stmt->bindParam(':v2', $gp['v2']);
     $stmt->bindParam(':v3', $gp['v3']);
+    $stmt->bindParam(':v4', $gp['v4']);
+    $stmt->bindParam(':ps_var', $json_ps_var);
     $stmt->bindParam(':discount', $gp['discount']);
     $stmt->bindParam(':create_id', $user_id);
     
@@ -865,6 +872,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
             'v1' => "",
             'v2' => "",
             'v3' => "",
+            'v4' => "",
             'url1' => "",
             'url2' => "",
             'url3' => "",
@@ -896,6 +904,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
             'v1' => "",
             'v2' => "",
             'v3' => "",
+            'v4' => "",
             'url1' => "",
             'url2' => "",
             'url3' => "",
@@ -927,6 +936,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
             'v1' => "",
             'v2' => "",
             'v3' => "",
+            'v4' => "",
             'url1' => "",
             'url2' => "",
             'url3' => "",
@@ -966,7 +976,9 @@ function GetItems($option_id, $legend_id, $db){
     pid,
     v1,
     v2,
-    v3
+    v3,
+    v4,
+    ps_var
     FROM   price_comparison_item
     WHERE  option_id = " . $option_id . "
     AND  legend_id = " . $legend_id . "
@@ -1009,10 +1021,13 @@ function GetItems($option_id, $legend_id, $db){
         $v1 = $row['v1'];
         $v2 = $row['v2'];
         $v3 = $row['v3'];
+        $v4 = $row['v4'];
+
+        $ps_var = json_decode($row['ps_var'] == null ? "[]" : $row['ps_var'], true);
         
-        $url1 = $photo1 == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo1;
-        $url2 = $photo2 == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo2;
-        $url3 = $photo3 == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo3;
+        $url1 = $photo1 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo1;
+        $url2 = $photo2 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo2;
+        $url3 = $photo3 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo3;
         
         
         $merged_results[] = array(
@@ -1038,6 +1053,8 @@ function GetItems($option_id, $legend_id, $db){
             'v1' => $v1,
             'v2' => $v2,
             'v3' => $v3,
+            'v4' => $v4,
+            'ps_var' => $ps_var,
             'url1' => $url1,
             'url2' => $url2,
             'url3' => $url3,
@@ -1230,7 +1247,7 @@ function GetSubTotalInfo($qid, $db)
     
     $query = "
     select sum(amount) amt from quotation_page_type_block
-    WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . ")
+    WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and status <> -1)
     ";
     
     // prepare the query
@@ -1565,7 +1582,7 @@ function GetSig($qid, $page, $db)
                 "id" => $id,
                 "type" => $type,
                 "photo" => $photo,
-                "url" =>  $photo != '' ? 'https://storage.cloud.google.com/feliiximg/' . $photo : '',
+                "url" =>  $photo != '' ? 'https://storage.googleapis.com/feliiximg/' . $photo : '',
                 "name" => $name,
                 "position" => $position,
                 "phone" => $phone,
@@ -1838,7 +1855,7 @@ function GetBlocks($qid, $db){
         $listing = $row['listing'];
         
         $type == "" ? "" : "image";
-        $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+        $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
         
         $merged_results[] = array(
             "id" => $id,

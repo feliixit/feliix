@@ -135,7 +135,10 @@ if (!isset($jwt)) {
         $period = $row['period'];
         $review_month = $row['review_month'];
 
-        $review_next_month = GetNextMonth($review_month);
+        if($period == 3)
+            $review_next_month = GetNextMonth3($review_month);
+        else
+            $review_next_month = GetNextMonth($review_month);
 
         $department = $row['department'];
         $title = $row['title'];
@@ -315,6 +318,13 @@ function GetNextMonth($d)
     $date = date('Y-m', strtotime('+1 month', strtotime($d . '-01')));
     return $date;
 }
+
+function GetNextMonth3($d)
+{
+    $date = date('Y-m', strtotime('+2 month', strtotime($d . '-01')));
+    return $date;
+}
+
 function GetAgenda($tid, $type, $db, $emp, $mag, $rid){
     $query = "
             SELECT pm.id,

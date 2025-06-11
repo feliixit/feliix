@@ -64,6 +64,7 @@ $page = (isset($_POST['page']) ?  $_POST['page'] : 1);
 $size = (isset($_POST['size']) ?  $_POST['size'] : 10);
 
 $conf = new Conf();
+$apartment_id = 0;
 
 // if jwt is not empty
 if($jwt){
@@ -74,6 +75,7 @@ if($jwt){
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
 
+        $apartment_id = $decoded->data->apartment_id;
         // response in json format
             http_response_code(200);
 
@@ -105,6 +107,12 @@ if($jwt){
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
                 where 1=1 ";
+
+// Sale = 1, Lighting = 2, Office = 3, Engineering = 5
+if($apartment_id == 1 || $apartment_id == 2 || $apartment_id == 3 || $apartment_id == 5)
+{
+    $sql = $sql . " and p.apartment_id = " . $apartment_id . " ";
+}
 
 if($ft != "" && $ft != "0")
 {
@@ -158,7 +166,6 @@ if($fs != "" && $fs != "0")
 if(count($status_array) > 0)
 {
     $sql = $sql . " and pm.`status` in (" . implode(",", $status_array) . ") ";
-    $query_cnt = $query_cnt . " and pm.`status` in (" . implode(",", $status_array) . ") ";
 }
 
 if($fat == "1" && $fau != "")

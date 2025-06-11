@@ -25,6 +25,9 @@ try {
     $position = $decoded->data->position;
     $department = $decoded->data->department;
 
+    if($decoded->data->limited_access == true)
+                header( 'location:index' );
+
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 
@@ -89,7 +92,7 @@ catch (Exception $e) {
     <link rel="stylesheet" type="text/css" href="css/ui.css" />
     <link rel="stylesheet" type="text/css" href="css/case.css" />
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" />
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
@@ -97,7 +100,7 @@ catch (Exception $e) {
     <script type="text/javascript" src="js/main.js" defer></script>
 
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="css/element-ui/theme-chalk/index.css">
 
 
 
@@ -400,13 +403,13 @@ background-color: #94BABB;
         </div>
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 <script defer src="js/a076d05399.js"></script>
 
 <script>
@@ -414,7 +417,7 @@ background-color: #94BABB;
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/monthly_xxxxx.js"></script>
 
 </html>

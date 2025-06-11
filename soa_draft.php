@@ -24,6 +24,10 @@ try {
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
 
+            
+if($decoded->data->limited_access == true)
+header( 'location:index' );
+
 $GLOBALS['position'] = $decoded->data->position;
 $GLOBALS['department'] = $decoded->data->department;
 
@@ -32,7 +36,7 @@ $test_manager = "1";
 }
 
 //  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
-if($user_id == 48 || $user_id == 2 || $user_id == 11 || $user_id == 6 ||  $user_id == 1 || $user_id == 3 || $user_id == 89 || $user_id == 129 || $user_id == 137 || $user_id == 138 || $user_id == 148)
+if($user_id == 48 || $user_id == 2 || $user_id == 11 || $user_id == 6 ||  $user_id == 1 || $user_id == 3 || $user_id == 89 || $user_id == 129 || $user_id == 137 || $user_id == 138 || $user_id == 148 || $user_id == 191 || $user_id == 195)
 $test_manager = "1";
 }
 
@@ -88,9 +92,9 @@ header( 'location:index' );
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+          href="css/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    <link rel="stylesheet" href="css/fontawesome/v5.7.0/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
@@ -101,7 +105,7 @@ header( 'location:index' );
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+            src="js/bootstrap4-toggle@3.6.1/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
@@ -2257,6 +2261,14 @@ header( 'location:index' );
             width: 4%;
         }
 
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23e0e0e0' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5L4.25 4l2.5-2.5L5.25 0z'/%3e%3c/svg%3e") !important;
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23e0e0e0' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5L3.75 4l-2.5 2.5L2.75 8l4-4-4-4z'/%3e%3c/svg%3e") !important;
+        }
+
         .list_function .sort_block {
             float: left;
         }
@@ -2289,6 +2301,13 @@ header( 'location:index' );
             outline-color: transparent!important;
         }
 
+        #tb_product_list ul li:nth-of-type(1) span.phasedout_replacement {
+            background-color: orange;
+            color: white;
+            padding: 0px 5px 3px;
+            border-radius: 10px;
+            cursor: pointer;	
+        }
 
         @media print {
             * {
@@ -3478,9 +3497,34 @@ header( 'location:index' );
 
                             </div>
 
-                            <div class="company_signature" v-if="(pag.sig != undefined ? pag.sig.item_company.length : 0) > 0">
+                            
+                            <div class="company_signature"
+                                 v-if="(pag.sig != undefined ? pag.sig.item_company.length : 0) > 0 && (pag.sig != undefined ? pag.sig.item_company.length : 0) <= 4">
 
                                 <div class="signature" v-for="(tt, index) in pag.sig.item_company">
+                                    <div class="pic"><img :src="img_url + tt.photo" v-if="tt.photo != ''"></div>
+                                    <div class="name">{{ tt.name }}</div>
+                                    <div class="line1">{{ tt.position }}</div>
+                                    <div class="line2">{{ tt.phone }}</div>
+                                    <div class="line3">{{ tt.email }}</div>
+                                </div>
+                            </div>
+
+                            <div class="company_signature"
+                                 v-if="(sig != undefined ? pag.sig.item_company.length : 0) > 4">
+
+                                <div class="signature" v-for="(tt, index) in sig.item_company" v-if="index < 3">
+                                    <div class="pic"><img :src="img_url + tt.photo" v-if="tt.photo != ''"></div>
+                                    <div class="name">{{ tt.name }}</div>
+                                    <div class="line1">{{ tt.position }}</div>
+                                    <div class="line2">{{ tt.phone }}</div>
+                                    <div class="line3">{{ tt.email }}</div>
+                                </div>
+                            </div>
+                            <div class="company_signature"
+                                 v-if="(sig != undefined ? pag.sig.item_company.length : 0) > 4">
+
+                                <div class="signature" v-for="(tt, index) in sig.item_company" v-if="index >= 3">
                                     <div class="pic"><img :src="img_url + tt.photo" v-if="tt.photo != ''"></div>
                                     <div class="name">{{ tt.name }}</div>
                                     <div class="line1">{{ tt.position }}</div>
@@ -3519,7 +3563,7 @@ header( 'location:index' );
     <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
          aria-hidden="true" id="modal_product_catalog">
 
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
             <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
 
@@ -3713,7 +3757,7 @@ header( 'location:index' );
                                     <span>QP: {{ item.quoted_price }} <br v-if="item.str_quoted_price_change"> {{ item.str_quoted_price_change ? item.str_quoted_price_change : '' }}<br></span>
                                 </td>
                                 <td>
-                                    <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true"
+                                    <button id="edit01" @click="btnEditClick(item)" v-if="item.status != -1"><i aria-hidden="true"
                                                                                        class="fas fa-caret-right"></i>
                                     </button>
                                 </td>
@@ -3845,7 +3889,7 @@ header( 'location:index' );
     <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
          aria-hidden="true" id="modal_product_display">
 
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
             <div class="modal-content"
                  style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
@@ -4097,6 +4141,18 @@ header( 'location:index' );
                                         </option>
                                     </select>
                                 </li>
+                                <li v-if="product.variation4_value[0] !== '' && product.variation4_value[0] !== undefined">
+                                    {{ product.variation4 !== 'custom' ? product.variation4 : product.variation4_custom
+                                    }}
+                                </li>
+                                <li v-show="product.variation4_value[0] !== '' && product.variation4_value[0] !== undefined">
+                                    <select class="form-control" v-model="v4" @change="change_v()">
+                                        <option value=""></option>
+                                        <option v-for="(item, index) in product.variation4_value" :value="item"
+                                                :key="item">{{item}}
+                                        </option>
+                                    </select>
+                                </li>
 
                                 <template v-for="(item, index) in product.accessory_infomation" v-if="show_accessory">
                                     <li>{{ item.category }}</li>
@@ -4250,7 +4306,7 @@ header( 'location:index' );
     <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
          aria-hidden="true" id="modal_specification_sheet">
 
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
             <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
 
@@ -4354,7 +4410,7 @@ header( 'location:index' );
     <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
          aria-hidden="true" id="modal_signature_codebook">
 
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1300px;">
 
             <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
 
@@ -4434,8 +4490,8 @@ header( 'location:index' );
 
 
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/quotation_pageless.js"></script>
 </html>

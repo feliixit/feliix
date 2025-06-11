@@ -36,7 +36,7 @@ if (!isset($jwt)) {
             $access7 = true;
         }
        
-        if($username == "Kristel Tan" || $username == "Kuan" || $username == "Dennis Lin" || $username == "Ronnie Fernando Dela Cruz" || $username == "Gina Donato")
+        if($username == "Kristel Tan" || $username == "Kuan" || $username == "Dennis Lin" || $username == "Marie Kayla Patricia Dequina" || $username == "Gina Donato" || $username == "dereck" || $username == "Aiza Eisma" || $username == "Johmar Maximo" || $username == "Stephanie De dios" || $username == "Jack Beringuela")
         {
             $access7 = true;
         }
@@ -121,7 +121,12 @@ function GetCurrentMonth($strDate, $sale_person, $category, $db)
 
     $report1 = GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
 
-    return array("date" => date("Y/m",strtotime($strDate . "first day of 0 month")), "report" => $report1);
+    $sum = 0;
+    foreach ($report1 as &$value) {
+        $sum = $sum + $value['subtotal'];
+    }
+
+    return array("date" => date("Y/m",strtotime($strDate . "first day of 0 month")), "report" => $report1, "sum" => $sum);
 }
 
 function GetOneMonth($strDate, $sale_person, $category, $db)
@@ -131,8 +136,13 @@ function GetOneMonth($strDate, $sale_person, $category, $db)
 
     $report1 = GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
 
+    $sum = 0;
+    foreach ($report1 as &$value) {
+        $sum = $sum + $value['subtotal'];
+    }
 
-    return array("date" => date("Y/m",strtotime($strDate . "first day of -1 month")), "report" => $report1);
+
+    return array("date" => date("Y/m",strtotime($strDate . "first day of -1 month")), "report" => $report1, "sum" => $sum);
 }
 
 function GetSalesMember($person, $db)

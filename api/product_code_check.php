@@ -64,7 +64,7 @@ else
               break;
             }
 
-            $sql = "SELECT id, code  FROM product_category p  WHERE  p.STATUS <> -1 and p.code like ? and p.id <> ? order by code limit 10";
+            $sql = "SELECT id, code  FROM product_category p  WHERE  (p.STATUS <> -1 or (p.status = -1 and (select count(*) from product_replacement pr where pr.product_id = p.id) > 0)) and p.code like ? and p.id <> ? order by code limit 10";
 
             $merged_results = array();
 

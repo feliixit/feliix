@@ -96,7 +96,8 @@ try{
         {
             $query = "update od_item
             SET
-                `status` = 0
+                `status` = 0,
+                `status_at` = now()
             where id = :id and `status` = 2 ";
 
             // prepare the query

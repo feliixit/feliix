@@ -53,6 +53,7 @@ if (!isset($jwt)) {
         $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
         $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
         $kind = (isset($_POST['kind']) ?  $_POST['kind'] : 0);
+        $date_data_submission = (isset($_POST['date_data_submission']) ?  $_POST['date_data_submission'] : '');
 
         $batch_id = 1;
         $query = "select coalesce(max(batch_id) + 1, 1) cnt from project_client_po";
@@ -64,12 +65,102 @@ if (!isset($jwt)) {
             $batch_id = $row['cnt'];
         }
 
+        if($kind == 4)
+        {
+            // delete previous data
+            $query = "DELETE FROM project_client_po WHERE project_id = :project_id and kind = 4 and status = -1";
+            // prepare the query
+            $stmt = $db->prepare($query);
+        
+            // bind the values
+            $stmt->bindParam(':project_id', $pid);
+
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+
+            // update status -1
+            $query = "update project_client_po set status = -1 WHERE project_id = :project_id and kind = 4";
+            // prepare the query
+            $stmt = $db->prepare($query);
+        
+            // bind the values
+            $stmt->bindParam(':project_id', $pid);
+
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+
+            $query = "update project_main set date_data_submission = :date_data_submission WHERE id = :project_id";
+            // prepare the query
+            $stmt = $db->prepare($query);
+        
+            // bind the values
+            $stmt->bindParam(':project_id', $pid);
+            $stmt->bindParam(':date_data_submission', $date_data_submission);
+
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+
+            $remark = $date_data_submission . ". " . $remark;
+        }
+        
+
+
+
         $query = "INSERT INTO project_client_po
                 SET
                     project_id = :project_id,
                     remark = :remark,
                     batch_id = :batch_id,
                     kind = :kind,
+                    date_data_submission = :date_data_submission,
                     create_id = :create_id,
                     created_at = now()";
     
@@ -81,6 +172,7 @@ if (!isset($jwt)) {
         $stmt->bindParam(':remark', $remark);
         $stmt->bindParam(':batch_id', $batch_id);
         $stmt->bindParam(':kind', $kind);
+        $stmt->bindParam(':date_data_submission', $date_data_submission);
         $stmt->bindParam(':create_id', $user_id);
 
         $last_id = 0;
@@ -114,6 +206,8 @@ if (!isset($jwt)) {
             $batch_type = 'client_other';
         if($kind == 3)
             $batch_type = 'client_other';
+        if($kind == 4)
+            $batch_type = 'client_other';
 
         $_pic_url = "";
         $_real_url = "";
@@ -127,7 +221,7 @@ if (!isset($jwt)) {
 
                     if (isset($_FILES['files']['name'][$i])) {
                         $image_name = $_FILES['files']['name'][$i];
-                        $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
+                        $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo","dwf");
                         $extension = pathinfo($image_name, PATHINFO_EXTENSION);
                         if (in_array(strtolower($extension), $valid_extensions)) {
                             //$upload_path = 'img/' . time() . '.' . $extension;
@@ -269,5 +363,5 @@ function SendNotifyMail($bid)
         $final_amount = $row['final_amount'];
     }
 
-    send_pay_notify_mail_new($leaver, $email1, $leaver, $project_name, $remark, $subtime, $category, $kind, $special, $final_amount);
+    send_pay_notify_mail_new($leaver, $email1, $leaver, $project_name, $remark, $subtime, $category, $kind, $special, $final_amount, $bid);
 }

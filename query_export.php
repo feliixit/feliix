@@ -23,6 +23,8 @@ try {
             $user_id = $decoded->data->id;
             $username = $decoded->data->username;
             
+            if($decoded->data->limited_access == true)
+                header( 'location:index' );
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             // 改從 access control
             $access = false;
@@ -203,19 +205,19 @@ $(function(){
     </div>
 </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script src="js/npm/vue/dist/vue.js"></script> 
 <script src="js/axios.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/npm/sweetalert2@9.js"></script>
 <script defer src="js/a076d05399.js"></script> 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script src="js/vue-i18n/vue-i18n.global.min.js"></script>
+<script src="js/element-ui@2.15.14/index.js"></script>
+<script src="js/element-ui@2.15.14/en.js"></script>
 
 <script>
   ELEMENT.locale(ELEMENT.lang.en)
 </script>
 
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="js/element-ui@2.15.14/lib/index.js"></script>
 <script src="js/query_export.js"></script>
 </html>

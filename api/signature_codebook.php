@@ -315,7 +315,7 @@ else
                 $pic_url = $row['pic_url'];
 
                 if($pic_url != '')
-                    $url = 'https://storage.cloud.google.com/feliiximg/' . $pic_url;
+                    $url = 'https://storage.googleapis.com/feliiximg/' . $pic_url;
 
                 $merged_results[] = array( "id" => $id,
                                     "name" => $name,

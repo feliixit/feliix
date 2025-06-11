@@ -34,6 +34,27 @@ var app = new Vue({
     halfday: [],
     tag_management: [],
     soa: [],
+    transmittal: [],
+    edit_emp: [],
+    edit_basic: [],
+    office_items : [],
+    office_item_approve: [],
+    office_item_release: [],
+    limited_access : [],
+    inventory_checker : [],
+    inventory_approver : [],
+    frozen_office: "",
+    quotation_control: [],
+    cost_lighting: [],
+    cost_furniture: [],
+    leadership_assessment: [],
+    special_agreement: [],
+    for_user: [],
+    for_profile: [],
+    product_edit: [],
+    product_duplicate: [],
+    product_delete: [],
+    inventory_modify: [],
   },
 
   created() {
@@ -150,6 +171,88 @@ var app = new Vue({
               _this.soa = res.data[0]["soa"].split(",").filter(function (el) {
                 return el != "";
               });
+              if (kind === 23 || kind === undefined)
+              _this.transmittal = res.data[0]["transmittal"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 24 || kind === undefined)
+              _this.edit_emp = res.data[0]["edit_emp"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 25 || kind === undefined)
+              _this.edit_basic = res.data[0]["edit_basic"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 26 || kind === undefined)
+              _this.office_items = res.data[0]["office_items"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 27 || kind === undefined)
+              _this.office_item_approve = res.data[0]["office_item_approve"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 28 || kind === undefined)
+              _this.office_item_release = res.data[0]["office_item_release"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 29 || kind === undefined)
+              _this.limited_access = res.data[0]["limited_access"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 30 || kind === undefined)
+              _this.inventory_checker = res.data[0]["inventory_checker"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 31 || kind === undefined)
+              _this.inventory_approver = res.data[0]["inventory_approver"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 32 || kind === undefined)
+              _this.frozen_office = res.data[0]["frozen_office"];
+              if (kind === 33 || kind === undefined)
+                _this.quotation_control = res.data[0]["quotation_control"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 34 || kind === undefined)
+                _this.cost_lighting = res.data[0]["cost_lighting"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 35 || kind === undefined)
+                _this.cost_furniture = res.data[0]["cost_furniture"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 36 || kind === undefined)
+                _this.leadership_assessment = res.data[0]["leadership_assessment"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 37 || kind === undefined)
+                _this.special_agreement = res.data[0]["special_agreement"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 38 || kind === undefined)
+                _this.for_user = res.data[0]["for_user"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 39 || kind === undefined)
+                _this.for_profile = res.data[0]["for_profile"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 40 || kind === undefined)
+                _this.product_edit = res.data[0]["product_edit"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 41 || kind === undefined)
+                _this.product_duplicate = res.data[0]["product_duplicate"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 42 || kind === undefined)
+                _this.product_delete = res.data[0]["product_delete"].split(",").filter(function (el) {
+                  return el != "";
+                });
+              if (kind === 43 || kind === undefined)
+                _this.inventory_modify = res.data[0]["inventory_modify"].split(",").filter(function (el) {
+                  return el != "";
+                });
 
           },
           (err) => {
@@ -217,6 +320,27 @@ var app = new Vue({
       form_Data.append("halfday", this.halfday.toString());
       form_Data.append("tag_management", this.tag_management.toString());
       form_Data.append("soa", this.soa.toString());
+      form_Data.append("transmittal", this.transmittal.toString());
+      form_Data.append("edit_emp", this.edit_emp.toString());
+      form_Data.append("edit_basic", this.edit_basic.toString());
+      form_Data.append("office_items", this.office_items.toString());
+      form_Data.append("office_item_approve", this.office_item_approve.toString());
+      form_Data.append("office_item_release", this.office_item_release.toString());
+      form_Data.append("limited_access", this.limited_access.toString());
+      form_Data.append("inventory_checker", this.inventory_checker.toString());
+      form_Data.append("inventory_approver", this.inventory_approver.toString());
+      form_Data.append("frozen_office", this.frozen_office);
+      form_Data.append("quotation_control", this.quotation_control);
+      form_Data.append("cost_lighting", this.cost_lighting);
+      form_Data.append("cost_furniture", this.cost_furniture);
+      form_Data.append("leadership_assessment", this.leadership_assessment);
+      form_Data.append("special_agreement", this.special_agreement);
+      form_Data.append("for_user", this.for_user);
+      form_Data.append("for_profile", this.for_profile);
+      form_Data.append("product_edit", this.product_edit);
+      form_Data.append("product_duplicate", this.product_duplicate);
+      form_Data.append("product_delete", this.product_delete);
+      form_Data.append("inventory_modify", this.inventory_modify);
 
       axios({
         method: "post",

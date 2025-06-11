@@ -57,7 +57,7 @@ else
           case 'GET':
             $merged_results = array();
 
-            $sql = "SELECT distinct brand COLLATE UTF8MB4_BIN brand FROM product_category p  WHERE  p.STATUS <> -1 and p.brand <> '' order by brand";
+            $sql = "SELECT distinct brand COLLATE UTF8MB4_BIN brand FROM product_category p  WHERE  (p.STATUS <> -1 or (p.status = -1 and (select count(*) from product_replacement pr where pr.product_id = p.id) > 0)) and p.brand <> '' order by brand";
 
             $merged_results = array();
 

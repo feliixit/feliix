@@ -783,7 +783,7 @@ var app = new Vue({
 
             if (this.ins_title.trim() == '') {
               Swal.fire({
-                text: 'Please Encode Quotation Name!',
+                text: 'Please Encode Approval Form Name!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })

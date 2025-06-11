@@ -117,7 +117,7 @@ function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
 
         $stage_id = $row["stage_id"];
 
-        if(count($order) > 0)
+        if(count($order) > 0 && $kind == "")
             task_notify_order("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, GetOrderType($order[0]["order_type"]), $order[0]["od_name"]);
         else
         {

@@ -114,7 +114,7 @@
         </div>
     </div>
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
 
 <script src="https://www.google.com/recaptcha/api.js?render=6Le2uvQUAAAAAOhI5CxFxFMMn1oiQCy5YZQFUu5j"></script>

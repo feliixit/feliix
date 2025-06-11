@@ -15,9 +15,11 @@ var app = new Vue({
     review_month: "",
     review_next_month: "",
 
+    review_next_month3: "",
+
     review_month_1:"",
 
-    sdate: "2021-04",
+    sdate: "2021-01",
     edate: "",
 
     editing: false,
@@ -130,7 +132,10 @@ var app = new Vue({
       var d = new Date(d + '-01');
       var d_next = new Date(d.setMonth(d.getMonth() + 1));
       this.review_next_month = moment(d_next).format('YYYY-MM');
+      var d_next = new Date(d.setMonth(d.getMonth() + 1));
+      this.review_next_month3 = moment(d_next).format('YYYY-MM');
     },
+
   },
 
   methods: {
@@ -371,6 +376,11 @@ var app = new Vue({
 
       form_Data.append("jwt", token);
       form_Data.append("user_id", this.employee.id);
+      if(this.month_type == 3)
+      {
+        form_Data.append("review_month", this.review_month);
+        form_Data.append("period", 3);
+      }
       if(this.month_type == 2)
       {
         form_Data.append("review_month", this.review_month);
@@ -991,24 +1001,24 @@ var app = new Vue({
 
       if(this.department.trim().toUpperCase() == 'SALES')
       { 
-        if(this.title.trim().toUpperCase() == 'ASSISTANT SALES MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT CUSTOMER VALUE DIRECTOR')
           can_save = true;
 
-        if(this.title.trim().toUpperCase() == 'SALES MANAGER')
+        if(this.title.trim().toUpperCase() == 'CUSTOMER VALUE DIRECTOR')
           can_save = true;
       }
 
       if(this.department.trim().toUpperCase() == 'LIGHTING')
       { 
-        if(this.title.trim().toUpperCase() == 'LIGHTING MANAGER')
+        if(this.title.trim().toUpperCase() == 'LIGHTING VALUE CREATION DIRECTOR')
           can_save = true;
-        if(this.title.trim().toUpperCase() == 'ASSISTANT LIGHTING MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT LIGHTING VALUE CREATION DIRECTOR')
           can_save = true;
       }
 
       if(this.department.trim().toUpperCase() == 'OFFICE')
       { 
-        if(this.title.trim().toUpperCase() == 'OFFICE SYSTEMS MANAGER')
+        if(this.title.trim().toUpperCase() == 'OFFICE SPACE VALUE CREATION DIRECTOR')
           can_save = true;
       }
 

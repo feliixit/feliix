@@ -55,7 +55,7 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : '');
 $fc = (isset($_GET['fc']) ?  $_GET['fc'] : '');
 $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
 $ft = (isset($_GET['ft']) ?  $_GET['ft'] : '');
-
+$fp = (isset($_GET['fp']) ?  $_GET['fp'] : '');
 $ft = urldecode($ft);
 
 $fal = (isset($_GET['fal']) ?  $_GET['fal'] : '');
@@ -64,6 +64,15 @@ $fpl = (isset($_GET['fpl']) ?  $_GET['fpl'] : '');
 $fpu = (isset($_GET['fpu']) ?  $_GET['fpu'] : '');
 $frl = (isset($_GET['frl']) ?  $_GET['frl'] : '');
 $fru = (isset($_GET['fru']) ?  $_GET['fru'] : '');
+
+$fal_eq = (isset($_GET['fal_eq']) ?  $_GET['fal_eq'] : '');
+$fau_eq = (isset($_GET['fau_eq']) ?  $_GET['fau_eq'] : '');
+$fpl_eq = (isset($_GET['fpl_eq']) ?  $_GET['fpl_eq'] : '');
+$fpu_eq = (isset($_GET['fpu_eq']) ?  $_GET['fpu_eq'] : '');
+$frl_eq = (isset($_GET['frl_eq']) ?  $_GET['frl_eq'] : '');
+$fru_eq = (isset($_GET['fru_eq']) ?  $_GET['fru_eq'] : '');
+
+$aging = (isset($_GET['aging']) ?  $_GET['aging'] : '');
 
 $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
 $fk = urldecode($fk);
@@ -102,6 +111,7 @@ $query = "SELECT pm.id,
                     ORDER  BY created_at DESC
                     LIMIT  1), pm.estimate_close_prob) estimate_close_prob,
             user.username,
+            pm.special,
             Date_format(pm.created_at, '%Y-%m-%d')       created_at,
             Date_format(pm.updated_at, '%Y-%m-%d')       updated_at,
             Coalesce((SELECT project_stage.stage
@@ -151,6 +161,26 @@ if($fs == "w")
  
 }
 
+if($fp == "A")
+{
+    $query = $query . " and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` = 0) > 0 and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` = 1) > 0 ";
+}
+
+if($fp == "D")
+{
+    $query = $query . " and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` = 0) > 0 and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` = 1) = 0 ";
+}
+
+if($fp == "F")
+{
+    $query = $query . " and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` = 0) = 0 and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` = 1) > 0 ";
+}
+
+if($fp == "N")
+{
+    $query = $query . " and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` = 0) = 0 and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` = 1) = 0 ";
+}
+
 if($ft != "" && $ft != "0")
 {
     $query = $query . " and user.username = '" . $ft . "' ";
@@ -163,40 +193,89 @@ if($id != "" && $id != "0")
  
 }
 
-if($fal != "" && $fal != "0")
+if($fal != "" && $fal_eq == "s")
+{
+    $query = $query . " and pm.final_amount > " . $fal . " ";
+}
+
+if($fal != "" && $fal_eq == "se")
 {
     $query = $query . " and pm.final_amount >= " . $fal . " ";
-  
 }
 
-if($fau != "" && $fau != "0")
+if($fau != "" && $fau_eq == "s")
+{
+    $query = $query . " and pm.final_amount < " . $fau . " ";
+}
+
+if($fau != "" && $fau_eq == "se")
 {
     $query = $query . " and pm.final_amount <= " . $fau . " ";
-  
 }
 
-if($fpl != "" && $fpl != "0")
+if($fpl != "" && $fpl_eq == "s")
 {
-    $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) >= " . $fpl . " ";
- 
+    $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), -999999999.99) > " . $fpl . " ";
 }
 
-if($fpu != "" && $fpu != "0")
+if($fpl != "" && $fpl_eq == "se")
 {
-    $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
-    
+    $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), -999999999.99) >= " . $fpl . " ";
 }
 
-if($frl != "" && $frl != "0")
+if($fpu != "" && $fpu_eq == "s")
 {
-    $query = $query . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) >= " . $frl . " ";
- 
+    $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 999999999.99) < " . $fpu . " ";
 }
 
-if($fru != "" && $fru != "0")
+if($fpu != "" && $fpu_eq == "se")
 {
-    $query = $query . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) <= " . $fru . " ";
-    
+    $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 999999999.99) <= " . $fpu . " ";
+}
+
+if($frl != "" && $frl_eq == "s")
+{
+    $query = $query . " and Coalesce(final_amount, -999999999.99) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) > " . $frl . " ";
+}
+
+if($frl != "" && $frl_eq == "se")
+{
+    $query = $query . " and Coalesce(final_amount, -999999999.99) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) >= " . $frl . " ";
+}
+
+if($fru != "" && $fru_eq == "s")
+{
+    $query = $query . " and Coalesce(final_amount, 999999999.99) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) < " . $fru . " ";
+}
+
+if($fru != "" && $fru_eq == "se")
+{
+    $query = $query . " and Coalesce(final_amount, 999999999.99) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) <= " . $fru . " ";
+}
+
+
+if($aging != "")
+{
+    if($aging == "0")
+    {
+        $query = $query . " and DATEDIFF(CURRENT_DATE, pm.date_data_submission) < 30 ";
+    }
+    else if($aging == "30")
+    {
+        $query = $query . " and DATEDIFF(CURRENT_DATE, pm.date_data_submission) >= 30 and DATEDIFF(CURRENT_DATE, pm.date_data_submission) < 60 ";
+    }
+    else if($aging == "60")
+    {
+        $query = $query . " and DATEDIFF(CURRENT_DATE, pm.date_data_submission) >= 60 and DATEDIFF(CURRENT_DATE, pm.date_data_submission) < 90 ";
+    }
+    else if($aging == "90")
+    {
+        $query = $query . " and DATEDIFF(CURRENT_DATE, pm.date_data_submission) >= 90 and DATEDIFF(CURRENT_DATE, pm.date_data_submission) < 120 ";
+    }
+    else if($aging == "120")
+    {
+        $query = $query . " and DATEDIFF(CURRENT_DATE, pm.date_data_submission) >= 120 ";
+    }
 }
 
 if($fkp != "")
@@ -358,6 +437,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $project_name = $row['project_name'];
     $project_status = $row['project_status'];
     $estimate_close_prob = $row['estimate_close_prob'];
+
+    $special = $row['special'];
     $username = $row['username'];
 
     $pm = $row['payment'];
@@ -368,10 +449,48 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $tax_withheld = $row['tax_withheld'];
     $billing_name = $row['billing_name'];
 
-    $quote_file_string = GetQuoteFileString($row['id'], $db);
+    //$quote_file_string = GetQuoteFileString($row['id'], $db);
 
-    $payment_amount = GetPaymentAmount($row['id'], $db);
-    $down_payment_amount = GetDownPaymentAmount($row['id'], $db);
+    
+    $amount = GetAmountRecords($row['id'], $db);
+    
+    $payment_amount = null;
+    $down_payment_amount = null;
+    foreach($amount as $value)
+    {
+        if($value['kind'] == 1)
+            $payment_amount += $value['amount'];
+        if($value['kind'] == 0)
+            $down_payment_amount += $value['amount'];
+    }
+
+    // $payment_amount = GetPaymentAmount($row['id'], $db); //
+    // $down_payment_amount = GetDownPaymentAmount($row['id'], $db); //
+
+    $apply_for_petty = 0;
+    $apply_for_petty_commission = 0;
+
+    $apply_for_petty_record = GetApplyForPettyRecord($row['id'], $db);
+
+    foreach($apply_for_petty_record as $value)
+    {
+        if($value['info_category'] == 'Projects' && $value['info_sub_category'] == 'Commission')
+        {
+            if($value['request_type'] == "1")
+                $apply_for_petty_commission += $value['amount_verified'];
+            if($value['request_type'] == "2")
+                $apply_for_petty_commission += $value['amount_applied'];
+        }
+
+        if($value['request_type'] == "1")
+            $apply_for_petty += $value['amount_verified'];
+        if($value['request_type'] == "2")
+            $apply_for_petty += $value['amount_applied'];
+    }
+    // $apply_for_petty = GetApplyForPetty($row['id'], $db); //
+
+
+    // $apply_for_petty_commission = GetApplyForPettyCommition($row['id'], $db); //
 
     $ar = null;
     if($final_amount != null)
@@ -386,30 +505,45 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $ar = $final_amount - $pay - $down_pay - $tax_withheld;
     }
 
+    if($ar != null)
+        $ar = number_format((float)$ar, 2, '.', '');
+
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
     $stage = $row['stage'];
-    $quote = GetQuote($row['id'], $db);
+    // $quote = GetQuote($row['id'], $db);
     $payment = GetPayment($row['id'], $db);
 
-    $client_po = GetClientPO($row['id'], $db);
+    // $client_po = GetClientPO($row['id'], $db);
     $client_other = GetClientOther($row['id'], $db);
 
-    $client_po_files = GetClientPOFile($row['id'], $db);
-    $client_other_files = GetClientOtherFile($row['id'], $db);
+    // $client_po_files = GetClientPOFile($row['id'], $db);
+    // $client_other_files = GetClientOtherFile($row['id'], $db);
 
-    $final_quotation = GetFinalQuote($row['id'], $db);
+    // $final_quotation = GetFinalQuote($row['id'], $db);
 
-    $apply_for_petty = GetApplyForPetty($row['id'], $db);
+    //$apply_for_petty = GetApplyForPetty($row['id'], $db);
 
-    $down_pay_amount = RetriveDownPaymentAmount($payment);
-    $down_pay_date = RetriveDownPaymentDate($payment);
+    // $down_pay_amount = RetriveDownPaymentAmount($payment);
+    // $down_pay_date = RetriveDownPaymentDate($payment);
 
-    $full_pay_amount = RetrivePaymentAmount($payment);
-    $full_pay_date = RetrivePaymentDate($payment);
+    // $full_pay_amount = RetrivePaymentAmount($payment);
+    // $full_pay_date = RetrivePaymentDate($payment);
 
-    $invoice = RetrieveInvoice($payment);
+    // $invoice = RetrieveInvoice($payment);
+    
+    // client_other's Dte of sub
+    $date_data_submission = "";
+    $aging = "";
 
+    foreach($client_other as $value)
+    {
+        if($value['kind'] == 4)
+        {
+            $date_data_submission = $value['date_data_submission'];
+            $aging = $value['aging'];
+        }
+    }
 
     $merged_results[] = array(
         "id" => $id,
@@ -424,7 +558,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "payment_amount" => $payment_amount,
         "down_payment_amount" => $down_payment_amount,
         "ar" => $ar,
-        "final_quotation" => $final_quotation,
+        // "final_quotation" => $final_quotation,
+        "special" => $special,
         "username" => $username,
         "created_at" => $created_at,
         "updated_at" => $updated_at,
@@ -433,23 +568,25 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "tax_withheld" => $tax_withheld,
         "net_amount" => ($final_amount - $tax_withheld == 0 ? "" : $final_amount - $tax_withheld),
         "billing_name" => $billing_name,
-        "quote" => $quote,
-        "client_po" => $client_po,
-        "client_other" => $client_other,
-        "client_po_file" => $client_po_files,
-        "client_other_file" => $client_other_files,
+        // "quote" => $quote,
+        // "client_po" => $client_po,
+        // "client_other" => $client_other,
+        // "client_po_file" => $client_po_files,
+        // "client_other_file" => $client_other_files,
         "payment" => $payment,
-        "down_pay_amount" => $down_pay_amount,
-        "down_pay_date" => $down_pay_date,
-        "full_pay_amount" => $full_pay_amount,
-        "full_pay_date" => $full_pay_date,
-        "invoice" => $invoice,
+        // "down_pay_amount" => $down_pay_amount,
+        // "down_pay_date" => $down_pay_date,
+        // "full_pay_amount" => $full_pay_amount,
+        // "full_pay_date" => $full_pay_date,
+        // "invoice" => $invoice,
         "pm" => $pm,
         "dpm" => $dpm,
         "expense" => $expense,
         "apply_for_petty" => $apply_for_petty,
+        "apply_for_petty_commission" => $apply_for_petty_commission,
         "quote_file_string" => $quote_file_string,
-        
+        "date_data_submission" => $date_data_submission,
+        "aging" => $aging
     );
 }
 
@@ -510,10 +647,17 @@ $sheet->setCellValue('G'. $i, 'Tax Withheld');
 $sheet->setCellValue('H'. $i, 'Down Payment');
 $sheet->setCellValue('I'. $i, 'Payment');
 $sheet->setCellValue('J'. $i, 'A/R');
-$sheet->setCellValue('K'. $i, 'Expense');
-$sheet->setCellValue('L'. $i, 'File');
+$sheet->setCellValue('K'. $i, 'Date of Data Submission' . PHP_EOL . 'Aging');
+$sheet->getStyle('K'. $i)->getAlignment()->setWrapText(true);
+$sheet->setCellValue('L'. $i, 'Expense (Commission)');
+$sheet->setCellValue('M'. $i, 'Expense (Others)');
+$sheet->setCellValue('N'. $i, 'File');
 
-$sheet->getStyle('A' . $i . ':' . 'K' . $i)->getFont()->setBold(true);
+$sheet->getStyle('A' . $i . ':' . 'N' . $i)->getFont()->setBold(true);
+
+$sheet->getColumnDimension('K')->setWidth(20);
+$sheet->getColumnDimension('L')->setWidth(20);
+$sheet->getColumnDimension('M')->setWidth(20);
 
 
 foreach($return_result as $row)
@@ -529,7 +673,10 @@ foreach($return_result as $row)
     $sheet->setCellValue('H' . $i, $row['down_payment_amount'] === null ? '' : number_format((float)$row['down_payment_amount'], 2, '.', ''));
     $sheet->setCellValue('I' . $i, $row['payment_amount'] === null ? '' : number_format((float)$row['payment_amount'], 2, '.', ''));
     $sheet->setCellValue('J' . $i, $row['ar'] === null ? '' : number_format((float)$row['ar'], 2, '.', ''));
-    $sheet->setCellValue('K' . $i, $row['apply_for_petty'] == 0 ? '' : number_format((float)$row['apply_for_petty'], 2, '.', ''));
+    $sheet->setCellValue('K' . $i, $row["date_data_submission"] != "" ? $row['date_data_submission'] . PHP_EOL . " " . $row['aging'] . " days" : "");
+    $sheet->getStyle('K'. $i)->getAlignment()->setWrapText(true);
+    $sheet->setCellValue('L' . $i, $row['apply_for_petty_commission'] == 0 ? '' : number_format((float)$row['apply_for_petty_commission'], 2, '.', ''));
+    $sheet->setCellValue('M' . $i, (float)$row['apply_for_petty'] - (float)$row['apply_for_petty_commission'] == 0 ? '' : number_format((float)$row['apply_for_petty'] - (float)$row['apply_for_petty_commission'], 2, '.', ''));
 
     $files = $row['payment'];
 
@@ -550,17 +697,39 @@ foreach($return_result as $row)
                 if($file_url != '')
                 {
                     $link = $baseURL . $file_url;
-                    $sheet->setCellValue(chr(76+$j) . $i, $file_name);
+                    $sheet->setCellValue(chr(78+$j) . $i, $file_name);
                     $sheet->getCellByColumnAndRow($j + 11, $i)->getHyperlink()->setUrl($link);
 
                     $j++;
                 }
                 else
-                    $sheet->setCellValue(chr(76+$j) . $i, '');
+                    $sheet->setCellValue(chr(78+$j) . $i, '');
 
                 
             }
         }
+    }
+
+    if($row["special"] == "s")
+    {
+        $spreadsheet
+        ->getActiveSheet()
+        ->getStyle('A' . $i . ':' . 'M' . $i)
+        ->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()
+        ->setARGB('E5F7EB');
+    }
+
+    if($row["special"] == "sn")
+    {
+        $spreadsheet
+        ->getActiveSheet()
+        ->getStyle('A' . $i . ':' . 'M' . $i)
+        ->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()
+        ->setARGB('E7D1E5');
     }
 }
 
@@ -619,12 +788,63 @@ function GetFinalQuote($project_id, $db){
     return $merged_results;
 }
 
+function GetApplyForPettyRecord($project_id, $db)
+{
+    $sql = "SELECT  Coalesce(ap.amount_verified, 0) amount_verified, ap.request_type,
+                        Coalesce((select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = ap.id AND pl.`status` <> -1), 0) amount_applied, info_category, info_sub_category
+                    FROM apply_for_petty ap 
+                    where project_name1 = (SELECT project_name FROM project_main WHERE id = " . $project_id . ") 
+                    and ap.status = 9";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+
 function GetApplyForPetty($project_id, $db)
 {
     $sql = "SELECT  Coalesce(ap.amount_verified, 0) amount_verified, ap.request_type,
                         Coalesce((select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = ap.id AND pl.`status` <> -1), 0) amount_applied
                     FROM apply_for_petty ap 
                     where project_name1 = (SELECT project_name FROM project_main WHERE id = " . $project_id . ") 
+                    and ap.status = 9";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    $amount_verified = 0;
+
+    foreach ($merged_results as &$value) {
+        if($value['request_type'] == "1")
+        $amount_verified += $value['amount_verified'];
+        if($value['request_type'] == "2")
+        $amount_verified += $value['amount_applied'];
+    }
+
+    return $amount_verified;
+}
+
+
+function GetApplyForPettyCommition($project_id, $db)
+{
+    $sql = "SELECT  Coalesce(ap.amount_verified, 0) amount_verified, ap.request_type,
+                        Coalesce((select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = ap.id AND pl.`status` <> -1), 0) amount_applied
+                    FROM apply_for_petty ap 
+                    where project_name1 = (SELECT project_name FROM project_main WHERE id = " . $project_id . ") and info_category = 'Projects' and info_sub_category = 'Commission'
                     and ap.status = 9";
 
     $merged_results = array();
@@ -753,6 +973,27 @@ function GetQuote($project_id, $db){
     return $merged_results;
 }
 
+function GetAmountRecords($project_id, $db){
+    $records = [];
+    $query = "
+        SELECT 
+            pm.amount, pm.kind
+        FROM   project_proof pm
+        WHERE  project_id = " . $project_id . "
+            AND pm.status = 1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $records[] = $row;
+    }
+
+    return $records;
+}
+
 function GetPaymentAmount($project_id, $db){
     $amount = null;
     $query = "
@@ -806,7 +1047,9 @@ function GetClientPO($project_id, $db){
             pm.remark,
             u.username,
             pm.created_at,
-            pm.kind
+            pm.kind,
+            pm.date_data_submission,
+            DATEDIFF(CURRENT_DATE, pm.date_data_submission) aging
         FROM   project_client_po pm
             LEFT JOIN user u
                 ON u.id = pm.create_id
@@ -826,6 +1069,8 @@ function GetClientPO($project_id, $db){
         $username = $row['username'];
         $created_at = $row['created_at'];
         $kind = $row['kind'];
+        $date_data_submission = $row['date_data_submission'];
+        $aging = $row['aging'];
      
         $items = GetItem($row['id'], $db, 'client_po');
 
@@ -841,6 +1086,8 @@ function GetClientPO($project_id, $db){
             "items" => $items,
             "create" => $create,
             "searchstr" => strtolower($searchstr),
+            "date_data_submission" => $date_data_submission,
+            "aging" => $aging,
         );
     }
 
@@ -853,7 +1100,9 @@ function GetClientRemarks($project_id, $db){
             pm.remark,
             u.username,
             pm.created_at,
-            pm.kind
+            pm.kind,
+            pm.date_data_submission,
+            DATEDIFF(CURRENT_DATE, pm.date_data_submission) aging
         FROM   project_client_po pm
             LEFT JOIN user u
                 ON u.id = pm.create_id
@@ -873,6 +1122,8 @@ function GetClientRemarks($project_id, $db){
         $username = $row['username'];
         $created_at = $row['created_at'];
         $kind = $row['kind'];
+        $date_data_submission = $row['date_data_submission'];
+        $aging = $row['aging'];
      
         $items = GetItem($row['id'], $db, 'client_other');
 
@@ -888,6 +1139,8 @@ function GetClientRemarks($project_id, $db){
             "items" => $items,
             "create" => $create,
             "searchstr" => strtolower($searchstr),
+            "date_data_submission" => $date_data_submission,
+            "aging" => $aging,
         );
     }
 
@@ -900,7 +1153,9 @@ function GetClientOther($project_id, $db){
             pm.remark,
             u.username,
             pm.created_at,
-            pm.kind
+            pm.kind,
+            pm.date_data_submission,
+            DATEDIFF(CURRENT_DATE, pm.date_data_submission) aging
         FROM   project_client_po pm
             LEFT JOIN user u
                 ON u.id = pm.create_id
@@ -920,6 +1175,8 @@ function GetClientOther($project_id, $db){
         $username = $row['username'];
         $created_at = $row['created_at'];
         $kind = $row['kind'];
+        $date_data_submission = $row['date_data_submission'];
+        $aging = $row['aging'];
      
         $items = GetItem($row['id'], $db, 'client_other');
 
@@ -935,6 +1192,8 @@ function GetClientOther($project_id, $db){
             "items" => $items,
             "create" => $create,
             "searchstr" => strtolower($searchstr),
+            "date_data_submission" => $date_data_submission,
+            "aging" => $aging,
         );
     }
 

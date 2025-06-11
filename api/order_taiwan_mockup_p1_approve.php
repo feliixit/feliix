@@ -63,6 +63,24 @@ $action = 'approved';
 
 $items_array = json_decode($items,true);
 
+// seperate the items from 'C' and 'J'
+$c_items = array();
+$w_items = array();
+
+for($i=0; $i<count($items_array); $i++) 
+{
+    $item_id = $items_array[$i]['id'];
+    $item_status = $items_array[$i]['confirm'];
+
+    if($item_status == 'C' || $item_status == 'O' || $item_status == 'E')
+    {
+        array_push($c_items, $items_array[$i]);
+    }
+    else if($item_status == 'J')
+    {
+        array_push($w_items, $items_array[$i]);
+    }
+}
 
 // update main table
 $query = "UPDATE od_main SET `updated_id` = :updated_id,  `updated_at` = now() WHERE id = :id";
@@ -90,15 +108,54 @@ try {
 
 try{
 
-    for($i=0; $i<count($items_array); $i++) 
+    for($i=0; $i<count($c_items); $i++) 
     {
-        $item_id = $items_array[$i]['id'];
+        $item_id = $c_items[$i]['id'];
+
+        if($item_id != 0)
+        {
+            $pre_confirm = GetPreviousConfirm($db, $od_id, $item_id);
+            // update product qty
+            if($pre_confirm == 'O')
+                RemoveProductQty($od_id, $c_items[$i], $db);
+
+            $query = "update od_item
+            SET
+                `status_at` = now(),
+                `confirm` = 'A',
+                `status` = 3
+            where id = :id  ";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            $stmt->bindParam(':id', $item_id);
+        }
+    
+        $jsonEncodedReturnArray = "";
+        if ($stmt->execute()) {
+            $returnArray = array('ret' => $item_id);
+            $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+        }
+        else
+        {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+        }
+
+    }
+
+    for($i=0; $i<count($w_items); $i++) 
+    {
+        $item_id = $w_items[$i]['id'];
 
         if($item_id != 0)
         {
             $query = "update od_item
             SET
-                `confirm` = 'A',
+                `status_at` = now(),
+                `confirm` = 'J',
                 `status` = 3
             where id = :id  ";
 
@@ -165,12 +222,91 @@ try{
         die();
     }
 
-    if($page != 3)
-        mockup_notification($user_name, 'access2', 'access1, access3', $project_name, $serial_name, $od_name, 'Order - Mockup', $comment, $action, $items_array, $od_id);
+    $access7 = GetAccess7($db, $od_id);
+    $access7 = ltrim($access7, ',');
+
+    if($page != 3 && count($c_items) > 0)
+        mockup_notification($user_name, 'access2', 'access1, access3', $project_name, $serial_name, $od_name, 'Order - Mockup', $comment, $action, $c_items, $od_id);
+    
+    if($page != 3 && count($w_items) > 0)
+    mockup_notification_warehouse($user_name, 'access1, access3, access4, access5', 'access2', $project_name, $serial_name, $od_name, 'Order - Mockup', $comment, $action, $w_items, $od_id, $access7);
 
     echo $jsonEncodedReturnArray;
 }
 catch (Exception $e)
 {
     error_log($e->getMessage());
+}
+
+
+function GetAccess7($db, $uid)
+{
+    $query = "SELECT access7 FROM od_main WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $uid);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['access7'];
+}
+
+function GetPreviousConfirm($db, $od_id, $item_id)
+{
+    $query = "SELECT confirm FROM od_item WHERE od_id = :od_id AND id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':od_id', $od_id);
+    $stmt->bindParam(':id', $item_id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['confirm'];
+}
+
+function RemoveProductQty($od_id, $item, $db)
+{
+    $pid = $item['pid'];
+    $org_incoming_element = [];
+
+    $new_incoming_qty = 0;
+    $new_incoming_element = [];
+
+    $v1 = $item['v1'];
+    $v2 = $item['v2'];
+    $v3 = $item['v3'];
+    $v4 = $item['v4'];
+    $ps_var = $item['ps_var'];
+
+    // check the original qty
+    $sql = "select incoming_qty, incoming_element from product_category where id = :pid ";
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+    $num = $stmt->rowCount();
+    if($num > 0)
+    {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row['incoming_element'] != '')
+            $org_incoming_element = json_decode($row['incoming_element'], true);
+        else
+            $org_incoming_element = [];
+    }
+
+    foreach($org_incoming_element as $element)
+    {
+        if($element['od_id'] == $od_id && $element['v1'] == $v1 && $element['v2'] == $v2 && $element['v3'] == $v3 && $element['v4'] == $v4 && $element['ps_var'] == $ps_var)
+        {
+            $found = true;
+        }
+        else
+        {
+            $new_incoming_qty += $element['qty'] + $element['backup_qty'];
+            $new_incoming_element[] = $element;
+        }
+    }
+
+    $sql = "update product_category set incoming_qty = :incoming_qty, incoming_element = :incoming_element where id = :pid ";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':incoming_qty', $new_incoming_qty);
+    $stmt->bindParam(':incoming_element', json_encode($new_incoming_element));
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
 }

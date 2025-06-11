@@ -45,7 +45,7 @@ $subquery = "";
 
 $merged_results = array();
 
-$sql = "SELECT * FROM user where user.status = 1 and need_punch = 1 order by username";
+$sql = "SELECT user.id, username, ud.department dept FROM user left join user_department ud on `user`.apartment_id  = ud.id where user.status = 1 and need_punch = 1 order by username";
 
 $stmt = $db->prepare( $sql );
 $stmt->execute();
@@ -53,7 +53,7 @@ $stmt->execute();
 /* fetch data */
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
     if (isset($row)){
-
+        $dept = $row['dept'];
         $mdate = date("Y/m/d");
         //$mdate = "2020/05/11";
         $subquery = " SELECT user.id, username, duty_date, duty_time, location, duty_type FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE  duty_date = '" . $mdate . "' AND on_duty.duty_type in('A', 'B') and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
@@ -96,11 +96,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 
         if($row_count != 0)
         {
-            $merged_results[] = array("is_checked" => 1, "id" => $row_id, "username" => $row_name, "duty_date" => rtrim($row_date, "<br>"),  "location" => rtrim($row_location, "<br>"), "date" => $mdate, "leave" => $leave);
+            $merged_results[] = array("is_checked" => 1, "id" => $row_id, "username" => $row_name, "duty_date" => rtrim($row_date, "<br>"),  "location" => rtrim($row_location, "<br>"), "date" => $mdate, "leave" => $leave, "dept" => $dept);
         }
         else
         {
-            $merged_results[] = array("is_checked" => 0, "id" => $row['id'], "username" => $row['username'], "duty_date" => "",  "location" =>"", "date" => $mdate, "leave" => $leave);
+            $merged_results[] = array("is_checked" => 0, "id" => $row['id'], "username" => $row['username'], "duty_date" => "",  "location" =>"", "date" => $mdate, "leave" => $leave, "dept" => $dept);
         }
 
 
