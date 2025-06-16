@@ -412,7 +412,7 @@ else
         update_relative_ids($related_product, $original_relative_product, $id, $code, $db);
 
         // update other related_product
-        if(count($replacement_array) > 0)
+        //if(count($replacement_array) > 0)
             update_replacement_ids_in_product_category($id, $replacement_array, $db);
 
         $batch_id = $last_id;

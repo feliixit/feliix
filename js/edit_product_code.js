@@ -1813,7 +1813,12 @@ var app = new Vue({
 
           let related_product = $('#related_product').val();
           form_Data.append("related_product", related_product);
-          form_Data.append("replacement_json", JSON.stringify(_this.replacement_json));
+          let replacement_product = $('#replacement_product').val();
+ 
+          if(replacement_product == "")
+            form_Data.append("replacement_json", JSON.stringify([]));
+          else
+            form_Data.append("replacement_json", JSON.stringify(_this.replacement_json));
 
           form_Data.append("accessory_mode", _this.accessory_mode === true || _this.accessory_mode === "1" ? 1 : 0);
           form_Data.append("variation_mode", _this.variation_mode === true || _this.variation_mode === "1" ? 1 : 0);
