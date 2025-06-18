@@ -1,7 +1,8 @@
 conf.inc  
 **/config  
 **/libs
-node_modules.*
+schema.sql
+node_modules
 vendor/* 
 images/*
 *.bak
