@@ -6,6 +6,9 @@ node_modules
 vendor/* 
 images/*
 *.bak
+*.sql
+*copy.js
+*copy.php
 
 js/@fullcalendar/
 js/bootstrap/
@@ -22,3 +25,20 @@ js/jSignature/
 js/light/
 js/npm/
 js/vue-i18n/
+js/canvas2image/
+
+# 第三方庫和套件
+css/bootstrap/
+css/@fullcalendar/
+css/chosen/
+css/element-ui/
+css/fontawesome/
+css/fullcalendar@*/
+css/jquery-ui/
+css/bootstrap4-toggle@3.6.1/
+
+
+composer.lock
+css/bootstrap-4.4.1.css
+js/bootstrap-4.4.1.js
+js/popper.min.js

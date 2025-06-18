@@ -3,7 +3,7 @@ $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
 if ($jwt === NULL || $jwt === '') {
     setcookie("userurl", $_SERVER['REQUEST_URI']);
-    header( 'location:index' );
+    header('location:index');
 }
 
 include_once 'api/config/core.php';
@@ -25,8 +25,8 @@ try {
     $position = $decoded->data->position;
     $department = $decoded->data->department;
 
-    if($decoded->data->limited_access == true)
-    header( 'location:index' );
+    if ($decoded->data->limited_access == true)
+        header('location:index');
 
     $database = new Database();
     $db = $database->getConnection();
@@ -34,19 +34,19 @@ try {
     $product_edit = false;
 
     $query = "SELECT * FROM access_control WHERE `product_edit` LIKE '%" . $username . "%' ";
-    $stmt = $db->prepare( $query );
+    $stmt = $db->prepare($query);
     $stmt->execute();
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $product_edit = true;
     }
 
     if ($product_edit == false)
-        header( 'location:index' );
+        header('location:index');
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
 
-    header( 'location:index' );
+    header('location:index');
 }
 
 ?>
@@ -105,669 +105,675 @@ catch (Exception $e) {
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
     <script>
-    $(function() {
-        $('header').load('include/header.php');
-    })
+        $(function() {
+            $('header').load('include/header.php');
+        })
     </script>
 
     <style>
-    body.gray header>.headerbox {
-        background-color: #707071;
-    }
-
-    body.gray select {
-        background-image: url(images/ui/icon_form_select_arrow_gray.svg);
-    }
-
-    a,
-    a:link,
-    a:visited,
-    a:active,
-    a:hover,
-    area {
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    body.gray header nav a,
-    body.gray header nav a:link {
-        color: #000;
-    }
-
-    body.gray header nav a:hover {
-        color: #333;
-    }
-
-    body.gray header nav {
-        font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
-    }
-
-    body.gray li>input:not([type='checkbox']),
-    body.gray td>input:not([type='checkbox']) {
-        background-color: #fff;
-        border: 1px solid #ced4da;
-    }
-
-    body.gray li>input.form-control:disabled,
-    body.gray li>input.form-control[readonly] {
-        background-color: #e9ecef;
-    }
-
-    body.gray input.alone[type=checkbox]::before {
-        color: rgb(118, 118, 118);
-        font-size: 20px;
-    }
-
-    body.gray input.alone[type=checkbox]:checked::before {
-        color: rgb(0, 117, 255);
-    }
-
-    body.gray header nav ul.info {
-        margin-bottom: 0;
-    }
-
-    body.gray header nav ul.info b {
-        font-weight: bold;
-    }
-
-    .region {
-        margin: 50px 10px 10px;
-        padding: 20px 15px 15px;
-        border: 2px solid #E2E2E2;
-        border-radius: 10px;
-        position: relative;
-    }
-
-    .region span.heading {
-        display: inline-block;
-        position: absolute;
-        top: -17px;
-        background-color: white;
-        padding: 0 10px;
-        font-size: 20px;
-        font-weight: 500;
-    }
-
-    .region>ul,
-    .heading-and-btn>ul {
-        margin: 0;
-        border-bottom: 1px solid #E2E2E2;
-        background-color: #F7F7F7;
-        display: flex;
-        align-items: center;
-    }
-
-    .region>ul.variation_list {
-        align-items: flex-start;
-        border-bottom: none;
-        background-color: #F0F0F0;
-        margin-bottom: 20px;
-    }
-
-    .region>ul.variation_list h6 {
-        text-align: center;
-    }
-
-    .region>ul.variation_list li:first-of-type {
-        min-width: 170px;
-    }
-
-    .region>ul.variation_list select {
-        margin-bottom: 10px;
-    }
-
-    .region>ul>li,
-    .heading-and-btn>ul>li {
-        display: table-cell;
-        text-decoration: none;
-        padding: 10px;
-    }
-
-    .region>ul>li:first-of-type,
-    .heading-and-btn ul li:nth-of-type(1) {
-        width: 20vw;
-        min-width: 150px;
-        text-align: center;
-        flex-grow: 0;
-        flex-shrink: 0;
-    }
-
-    .region>ul>li:nth-of-type(2),
-    .heading-and-btn ul li:nth-of-type(2) {
-        flex-grow: 1;
-        flex-shrink: 1;
-    }
-
-    .region>ul>li>input[type='text']+i {
-        margin-left: 5px;
-    }
-
-    .region>ul>li button.btn-light,
-    .region>ul>li button.btn-light:not(:disabled).active,
-    .region>ul>li .show>.btn-light.dropdown-toggle {
-        background-color: #fff;
-        border: 1px solid #ced4da;
-    }
-
-    .region>ul>li>input[type='text']:first-of-type~input {
-        margin-left: 10px;
-    }
-
-    .region .bootstrap-select .dropdown-toggle:focus,
-    .region .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
-        outline: 0;
-        box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
-        background-color: #fff;
-    }
-
-    .region .bootstrap-select .btn:focus {
-        outline: none !important;
-    }
-
-    .one_half {
-        width: 48%;
-        display: inline-block;
-    }
-
-    .one_third {
-        width: 32%;
-        display: inline-block;
-    }
-
-    .one_fifth{
-        width: 20%;
-        display: inline-block;
-        margin-left: 40px;
-        min-width: 100px;
-    }
-
-    .one_whole {
-        width: 96%;
-        display: inline-block;
-    }
-
-    input.updated_date {
-        margin-top: 10px;
-    }
-
-    .itembox {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-right: 20px;
-    }
-
-    .itembox:last-of-type {
-        margin-right: 0;
-    }
-
-    .itembox .photo {
-        border: 1px dashed #3FA4F4;
-        width: 200px;
-        height: 200px;
-        padding: 3px;
-        position: relative;
-    }
-
-    .itembox .photo::before {
-        content: "+";
-        display: block;
-        width: 36px;
-        height: 36px;
-        border: 1px dashed #3FA4F4;
-        border-radius: 18px;
-        line-height: 24px;
-        text-align: center;
-        color: #3FA4F4;
-        font-size: 36px;
-        font-weight: 300;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        margin: auto;
-    }
-
-    .itembox .photo>input[type='file'] {
-        opacity: 0;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 2;
-    }
-
-    .itembox .photo>img {
-        max-width: 100%;
-        max-height: 100%;
-    }
-
-    .itembox.chosen .photo::before {
-        content: none;
-    }
-
-    .itembox>div>span {
-        display: none;
-    }
-
-    .itembox.chosen>div>span {
-        display: inline-block;
-        margin: 8px auto 5px;
-        width: 36px;
-        height: 36px;
-        border: 1px dashed #EA0029;
-        border-radius: 18px;
-        line-height: 28px;
-        text-align: center;
-        color: #EA0029;
-        font-size: 24px;
-        font-weight: 400;
-        cursor: pointer;
-    }
-
-    .itembox input[type="text"] {
-        box-sizing: border-box;
-        width: 200px;
-        margin-top: 5px;
-        border: 1px dashed #3FA4F4;
-    }
-
-    .itembox>div>i.fa-trash-alt {
-        display: inline-block;
-        margin: 8px auto 5px;
-        width: 36px;
-        height: 36px;
-        border: 1px dashed #EA0029;
-        border-radius: 18px;
-        line-height: 34px;
-        text-align: center;
-        color: #EA0029;
-        font-size: 18px;
-        font-weight: 400;
-        cursor: pointer;
-    }
-
-    li.additional_file > input[type="file"] {
-        border-radius: 0.25rem;
-        color: #495057;
-    }
-
-    .additem {
-        width: 200px;
-        height: 200px;
-        padding: 3px;
-        position: relative;
-    }
-
-    .additem>span {
-        display: block;
-        width: 36px;
-        height: 36px;
-        border: 1px dashed #3FA4F4;
-        border-radius: 18px;
-        line-height: 24px;
-        text-align: center;
-        color: #3FA4F4;
-        font-size: 36px;
-        font-weight: 300;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        margin: auto;
-        cursor: pointer;
-    }
-
-    span.badge.badge-info {
-        background-color: #5bc0de;
-        margin-right: 8px;
-        font-size: 14px;
-        height: 24px;
-    }
-
-    .bootstrap-tagsinput .badge [data-role="remove"]::after {
-        background-color: #5bc0de !important;
-        font-size: 14px;
-    }
-
-    .toggle-switch {
-        margin: 50px 0 -30px;
-        border-top: 2px solid #E2E2E2;
-        padding: 20px;
-    }
-
-    .toggle-switch .description {
-        margin-right: 20px;
-        color: #0069d9;
-        font-weight: 700;
-        font-size: 20px;
-    }
-
-
-    .table_template {
-        text-align: center;
-    }
-
-    .table_template thead th {
-        background-color: #E0E0E0;
-        padding: 10px;
-        text-align: center;
-    }
-
-    .table_template tbody td {
-        padding: 10px;
-        text-align: center;
-        border-bottom: 1px solid #E2E2E2;
-    }
-
-    .table_template tbody tr:nth-of-type(even) {
-        background-color: #F7F7F7
-    }
-
-    .table_template .itembox .photo {
-        width: 100px;
-        height: 100px;
-    }
-
-    #tb_product_variants {
-        width: 100%;
-    }
-
-    #tb_product_variants thead tr th {
-        min-width: 100px;
-    }
-
-    #tb_product_variants thead tr th:first-of-type {
-        min-width: 50px;
-    }
-
-    #tb_product_variants thead tr th:last-of-type {
-        min-width: 130px;
-    }
-
-    #tb_product_variants tbody .itembox {
-        margin: auto;
-    }
-
-    #tb_bulk_apply,
-    #tb_edit_name,
-    #tb_quick_assign,
-    #tb_quick_assign2 {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-
-    #tb_bulk_apply tbody tr,
-    #tb_edit_name tbody tr {
-        background-color: #FFFFFF;
-    }
-
-    #tb_bulk_apply tbody tr td .itembox {
-        margin: auto;
-    }
-
-    .btnbox {
-        text-align: center;
-    }
-
-    .btnbox>button,
-    .heading-and-btn button {
-        margin: 0 10px;
-        width: 80px;
-    }
-
-    .bodybox .mask {
-        position: fixed;
-        background: rgba(0, 0, 0, 0.5);
-        width: 100%;
-        height: 100%;
-        top: 0;
-        z-index: 1;
-        display: none;
-    }
-
-    #modal_bulk_apply,
-    #modal_edit_name,
-    #modal_quick_assign,
-    #modal_quick_assign2_1 {
-        position: fixed;
-        top: 30px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        z-index: 2;
-    }
-
-    #modal_bulk_apply>.modal-content,
-    #modal_edit_name>.modal-content,
-    #modal_quick_assign>.modal-content,
-    #modal_quick_assign2_1>.modal-content {
-        width: 700px;
-        max-height: calc(100vh - 60px);
-        margin: auto;
-        border: 3px solid #E2E2E2;
-        padding: 25px 20px 20px;
-        background-color: white;
-        overflow-y: auto;
-    }
-
-    #modal_bulk_apply>.modal-content,
-    #modal_quick_assign>.modal-content,
-    #modal_quick_assign2_1>.modal-content {
-        width: 600px;
-    }
-
-    #modal_bulk_apply,
-    #modal_edit_name,
-    #modal_quick_assign,
-    #modal_quick_assign2_2 {
-        position: fixed;
-        top: 30px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        z-index: 2;
-    }
-
-    #modal_bulk_apply>.modal-content,
-    #modal_edit_name>.modal-content,
-    #modal_quick_assign>.modal-content,
-    #modal_quick_assign2_2>.modal-content {
-        width: 700px;
-        max-height: calc(100vh - 60px);
-        margin: auto;
-        border: 3px solid #E2E2E2;
-        padding: 25px 20px 20px;
-        background-color: white;
-        overflow-y: auto;
-    }
-
-    #modal_bulk_apply>.modal-content,
-    #modal_quick_assign>.modal-content,
-    #modal_quick_assign2_2>.modal-content {
-        width: 600px;
-    }
-
-    #modal_bulk_apply,
-    #modal_edit_name,
-    #modal_quick_assign,
-    #modal_quick_assign2_3 {
-        position: fixed;
-        top: 30px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        z-index: 2;
-    }
-
-    #modal_bulk_apply>.modal-content,
-    #modal_edit_name>.modal-content,
-    #modal_quick_assign>.modal-content,
-    #modal_quick_assign2_3>.modal-content {
-        width: 700px;
-        max-height: calc(100vh - 60px);
-        margin: auto;
-        border: 3px solid #E2E2E2;
-        padding: 25px 20px 20px;
-        background-color: white;
-        overflow-y: auto;
-    }
-
-    #modal_bulk_apply>.modal-content,
-    #modal_quick_assign>.modal-content,
-    #modal_quick_assign2_3>.modal-content {
-        width: 600px;
-    }
-
-    #modal_bulk_apply,
-    #modal_edit_name,
-    #modal_quick_assign,
-    #modal_quick_assign2_4 {
-        position: fixed;
-        top: 30px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        z-index: 2;
-    }
-
-    #modal_bulk_apply>.modal-content,
-    #modal_edit_name>.modal-content,
-    #modal_quick_assign>.modal-content,
-    #modal_quick_assign2_4>.modal-content {
-        width: 700px;
-        max-height: calc(100vh - 60px);
-        margin: auto;
-        border: 3px solid #E2E2E2;
-        padding: 25px 20px 20px;
-        background-color: white;
-        overflow-y: auto;
-    }
-
-    #modal_bulk_apply>.modal-content,
-    #modal_quick_assign>.modal-content,
-    #modal_quick_assign2_4>.modal-content {
-        width: 600px;
-    }
-
-    .custom-modal-header {
-        color: #808080;
-        border-bottom: 2px solid #E2E2E2;
-        padding-bottom: 5px;
-        margin-bottom: 10px;
-        font-size: 22px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .custom-modal-header i {
-        font-size: 20px;
-    }
-
-    #tb_edit_name thead tr th {
-        min-width: 200px;
-    }
-
-    #tb_edit_name thead tr th:first-of-type {
-        min-width: 150px;
-    }
-
-    #tb_edit_name tbody tr select+input {
-        margin-top: 5px;
-    }
-
-    .heading-and-btn {
-        border-bottom: 2px solid #E2E2E2;
-        padding: 0 20px 10px;
-    }
-
-    .heading-and-btn ul {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: none;
-        background-color: #FFFFFF;
-    }
-
-    .heading-and-btn ul li:nth-of-type(1) {
-        text-align: left;
-        flex-grow: 1;
-    }
-
-    .heading-and-btn ul li:nth-of-type(2) {
-        width: 240px;
-        text-align: center;
-        flex-grow: 0;
-        flex-shrink: 0;
-    }
-
-    .heading-and-btn ul li select {
-        display: inline-block;
-        width: 300px;
-        margin-left: 10px;
-    }
-
-    .NTD_price {}
-
-    .swal2-content .text-left>div:nth-of-type(1)>a {
-        margin-top: 10px;
-    }
-
-    .swal2-content .text-left>div>a,
-    .swal2-content .text-left>div>a:visited {
-        color: #000 !important;
-    }
-
-    .autocomplete {
-        /*the container must be positioned relative:*/
-        position: relative;
-        display: inline-block;
-    }
-    .autocomplete input {
-        border: 1px solid transparent;
-        background-color: #f1f1f1;
-        padding: 10px;
-        font-size: 16px;
-    }
-    .autocomplete input[type=text] {
-        background-color: #f1f1f1;
-        width: 48%;
-    }
-    .autocomplete input[type=submit] {
-        background-color: DodgerBlue;
-        color: #fff;
-    }
-    .autocomplete-items {
-        position: absolute;
-        border: 1px solid #d4d4d4;
-        border-bottom: none;
-        border-top: none;
-        z-index: 99;
-        /*position the autocomplete items to be the same width as the container:*/
-        top: 100%;
-        width: 48%;
-        left: 0;
-        right: 0;
-    }
-    .autocomplete-items div {
-        padding: 10px;
-        cursor: pointer;
-        background-color: #fff;
-        border-bottom: 1px solid #d4d4d4;
-    }
-    .autocomplete-items div:hover {
-        /*when hovering an item:*/
-        background-color: #e9e9e9;
-    }
-    .autocomplete-active {
-        /*when navigating through the items using the arrow keys:*/
-        background-color: DodgerBlue !important;
-        color: #ffffff;
-    }
-
+        body.gray header>.headerbox {
+            background-color: #707071;
+        }
+
+        body.gray select {
+            background-image: url(images/ui/icon_form_select_arrow_gray.svg);
+        }
+
+        a,
+        a:link,
+        a:visited,
+        a:active,
+        a:hover,
+        area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.gray header nav a,
+        body.gray header nav a:link {
+            color: #000;
+        }
+
+        body.gray header nav a:hover {
+            color: #333;
+        }
+
+        body.gray header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
+        body.gray li>input:not([type='checkbox']),
+        body.gray td>input:not([type='checkbox']) {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+        }
+
+        body.gray li>input.form-control:disabled,
+        body.gray li>input.form-control[readonly] {
+            background-color: #e9ecef;
+        }
+
+        body.gray input.alone[type=checkbox]::before {
+            color: rgb(118, 118, 118);
+            font-size: 20px;
+        }
+
+        body.gray input.alone[type=checkbox]:checked::before {
+            color: rgb(0, 117, 255);
+        }
+
+        body.gray header nav ul.info {
+            margin-bottom: 0;
+        }
+
+        body.gray header nav ul.info b {
+            font-weight: bold;
+        }
+
+        .region {
+            margin: 50px 10px 10px;
+            padding: 20px 15px 15px;
+            border: 2px solid #E2E2E2;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .region span.heading {
+            display: inline-block;
+            position: absolute;
+            top: -17px;
+            background-color: white;
+            padding: 0 10px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .region>ul,
+        .heading-and-btn>ul {
+            margin: 0;
+            border-bottom: 1px solid #E2E2E2;
+            background-color: #F7F7F7;
+            display: flex;
+            align-items: center;
+        }
+
+        .region>ul.variation_list {
+            align-items: flex-start;
+            border-bottom: none;
+            background-color: #F0F0F0;
+            margin-bottom: 20px;
+        }
+
+        .region>ul.variation_list h6 {
+            text-align: center;
+        }
+
+        .region>ul.variation_list li:first-of-type {
+            min-width: 170px;
+        }
+
+        .region>ul.variation_list select {
+            margin-bottom: 10px;
+        }
+
+        .region>ul>li,
+        .heading-and-btn>ul>li {
+            display: table-cell;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        .region>ul>li:first-of-type,
+        .heading-and-btn ul li:nth-of-type(1) {
+            width: 20vw;
+            min-width: 150px;
+            text-align: center;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .region>ul>li:nth-of-type(2),
+        .heading-and-btn ul li:nth-of-type(2) {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+
+        .region>ul>li>input[type='text']+i {
+            margin-left: 5px;
+        }
+
+        .region>ul>li button.btn-light,
+        .region>ul>li button.btn-light:not(:disabled).active,
+        .region>ul>li .show>.btn-light.dropdown-toggle {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+        }
+
+        .region>ul>li>input[type='text']:first-of-type~input {
+            margin-left: 10px;
+        }
+
+        .region .bootstrap-select .dropdown-toggle:focus,
+        .region .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+            background-color: #fff;
+        }
+
+        .region .bootstrap-select .btn:focus {
+            outline: none !important;
+        }
+
+        .one_half {
+            width: 48%;
+            display: inline-block;
+        }
+
+        .one_third {
+            width: 32%;
+            display: inline-block;
+        }
+
+        .one_fifth {
+            width: 20%;
+            display: inline-block;
+            margin-left: 40px;
+            min-width: 100px;
+        }
+
+        .one_whole {
+            width: 96%;
+            display: inline-block;
+        }
+
+        input.updated_date {
+            margin-top: 10px;
+        }
+
+        .itembox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .itembox:last-of-type {
+            margin-right: 0;
+        }
+
+        .itembox .photo {
+            border: 1px dashed #3FA4F4;
+            width: 200px;
+            height: 200px;
+            padding: 3px;
+            position: relative;
+        }
+
+        .itembox .photo::before {
+            content: "+";
+            display: block;
+            width: 36px;
+            height: 36px;
+            border: 1px dashed #3FA4F4;
+            border-radius: 18px;
+            line-height: 24px;
+            text-align: center;
+            color: #3FA4F4;
+            font-size: 36px;
+            font-weight: 300;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        .itembox .photo>input[type='file'] {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        .itembox .photo>img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .itembox.chosen .photo::before {
+            content: none;
+        }
+
+        .itembox>div>span {
+            display: none;
+        }
+
+        .itembox.chosen>div>span {
+            display: inline-block;
+            margin: 8px auto 5px;
+            width: 36px;
+            height: 36px;
+            border: 1px dashed #EA0029;
+            border-radius: 18px;
+            line-height: 28px;
+            text-align: center;
+            color: #EA0029;
+            font-size: 24px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .itembox input[type="text"] {
+            box-sizing: border-box;
+            width: 200px;
+            margin-top: 5px;
+            border: 1px dashed #3FA4F4;
+        }
+
+        .itembox>div>i.fa-trash-alt {
+            display: inline-block;
+            margin: 8px auto 5px;
+            width: 36px;
+            height: 36px;
+            border: 1px dashed #EA0029;
+            border-radius: 18px;
+            line-height: 34px;
+            text-align: center;
+            color: #EA0029;
+            font-size: 18px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        li.additional_file>input[type="file"] {
+            border-radius: 0.25rem;
+            color: #495057;
+        }
+
+        .additem {
+            width: 200px;
+            height: 200px;
+            padding: 3px;
+            position: relative;
+        }
+
+        .additem>span {
+            display: block;
+            width: 36px;
+            height: 36px;
+            border: 1px dashed #3FA4F4;
+            border-radius: 18px;
+            line-height: 24px;
+            text-align: center;
+            color: #3FA4F4;
+            font-size: 36px;
+            font-weight: 300;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            cursor: pointer;
+        }
+
+        span.badge.badge-info {
+            background-color: #5bc0de;
+            margin-right: 8px;
+            font-size: 14px;
+            height: 24px;
+        }
+
+        .bootstrap-tagsinput .badge [data-role="remove"]::after {
+            background-color: #5bc0de !important;
+            font-size: 14px;
+        }
+
+        .toggle-switch {
+            margin: 50px 0 -30px;
+            border-top: 2px solid #E2E2E2;
+            padding: 20px;
+        }
+
+        .toggle-switch .description {
+            margin-right: 20px;
+            color: #0069d9;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+
+        .table_template {
+            text-align: center;
+        }
+
+        .table_template thead th {
+            background-color: #E0E0E0;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .table_template tbody td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #E2E2E2;
+        }
+
+        .table_template tbody tr:nth-of-type(even) {
+            background-color: #F7F7F7
+        }
+
+        .table_template .itembox .photo {
+            width: 100px;
+            height: 100px;
+        }
+
+        #tb_product_variants {
+            width: 100%;
+        }
+
+        #tb_product_variants thead tr th {
+            min-width: 100px;
+        }
+
+        #tb_product_variants thead tr th:first-of-type {
+            min-width: 50px;
+        }
+
+        #tb_product_variants thead tr th:last-of-type {
+            min-width: 130px;
+        }
+
+        #tb_product_variants tbody .itembox {
+            margin: auto;
+        }
+
+        #tb_bulk_apply,
+        #tb_edit_name,
+        #tb_quick_assign,
+        #tb_quick_assign2 {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #tb_bulk_apply tbody tr,
+        #tb_edit_name tbody tr {
+            background-color: #FFFFFF;
+        }
+
+        #tb_bulk_apply tbody tr td .itembox {
+            margin: auto;
+        }
+
+        .btnbox {
+            text-align: center;
+        }
+
+        .btnbox>button,
+        .heading-and-btn button {
+            margin: 0 10px;
+            width: 80px;
+        }
+
+        .bodybox .mask {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            z-index: 1;
+            display: none;
+        }
+
+        #modal_bulk_apply,
+        #modal_edit_name,
+        #modal_quick_assign,
+        #modal_quick_assign2_1 {
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 2;
+        }
+
+        #modal_bulk_apply>.modal-content,
+        #modal_edit_name>.modal-content,
+        #modal_quick_assign>.modal-content,
+        #modal_quick_assign2_1>.modal-content {
+            width: 700px;
+            max-height: calc(100vh - 60px);
+            margin: auto;
+            border: 3px solid #E2E2E2;
+            padding: 25px 20px 20px;
+            background-color: white;
+            overflow-y: auto;
+        }
+
+        #modal_bulk_apply>.modal-content,
+        #modal_quick_assign>.modal-content,
+        #modal_quick_assign2_1>.modal-content {
+            width: 600px;
+        }
+
+        #modal_bulk_apply,
+        #modal_edit_name,
+        #modal_quick_assign,
+        #modal_quick_assign2_2 {
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 2;
+        }
+
+        #modal_bulk_apply>.modal-content,
+        #modal_edit_name>.modal-content,
+        #modal_quick_assign>.modal-content,
+        #modal_quick_assign2_2>.modal-content {
+            width: 700px;
+            max-height: calc(100vh - 60px);
+            margin: auto;
+            border: 3px solid #E2E2E2;
+            padding: 25px 20px 20px;
+            background-color: white;
+            overflow-y: auto;
+        }
+
+        #modal_bulk_apply>.modal-content,
+        #modal_quick_assign>.modal-content,
+        #modal_quick_assign2_2>.modal-content {
+            width: 600px;
+        }
+
+        #modal_bulk_apply,
+        #modal_edit_name,
+        #modal_quick_assign,
+        #modal_quick_assign2_3 {
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 2;
+        }
+
+        #modal_bulk_apply>.modal-content,
+        #modal_edit_name>.modal-content,
+        #modal_quick_assign>.modal-content,
+        #modal_quick_assign2_3>.modal-content {
+            width: 700px;
+            max-height: calc(100vh - 60px);
+            margin: auto;
+            border: 3px solid #E2E2E2;
+            padding: 25px 20px 20px;
+            background-color: white;
+            overflow-y: auto;
+        }
+
+        #modal_bulk_apply>.modal-content,
+        #modal_quick_assign>.modal-content,
+        #modal_quick_assign2_3>.modal-content {
+            width: 600px;
+        }
+
+        #modal_bulk_apply,
+        #modal_edit_name,
+        #modal_quick_assign,
+        #modal_quick_assign2_4 {
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 2;
+        }
+
+        #modal_bulk_apply>.modal-content,
+        #modal_edit_name>.modal-content,
+        #modal_quick_assign>.modal-content,
+        #modal_quick_assign2_4>.modal-content {
+            width: 700px;
+            max-height: calc(100vh - 60px);
+            margin: auto;
+            border: 3px solid #E2E2E2;
+            padding: 25px 20px 20px;
+            background-color: white;
+            overflow-y: auto;
+        }
+
+        #modal_bulk_apply>.modal-content,
+        #modal_quick_assign>.modal-content,
+        #modal_quick_assign2_4>.modal-content {
+            width: 600px;
+        }
+
+        .custom-modal-header {
+            color: #808080;
+            border-bottom: 2px solid #E2E2E2;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .custom-modal-header i {
+            font-size: 20px;
+        }
+
+        #tb_edit_name thead tr th {
+            min-width: 200px;
+        }
+
+        #tb_edit_name thead tr th:first-of-type {
+            min-width: 150px;
+        }
+
+        #tb_edit_name tbody tr select+input {
+            margin-top: 5px;
+        }
+
+        .heading-and-btn {
+            border-bottom: 2px solid #E2E2E2;
+            padding: 0 20px 10px;
+        }
+
+        .heading-and-btn ul {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: none;
+            background-color: #FFFFFF;
+        }
+
+        .heading-and-btn ul li:nth-of-type(1) {
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .heading-and-btn ul li:nth-of-type(2) {
+            width: 240px;
+            text-align: center;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .heading-and-btn ul li select {
+            display: inline-block;
+            width: 300px;
+            margin-left: 10px;
+        }
+
+        .NTD_price {}
+
+        .swal2-content .text-left>div:nth-of-type(1)>a {
+            margin-top: 10px;
+        }
+
+        .swal2-content .text-left>div>a,
+        .swal2-content .text-left>div>a:visited {
+            color: #000 !important;
+        }
+
+        .autocomplete {
+            /*the container must be positioned relative:*/
+            position: relative;
+            display: inline-block;
+        }
+
+        .autocomplete input {
+            border: 1px solid transparent;
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .autocomplete input[type=text] {
+            background-color: #f1f1f1;
+            width: 48%;
+        }
+
+        .autocomplete input[type=submit] {
+            background-color: DodgerBlue;
+            color: #fff;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            width: 48%;
+            left: 0;
+            right: 0;
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        .autocomplete-items div:hover {
+            /*when hovering an item:*/
+            background-color: #e9e9e9;
+        }
+
+        .autocomplete-active {
+            /*when navigating through the items using the arrow keys:*/
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
     </style>
 
 </head>
@@ -807,12 +813,14 @@ catch (Exception $e) {
 
                         <select v-if="category == '20000000'" class="form-control" v-model="sub_category">
                             <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
-                                {{ item.category }}</option>
+                                {{ item.category }}
+                            </option>
                         </select>
 
                         <select v-if="category == '10000000'" class="form-control" v-model="sub_category">
                             <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
-                                {{ item.category }}</option>
+                                {{ item.category }}
+                            </option>
                         </select>
                     </li>
 
@@ -844,13 +852,15 @@ catch (Exception $e) {
                         <select v-if="category == '20000000'" class="form-control one_third" v-model="sub_category"
                             :disabled="edit_mode == true">
                             <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
-                                {{ item.category }}</option>
+                                {{ item.category }}
+                            </option>
                         </select>
 
                         <select v-if="category == '10000000'" class="form-control one_third" v-model="sub_category"
                             :disabled="edit_mode == true">
                             <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
-                                {{ item.category }}</option>
+                                {{ item.category }}
+                            </option>
                         </select>
                     </li>
                 </ul>
@@ -891,7 +901,7 @@ catch (Exception $e) {
                             <option value="PH">Handled by Philippines Office</option>
                         </select>
 
-                        
+
                     </li>
                 </ul>
 
@@ -1037,7 +1047,7 @@ catch (Exception $e) {
                     <li>
                         Replacement Product<br>(for phased-out or deleted product)
                     </li>
-                        <li><input type="text" value="" data-role="tagsinput" id="replacement_product"></li>
+                    <li><input type="text" value="" data-role="tagsinput" id="replacement_product"></li>
                 </ul>
 
                 <!-- 如果使用者選擇當前產品為 Category=Lighting，則下面這個 IES Files 的<ul>結構會被製造出來； 如果使用者選擇當前產品為 Category=Systems Furniture，則下面這個 IES Files 的<ul>結構不會被製造出來 -->
@@ -1046,7 +1056,7 @@ catch (Exception $e) {
                         IES File
                     </li>
                     <li class="additional_file">
-                        <input class="one_third" type="file" ref="file_ics" name="file_ics[]" multiple  @change="check_ics($event)">
+                        <input class="one_third" type="file" ref="file_ics" name="file_ics[]" multiple @change="check_ics($event)">
                     </li>
                 </ul>
 
@@ -1056,7 +1066,7 @@ catch (Exception $e) {
                         SketchUp File
                     </li>
                     <li class="additional_file">
-                        <input class="one_third" type="file" ref="file_skp" name="file_skp[]" multiple  @change="check_skp($event)">
+                        <input class="one_third" type="file" ref="file_skp" name="file_skp[]" multiple @change="check_skp($event)">
                     </li>
                 </ul>
 
@@ -1065,7 +1075,7 @@ catch (Exception $e) {
                         Manual / Supporting File
                     </li>
                     <li class="additional_file">
-                        <input class="one_third" type="file" ref="file_manual" name="file_manual[]" multiple  @change="check_manual($event)">
+                        <input class="one_third" type="file" ref="file_manual" name="file_manual[]" multiple @change="check_manual($event)">
                     </li>
                 </ul>
 
@@ -1087,16 +1097,18 @@ catch (Exception $e) {
                             <option value="20000000">Systems Furniture</option>
                         </select>
 
-                        <select v-if="category == '20000000'" class="form-control one_third" v-model="sub_category" 
+                        <select v-if="category == '20000000'" class="form-control one_third" v-model="sub_category"
                             :disabled="edit_mode == true">
                             <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
-                                {{ item.category }}</option>
+                                {{ item.category }}
+                            </option>
                         </select>
 
                         <select v-if="category == '10000000'" class="form-control one_third" v-model="sub_category"
                             :disabled="edit_mode == true">
                             <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">
-                                {{ item.category }}</option>
+                                {{ item.category }}
+                            </option>
                         </select>
                     </li>
                 </ul>
@@ -1149,7 +1161,7 @@ catch (Exception $e) {
                 <ul>
                     <li>Product 1</li>
                     <li class="autocomplete">
-                        <input type="text" class="form-control one_half" placeholder="Product Code"  v-model="p1_code" id="product_1">
+                        <input type="text" class="form-control one_half" placeholder="Product Code" v-model="p1_code" id="product_1">
                         <input type="number" class="form-control one_fifth" min="1" placeholder="Qty" v-model="p1_qty">
                     </li>
                 </ul>
@@ -1318,7 +1330,7 @@ catch (Exception $e) {
                     </li>
                 </ul>
 
-                
+
                 <ul class="variation_list">
                     <li>
                         <h6>4th Variation</h6>
@@ -2019,7 +2031,7 @@ catch (Exception $e) {
 <script src="js/a076d05399.js"></script>
 
 <script>
-ELEMENT.locale(ELEMENT.lang.en)
+    ELEMENT.locale(ELEMENT.lang.en)
 </script>
 
 <!-- import JavaScript -->
@@ -2028,141 +2040,146 @@ ELEMENT.locale(ELEMENT.lang.en)
 <script src="js/add_product_code.js"></script>
 
 <script>
-var codes = [];
+    var codes = [];
 
-function autocomplete(inp, arr) {
-  /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
-  var currentFocus;
-  /*execute a function when someone writes in the text field:*/
-  inp.addEventListener("input", async function(e) {
-      var a, b, i, val = this.value;
-      /*close any already open lists of autocompleted values*/
-      closeAllLists();
-      if (!val) { return false;}
+    function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", async function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) {
+                return false;
+            }
 
 
-    let _arr = await axios.get('api/product_code_auto_complete', {
-            params: {
-                code: val
+            let _arr = await axios.get('api/product_code_auto_complete', {
+                params: {
+                    code: val
+                }
+            });
+
+
+            arr = _arr.data;
+
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+                /*check if the item starts with the same letters as the text field value:*/
+                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    /*insert a input field that will hold the current array item's value:*/
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                        /*insert the value for the autocomplete text field:*/
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        if (inp.id == 'product_1') {
+                            app.p1_code = inp.value;
+                        } else if (inp.id == 'product_2') {
+                            app.p2_code = inp.value;
+                        } else if (inp.id == 'product_3') {
+                            app.p3_code = inp.value;
+                        }
+                        /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+                /*If the arrow DOWN key is pressed,
+                increase the currentFocus variable:*/
+                currentFocus++;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 38) { //up
+                /*If the arrow UP key is pressed,
+                decrease the currentFocus variable:*/
+                currentFocus--;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 13) {
+                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                }
             }
         });
 
-
-    arr = _arr.data;
-      
-      currentFocus = -1;
-      /*create a DIV element that will contain the items (values):*/
-      a = document.createElement("DIV");
-      a.setAttribute("id", this.id + "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
-      /*append the DIV element as a child of the autocomplete container:*/
-      this.parentNode.appendChild(a);
-      /*for each item in the array...*/
-      for (i = 0; i < arr.length; i++) {
-        /*check if the item starts with the same letters as the text field value:*/
-        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-          /*create a DIV element for each matching element:*/
-          b = document.createElement("DIV");
-          /*make the matching letters bold:*/
-          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-          b.innerHTML += arr[i].substr(val.length);
-          /*insert a input field that will hold the current array item's value:*/
-          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-          /*execute a function when someone clicks on the item value (DIV element):*/
-              b.addEventListener("click", function(e) {
-              /*insert the value for the autocomplete text field:*/
-              inp.value = this.getElementsByTagName("input")[0].value;
-              if(inp.id == 'product_1') {
-                app.p1_code = inp.value;
-              } else if(inp.id == 'product_2') {
-                app.p2_code = inp.value;
-              } else if(inp.id == 'product_3') {
-                app.p3_code = inp.value;
-              }
-              /*close the list of autocompleted values,
-              (or any other open lists of autocompleted values:*/
-              closeAllLists();
-          });
-          a.appendChild(b);
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
         }
-      }
-  });
-  /*execute a function presses a key on the keyboard:*/
-  inp.addEventListener("keydown", function(e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
-      if (x) x = x.getElementsByTagName("div");
-      if (e.keyCode == 40) {
-        /*If the arrow DOWN key is pressed,
-        increase the currentFocus variable:*/
-        currentFocus++;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 38) { //up
-        /*If the arrow UP key is pressed,
-        decrease the currentFocus variable:*/
-        currentFocus--;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 13) {
-        /*If the ENTER key is pressed, prevent the form from being submitted,*/
-        e.preventDefault();
-        if (currentFocus > -1) {
-          /*and simulate a click on the "active" item:*/
-          if (x) x[currentFocus].click();
+
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
         }
-      }
-  });
-  function addActive(x) {
-    /*a function to classify an item as "active":*/
-    if (!x) return false;
-    /*start by removing the "active" class on all items:*/
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = (x.length - 1);
-    /*add class "autocomplete-active":*/
-    x[currentFocus].classList.add("autocomplete-active");
-  }
-  function removeActive(x) {
-    /*a function to remove the "active" class from all autocomplete items:*/
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
+
+        function closeAllLists(elmnt) {
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function(e) {
+            closeAllLists(e.target);
+        });
     }
-  }
-  function closeAllLists(elmnt) {
-    /*close all autocomplete lists in the document,
-    except the one passed as an argument:*/
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
-      x[i].parentNode.removeChild(x[i]);
-    }
-  }
-}
-/*execute a function when someone clicks in the document:*/
-document.addEventListener("click", function (e) {
-    closeAllLists(e.target);
-});
-}
 
-autocomplete(document.getElementById("product_1"), codes);
-autocomplete(document.getElementById("product_2"), codes);
-autocomplete(document.getElementById("product_3"), codes);
+    autocomplete(document.getElementById("product_1"), codes);
+    autocomplete(document.getElementById("product_2"), codes);
+    autocomplete(document.getElementById("product_3"), codes);
 
 
-$(function() {
-    $('#accessory_mode').change(function() {
-        app.accessory_mode = $(this).prop('checked');
+    $(function() {
+        $('#accessory_mode').change(function() {
+            app.accessory_mode = $(this).prop('checked');
+        })
+
     })
 
-})
+    $(function() {
 
-$(function() {
-
-    $('#variation_mode').change(function() {
-        app.variation_mode = $(this).prop('checked');
+        $('#variation_mode').change(function() {
+            app.variation_mode = $(this).prop('checked');
+        })
     })
-})
 </script>
 
 </html>
